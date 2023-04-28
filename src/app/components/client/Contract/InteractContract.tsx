@@ -7,7 +7,7 @@ import { useStoreWallet } from '../../Wallet/walletContext';
 import GetBalance from "./GetBalance";
 import PlayWithCairo1 from "./PlayWithCairo1";
 
-import { Text, Button, Spinner, Center } from "@chakra-ui/react";
+import { Text, Button, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 
@@ -56,26 +56,39 @@ export default function InteractContract() {
 
     return (
         <>
-            {!blockFromContext.blockNumber ? (
-                <Center>
+            <Box bg='gray.300' color='black' borderWidth='1px' borderRadius='lg'>
+                {!blockFromContext.blockNumber ? (
+                    <Center>
+                        <Spinner color="blue"  size="sm" mr={4}/>  Fetching data ...
+                    </Center>
+                ) :
+                    (
+                        <>
+                            <Text className={styles.text1}>Last block number = {blockFromContext.blockNumber} timerId = {timerId ? "Set" : "Not set"} </Text>
+                            <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
+                            <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
+                            <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
+                            <Divider></Divider>
+                        </>
+                    )
+                }
+            </Box>
+            {!!blockFromContext.blockNumber &&
+                <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
+                    <Center> Updated each new block :</Center>
+                    <GetBalance tokenAddress={addrETH} ></GetBalance>
+                    <GetBalance tokenAddress={addrTEST} ></GetBalance>
 
-                    <Spinner color="blue" size="sm" />  _Fetching data ...
-                </Center>
-            ) :
-                (
+                </Box>
+            }
+            {!!blockFromContext.blockNumber &&
+                <Box bg='mediumaquamarine' color='black' borderWidth='3px'  borderColor='green.800' borderRadius='xl' p={2}>
                     <>
-                        <Text className={styles.text1}>BlockNumber = {blockFromContext.blockNumber} timerId = {timerId ? "Set" : "Not set"} </Text>
-                        <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
-                        <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
-                        <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
-                        <GetBalance tokenAddress={addrETH} ></GetBalance>
-                        <GetBalance tokenAddress={addrTEST} ></GetBalance>
-                        <Text className={styles.text1}>Balance of Cairo 1 contract :  </Text>
+                        <Text textAlign='center'  fontSize={20}>Balance of Cairo 1 🦀 contract :  </Text>
                         <PlayWithCairo1></PlayWithCairo1>
-
-                        <br />
                     </>
-                )
+
+                </Box>
             }
         </>
 

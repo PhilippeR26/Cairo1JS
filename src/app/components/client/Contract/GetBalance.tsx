@@ -4,7 +4,7 @@ import { Provider, ProviderInterface, RpcProvider, constants, GetBlockResponse, 
 import { useStoreBlock, DataBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
 
-import { Text, Button, Center, Spinner } from "@chakra-ui/react";
+import { Text, Button, Center, Spinner, Divider } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 import { erc20Abi } from "../../../contracts/abis/ERC20abi"
@@ -19,7 +19,7 @@ export default function GetBalance({ tokenAddress }: Props) {
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
 
-    const [balance, setBalance] = useState<number>(0);
+    const [balance, setBalance] = useState<number|undefined>(undefined);
     const [decimals, setDecimals] = useState<number>(1)
     const [symbol, setSymbol] = useState<string>("");
 
@@ -64,18 +64,20 @@ export default function GetBalance({ tokenAddress }: Props) {
     return (
         <>
             {
-                !balance ? (
-                    <Center>
+                typeof(balance)!=="number" ? (
+                    <>
+                        <Center>
 
-                        <Spinner color="blue" size="sm" />  _Fetching data ...
-                    </Center>
-
+                            <Spinner color="blue" size="sm" mr={4} />  Fetching data ...
+                        </Center>
+                    </>
                 ) : (
                     <>
                         <Text className={styles.text1}>Balance = {balance} {symbol} </Text>
                     </>
                 )
             }
+                        <Divider borderColor='gray.600'></Divider>
 
         </>
 

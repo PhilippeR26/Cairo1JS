@@ -1,7 +1,7 @@
 import { use, useEffect, useMemo, useState } from 'react';
 import { Provider, ProviderInterface, RpcProvider, constants, GetBlockResponse } from "starknet";
 import { useStoreBlock, DataBlock, dataBlockInit } from "./blockContext";
-import { Text, Button } from "@chakra-ui/react";
+import { Text, Button, Divider } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 
@@ -58,9 +58,7 @@ export default function BlockDisplay({ providerSN }: Props) {
                         <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
                         <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
                         <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
-                        {/* <Button onClick={() => {
-                            ;
-                        }}>Increase</Button> */}
+                        <Divider></Divider>
                     </>
                 )}
 

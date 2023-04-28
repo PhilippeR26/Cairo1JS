@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image'
 import styles from './page.module.css'
-import { Center, Spinner, Text, Button } from '@chakra-ui/react';
+import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
 import BlockDisplay from './components/client/Block/BlockDisplay';
 import InteractContract from './components/client/Contract/InteractContract';
 import { useEffect, useState } from "react";
@@ -9,10 +9,10 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
 
-import { AccountInterface, Contract, shortString, json, ProviderInterface, encode, GetBlockResponse } from "starknet";
+import { AccountInterface, Contract, shortString, json, ProviderInterface, encode, GetBlockResponse, constants } from "starknet";
 import { StarknetWindowObject, connect } from "get-wallet-starknet";
 
-import { contratSierra } from "./contracts/test_type1_sierra";
+import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
 
 
 
@@ -30,8 +30,11 @@ export default function Page() {
     const providerFromContext = useStoreWallet(state => state.provider);
     const setProvider = useStoreWallet(state => state.setProvider);
 
+    // Component context
+    const [isTesnet, SetIsTestnet] = useState<boolean | undefined>(undefined);
+
     const handleConnectClick = async () => {
-        const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "dark" });
+        const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
         await wallet?.enable({ starknetVersion: "v5" } as any);
         setWallet(wallet);
         const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
@@ -46,36 +49,38 @@ export default function Page() {
         }
     }
 
-
-
-    // function IncreaseBalance() { }
-
-    // async function getBalance(account: AccountInterface): Promise<string> {
-    //     const compiledTest = contratSierra;
-    //     const myTestContract = new Contract(compiledTest.abi, ContractAddress, account);
-    //     const balance = await myTestContract.get_balance({
-    //         parseRequest: false,
-    //         parseResponse: false,
-    //     });
-    //     console.log("balance =", balance);
-    //     return BigInt(balance).toString(10);
-    // }
-
-
     return (
         <ChakraProvider>
             <div>
 
                 <p className={styles.bgText}>
                     Test get-wallet-starknet with starknet.js v5.8.0
-                    <br />
-                    Please connect to testnet
+                </p>
+                <Center>
+                    <Image src={starknetjsImg} alt='starknet.js' width={150} height={150} />
+                </Center>
+                <p className={styles.bgText}>
+                    Please connect to testnet network
                 </p>
 
                 <div>
 
-                    {
-                        !isConnected ? (
+                    {!isConnected ? (
+                        <Center>
+                            <Button
+                                ml="4"
+                                textDecoration="none !important"
+                                outline="none !important"
+                                boxShadow="none !important"
+                                onClick={() => {
+                                    handleConnectClick();
+                                }}
+                            >
+                                Connect Wallet
+                            </Button>
+                        </Center>
+                    ) : (
+                        <>
                             <Center>
                                 <Button
                                     ml="4"
@@ -83,45 +88,27 @@ export default function Page() {
                                     outline="none !important"
                                     boxShadow="none !important"
                                     onClick={() => {
-                                        handleConnectClick();
+                                        setConnected(false);
                                     }}
                                 >
-                                    Connect Wallet
+                                    {accountFromContext
+                                        ? `Your wallet : ${addressAccountFromContext?.slice(0, 7)}...${addressAccountFromContext?.slice(-4)} is connected`
+                                        : "No Account"}
                                 </Button>
                             </Center>
-                        ) : (
-                            <>
-                                <Center>
-                                    <Button
-                                        ml="4"
-                                        textDecoration="none !important"
-                                        outline="none !important"
-                                        boxShadow="none !important"
-                                        onClick={() => {
-                                            setConnected(false);
-                                        }}
-                                    >
-                                        {accountFromContext
-                                            ? `Your wallet : ${addressAccountFromContext?.slice(0, 7)}...${addressAccountFromContext?.slice(-4)} is connected`
-                                            : "No Account"}
-                                    </Button>
-                                </Center>
-                                <br />
+                            <br />
+                            <Box bg='pink.200' color='black' borderWidth='1px' borderRadius='md'>
                                 <p className={styles.text1}>
                                     address = {addressAccountFromContext}<br />
                                     chain = {chainFromContext}<br />
                                     isConnected={isConnected ? "Yes" : "No"}<br />
                                     account.address ={accountFromContext?.address}
                                 </p>
-                                <br />
-                                {providerFromContext &&
-                                    <InteractContract ></InteractContract>
-                                }
-
-                                {/* Balance = {getBalance(account!)} */}
-
-                            </>
-                        )
+                            </Box>
+                            {!!providerFromContext &&
+                                <InteractContract ></InteractContract>}
+                        </>
+                    )
                     }
 
 

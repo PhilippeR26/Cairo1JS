@@ -16,7 +16,7 @@ export interface WalletState {
 export const useStoreWallet = create<WalletState>()(set => ({
     address:"" ,
     setAddressAccount:(address:string)=>{set(state=>({address:address}))},
-    chain:"" ,
+    chain:" " ,
     setChain:(chain:string)=>{set(state=>({chain:chain}))},
     account:undefined ,
     setAccount:(account:AccountInterface)=>{set(state=>({account:account}))},
