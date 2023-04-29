@@ -1,9 +1,8 @@
-import { use, useEffect, useMemo, useState } from 'react';
-import { Provider, ProviderInterface, RpcProvider, constants, GetBlockResponse } from "starknet";
-import { useStoreBlock, DataBlock, dataBlockInit } from "./blockContext";
-import { Text, Button, Divider } from "@chakra-ui/react";
+import { useEffect, useState } from 'react';
+import { ProviderInterface, GetBlockResponse } from "starknet";
+import { useStoreBlock } from "./blockContext";
+import { Text, Divider } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
-
 
 type Props = { providerSN: ProviderInterface };
 
@@ -39,19 +38,11 @@ export default function BlockDisplay({ providerSN }: Props) {
     }
         , []);
 
-    // useEffect(() => {
-
-    // }
-    //     , []
-    // );
-
-
     return (
         <>
             {
                 !blockFromContext.blockNumber ? (
                     <Text>Fetching in progres ... </Text>
-
                 ) : (
                     <>
                         <Text className={styles.text1}>BlockNumber = {blockFromContext.blockNumber} timerId = {timerId ? "Set" : "Not set"} </Text>
@@ -61,7 +52,6 @@ export default function BlockDisplay({ providerSN }: Props) {
                         <Divider></Divider>
                     </>
                 )}
-
         </>
 
     )

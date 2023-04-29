@@ -1,10 +1,10 @@
-import { use, useEffect, useMemo, useState } from 'react';
-import { Provider, ProviderInterface, RpcProvider, constants, GetBlockResponse, Contract, uint256, shortString } from "starknet";
+import { useEffect, useState } from 'react';
+import { Contract, uint256, shortString } from "starknet";
 
-import { useStoreBlock, DataBlock, dataBlockInit } from "../Block/blockContext";
+import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
 
-import { Text, Button, Center, Spinner, Divider } from "@chakra-ui/react";
+import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 import { erc20Abi } from "../../../contracts/abis/ERC20abi"
@@ -19,7 +19,7 @@ export default function GetBalance({ tokenAddress }: Props) {
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
 
-    const [balance, setBalance] = useState<number|undefined>(undefined);
+    const [balance, setBalance] = useState<number | undefined>(undefined);
     const [decimals, setDecimals] = useState<number>(1)
     const [symbol, setSymbol] = useState<string>("");
 
@@ -52,7 +52,6 @@ export default function GetBalance({ tokenAddress }: Props) {
                 console.log("res3=", res3);
                 setBalance(res3 / Math.pow(10, decimals));
             }
-
             )
             .catch((e: any) => { console.log("error getBloc=", e) });
 
@@ -60,14 +59,12 @@ export default function GetBalance({ tokenAddress }: Props) {
     }
         , [blockFromContext.blockNumber, decimals]); // balance updated at each block
 
-
     return (
         <>
             {
-                typeof(balance)!=="number" ? (
+                typeof (balance) !== "number" ? (
                     <>
                         <Center>
-
                             <Spinner color="blue" size="sm" mr={4} />  Fetching data ...
                         </Center>
                     </>
@@ -77,8 +74,6 @@ export default function GetBalance({ tokenAddress }: Props) {
                     </>
                 )
             }
-                        <Divider borderColor='gray.600'></Divider>
-
         </>
 
     )

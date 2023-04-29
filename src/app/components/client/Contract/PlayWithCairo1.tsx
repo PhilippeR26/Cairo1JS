@@ -1,22 +1,20 @@
-import { use, useEffect, useMemo, useState } from 'react';
-import { Provider, ProviderInterface, RpcProvider, constants, GetBlockResponse, Contract, AccountInterface, uint256, shortString, InvokeFunctionResponse } from "starknet";
+import { useEffect, useState } from 'react';
+import { Contract, InvokeFunctionResponse } from "starknet";
 
-import { useStoreBlock, DataBlock, dataBlockInit } from "../Block/blockContext";
+import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
 
 import { Text, Button, Center, Spinner, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
-import { erc20Abi } from "../../../contracts/abis/ERC20abi";
 import { test1Abi } from "../../../contracts/abis/test1";
-import { contratSierra } from "../../../contracts/test_type1_sierra";
+import TransactionStatus from '../Transaction/TransactionStatus';
 
 const contractAddress = "0x697d3bc2e38d57752c28be0432771f4312d070174ae54eef67dd29e4afb174";
 
 export default function PlayWithCairo1() {
     // wallet context
     const providerSN = useStoreWallet(state => state.provider);
-    const accountAddressFromContext = useStoreWallet(state => state.address);
     const accountFromContext = useStoreWallet(state => state.account);
 
     // block context
@@ -44,7 +42,7 @@ export default function PlayWithCairo1() {
     function IncreaseBalance() {
         cairo1Contract.increase_balance(10)
             .then((resp: InvokeFunctionResponse) => {
-                console.log("resp =", resp.transaction_hash)
+                console.log("increaseBalance txH =", resp.transaction_hash)
                 setTransactionHash(resp.transaction_hash);
             })
             .catch((e: any) => { console.log("error increase balance =", e) });
@@ -77,18 +75,15 @@ export default function PlayWithCairo1() {
                             </Center>
                         </div>
                         {!!transactionHash && (
-                            <Box bg='green.200' color='black' borderWidth='1px'  borderColor='green.800' borderRadius='md' p={1} marginTop={2}>
-                                <Text className={styles.text1}>Transaction in progress</Text>
+                            <Box bg='green.200' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} marginTop={2}>
+                                <Text className={styles.text1}>Last transaction status :</Text>
+                                <TransactionStatus transactionHash={transactionHash}></TransactionStatus>
                             </Box>
                         )
-
                         }
-
                     </>
                 )
             }
-
         </>
-
     )
 }

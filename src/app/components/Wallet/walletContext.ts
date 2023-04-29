@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { GetBlockResponse, Provider,RpcProvider, ProviderInterface, AccountInterface } from "starknet";
+import {  ProviderInterface, AccountInterface } from "starknet";
 
 export interface WalletState {
     address:string,

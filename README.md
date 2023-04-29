@@ -9,6 +9,8 @@ Analyze the code to see how to create a such DAPP (start [here](src/app/page.tsx
 
 The DAPP is made in the next.js framework, using the experimental **appDir** feature. Coded in Typescript. Using React, Zustand context & Chaka-ui components.
 
+As the get-starknet.js library isn't today compatible with starknet.js V5, a temporary solution is implemented in this project, with the get-wallet-starknet.js library. To use only for development purpose ; 🚨 🚨 🚨 Do not use this lib to handle accounts containing valuable tokens 🚨 🚨 🚨.
+
 ## Getting Started 🚀
 
 First, run the development server:
@@ -19,7 +21,7 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-In Brave/Chrome, <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>I</kbd> to see debug informations.
+<kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>I</kbd> to see debug informations.
 
 ## Deploy on Vercel 🎊
 

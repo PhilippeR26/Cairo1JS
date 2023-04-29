@@ -2,19 +2,15 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
-import BlockDisplay from './components/client/Block/BlockDisplay';
 import InteractContract from './components/client/Contract/InteractContract';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
-
-import { AccountInterface, Contract, shortString, json, ProviderInterface, encode, GetBlockResponse, constants } from "starknet";
+import { encode } from "starknet";
 import { StarknetWindowObject, connect } from "get-wallet-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
-
-
 
 export default function Page() {
 
@@ -31,7 +27,6 @@ export default function Page() {
     const setProvider = useStoreWallet(state => state.setProvider);
 
     // Component context
-    const [isTesnet, SetIsTestnet] = useState<boolean | undefined>(undefined);
 
     const handleConnectClick = async () => {
         const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
@@ -52,9 +47,8 @@ export default function Page() {
     return (
         <ChakraProvider>
             <div>
-
                 <p className={styles.bgText}>
-                    Test get-wallet-starknet with starknet.js v5.8.0
+                    Test get-wallet-starknet with starknet.js v5.9.0
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} height={150} />
@@ -62,9 +56,7 @@ export default function Page() {
                 <p className={styles.bgText}>
                     Please connect to testnet network
                 </p>
-
                 <div>
-
                     {!isConnected ? (
                         <Center>
                             <Button
@@ -110,11 +102,7 @@ export default function Page() {
                         </>
                     )
                     }
-
-
                 </div>
-
-
             </div >
         </ChakraProvider>
     )
