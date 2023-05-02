@@ -23,18 +23,23 @@ export default function InteractContract() {
     const setBlockData = useStoreBlock((state) => state.setBlockData);
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
 
+    function catchBlock() {
+        providerSN?.getBlock("latest").then((resp: GetBlockResponse) => {
+            // console.log("end getBloc");
+            setBlockData({
+                timeStamp: resp.timestamp,
+                blockHash: resp.block_hash,
+                blockNumber: resp.block_number,
+                gasPrice: resp.gas_price ?? ""
+            }
+            )
+        })
+            .catch((e) => { console.log("error getBloc=", e) })
+    }
     useEffect(() => {
+        catchBlock()
         const tim = setInterval(() => {
-            providerSN?.getBlock("latest").then((resp: GetBlockResponse) => {
-                setBlockData({
-                    timeStamp: resp.timestamp,
-                    blockHash: resp.block_hash,
-                    blockNumber: resp.block_number,
-                    gasPrice: resp.gas_price ?? ""
-                }
-                )
-            })
-                .catch((e) => { console.log("error getBloc=", e) })
+            catchBlock()
             console.log("timerId=", tim);
         }
             , 5000 //ms
