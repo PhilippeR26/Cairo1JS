@@ -3,6 +3,7 @@ import Image from 'next/image'
 import styles from './page.module.css'
 import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
 import InteractContract from './components/client/Contract/InteractContract';
+
 import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
@@ -11,6 +12,7 @@ import { encode } from "starknet";
 import { StarknetWindowObject, connect } from "get-wallet-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
+import { SpecialButton } from './components/client/specialButton/SpecialButton';
 
 export default function Page() {
 
@@ -58,6 +60,7 @@ export default function Page() {
                 </p>
                 <div>
                     {!isConnected ? (
+                        <>
                         <Center>
                             <Button
                                 ml="4"
@@ -70,7 +73,11 @@ export default function Page() {
                             >
                                 Connect Wallet
                             </Button>
-                        </Center>
+                         </Center>
+                         <div>
+                            <SpecialButton></SpecialButton>
+                            </div>
+                       </>
                     ) : (
                         <>
                             <Center>
@@ -104,7 +111,7 @@ export default function Page() {
                     }
                 </div>
             </div >
-        </ChakraProvider>
+        </ChakraProvider >
     )
 }
 
