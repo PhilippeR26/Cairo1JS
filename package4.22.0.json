@@ -1,0 +1,40 @@
+{
+  "name": "airdrop-for-starknet",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.19",
+    "@chakra-ui/react": "^2.6.0",
+    "@emotion/react": "^11.10.8",
+    "@emotion/styled": "^11.10.8",
+    "@types/node": "18.16.3",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.1",
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "framer-motion": "^10.12.4",
+    "get-starknet": "^2.0.0",
+    "get-starknet-core": "^2.0.0",
+    "material-react-toastify": "^2.0.1",
+    "next": "13.4",
+    "next.js": "^1.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "server-only": "^0.0.1",
+    "sharp": "^0.32.1",
+    "starknet": "^4.22.0",
+    "swr": "^2.1.5",
+    "typescript": "^5.0.4",
+    "zustand": "^4.3.7"
+  },
+  "devDependencies": {
+    "encoding": "^0.1.13",
+    "simple-zustand-devtools": "^1.1.0"
+  }
+}
