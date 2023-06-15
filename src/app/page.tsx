@@ -8,7 +8,7 @@ import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
-import { encode } from "starknet";
+import { Provider, encode } from "starknet";
 import { StarknetWindowObject, connect } from "get-wallet-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
@@ -32,7 +32,7 @@ export default function Page() {
 
     const handleConnectClick = async () => {
         const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-        await wallet?.enable({ starknetVersion: "v5" } as any);
+        await wallet?.enable({ starknetVersion: "v4" } as any);
         setWallet(wallet);
         const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
         setAddressAccount(addr);
@@ -42,7 +42,8 @@ export default function Page() {
         }
         if (wallet?.isConnected) {
             setChain(wallet.chainId); // not provided by Braavos
-            setProvider(wallet.provider);
+            // setProvider(wallet.provider); // ********** for serial
+            setProvider(new Provider({ sequencer: { baseUrl: "http://127.0.0.1:5050" } })); // ************* debug in devnet *********
         }
     }
 
@@ -61,23 +62,23 @@ export default function Page() {
                 <div>
                     {!isConnected ? (
                         <>
-                        <Center>
-                            <Button
-                                ml="4"
-                                textDecoration="none !important"
-                                outline="none !important"
-                                boxShadow="none !important"
-                                onClick={() => {
-                                    handleConnectClick();
-                                }}
-                            >
-                                Connect Wallet
-                            </Button>
-                         </Center>
-                         <div>
-                            <SpecialButton></SpecialButton>
+                            <Center>
+                                <Button
+                                    ml="4"
+                                    textDecoration="none !important"
+                                    outline="none !important"
+                                    boxShadow="none !important"
+                                    onClick={() => {
+                                        handleConnectClick();
+                                    }}
+                                >
+                                    Connect Wallet
+                                </Button>
+                            </Center>
+                            <div>
+                                <SpecialButton></SpecialButton>
                             </div>
-                       </>
+                        </>
                     ) : (
                         <>
                             <Center>
