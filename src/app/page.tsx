@@ -30,7 +30,7 @@ export default function Page() {
 
     const handleConnectClick = async () => {
         const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-        await wallet?.enable({ starknetVersion: "v5" } as any);
+        await wallet?.enable({ starknetVersion: "v4" } as any); // should be v5, but necessary to fake ArgentX
         setWallet(wallet);
         const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
         setAddressAccount(addr);
