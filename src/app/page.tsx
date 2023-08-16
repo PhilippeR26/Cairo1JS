@@ -7,8 +7,8 @@ import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
-import { encode } from "starknet";
-import { StarknetWindowObject, connect } from "get-wallet-starknet";
+import { encode, Provider } from "starknet";
+import { StarknetWindowObject, connect } from "get-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
 
@@ -40,7 +40,8 @@ export default function Page() {
         }
         if (wallet?.isConnected) {
             setChain(wallet.chainId); // not provided by Braavos
-            setProvider(wallet.provider);
+            setProvider(wallet.provider); // ********** for serial
+            // setProvider(new Provider({ sequencer: { baseUrl: "http://127.0.0.1:5050" } })); // ************* debug in devnet *********
         }
     }
 
