@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Airdrop-for-Starknet',
-  description: 'Airdrop on Starknet network',
+  title: 'Cairo1-JS',
+  description: 'Demo of Starknet.js with Cairo 1',
 }
 
 export default function RootLayout({
