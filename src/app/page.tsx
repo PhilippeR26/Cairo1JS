@@ -1,4 +1,7 @@
 "use client";
+// DAPP Demo of Starknet, with Next.js
+// CTRL+SHIFT+I for the debug
+
 import Image from 'next/image'
 import styles from './page.module.css'
 import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
@@ -7,10 +10,11 @@ import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
-import { encode, Provider } from "starknet";
+import { constants, encode, Provider, shortString, typedData, WeierstrassSignatureType } from "starknet";
 import { StarknetWindowObject, connect } from "get-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
+import { sign } from 'crypto';
 
 export default function Page() {
 
@@ -30,7 +34,7 @@ export default function Page() {
 
     const handleConnectClick = async () => {
         const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-        await wallet?.enable({ starknetVersion: "v4" } as any); // should be v5, but necessary to fake ArgentX
+        await wallet?.enable({ starknetVersion: "v5" } as any);
         setWallet(wallet);
         const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
         setAddressAccount(addr);
@@ -41,9 +45,55 @@ export default function Page() {
         if (wallet?.isConnected) {
             setChain(wallet.chainId); // not provided by Braavos
             setProvider(wallet.provider); // ********** for serial
+            console.log(wallet.provider);
             // setProvider(new Provider({ sequencer: { baseUrl: "http://127.0.0.1:5050" } })); // ************* debug in devnet *********
         }
     }
+
+    const handleSignEIP712=async()=>{
+        const typedDataValidate: typedData.TypedData = {
+            domain: {
+                chainId: "Starknet Mainnet",
+                name: "Dappland",
+                version: "1.0",
+            },
+            message: {
+                dappKey: "10kswap",
+                rating: 5,
+            },
+            primaryType: "Message1",
+            types: {
+                Message1: [
+                    {
+                        name: "dappKey",
+                        type: "string",
+                    },
+                    {
+                        name: "rating",
+                        type: "felt",
+                    },
+                ],
+                StarkNetDomain: [
+                    {
+                        name: "name",
+                        type: "string",
+                    },
+                    {
+                        name: "chainId",
+                        type: "string",
+                    },
+                    {
+                        name: "version",
+                        type: "string",
+                    },
+                ],
+            },
+        }; 
+        if (accountFromContext) {
+        const signature = await accountFromContext.signMessage(typedDataValidate) as WeierstrassSignatureType;
+    const res = await accountFromContext.verifyMessage(typedDataValidate, signature);
+    console.log("signature =",signature,"\nResult =",res);
+    }}
 
     return (
         <ChakraProvider>
@@ -96,6 +146,24 @@ export default function Page() {
                                     chain = {chainFromContext}<br />
                                     isConnected={isConnected ? "Yes" : "No"}<br />
                                     account.address ={accountFromContext?.address}
+                                </p>
+                            </Box>
+                            <Box bg='blue.200' color='black' borderWidth='2px' borderRadius='md'>
+                                <Center>
+                                    <Button
+                                        ml="4"
+                                        textDecoration="none !important"
+                                        outline="none !important"
+                                        boxShadow="none !important"
+                                        onClick={() => {
+                                            handleSignEIP712();
+                                        }}
+                                    >
+                                        Sign EIP712
+                                    </Button>
+                                </Center>
+                                <p className={styles.text1}>
+                                    test
                                 </p>
                             </Box>
                             {!!providerFromContext &&
