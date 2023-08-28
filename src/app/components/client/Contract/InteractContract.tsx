@@ -10,9 +10,9 @@ import PlayWithCairo1 from "./PlayWithCairo1";
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
-// Test a Cairo 1 contrat already deployed in testnet:
+// Test a Cairo 1 contrat already deployed in testnet2:
 const addrETH = "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7";
-const addrTEST = "0x07394cBe418Daa16e42B87Ba67372d4AB4a5dF0B05C6e554D158458Ce245BC10";
+const addrTEST = "0x1e8294b01f549d27e135dbe54d30704ee4d3a6c6f9007e14e78010fc77e6c1d";
 
 export default function InteractContract() {
     // wallet context

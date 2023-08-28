@@ -37,5 +37,6 @@ yarn-error.log*
 next-env.d.ts
 /scripts-ts-node/
 package-lock.json
+yarn.lock
 A1priv/A1priv.ts
 /A1priv/

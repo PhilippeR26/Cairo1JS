@@ -10,10 +10,12 @@ import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
-import { constants, encode, Provider, shortString, typedData, WeierstrassSignatureType } from "starknet";
+import { Account, cairo, constants, Contract, encode, Provider, shortString, typedData, WeierstrassSignatureType } from "starknet";
 import { StarknetWindowObject, connect } from "get-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
+import { erc20Abi } from "./contracts/abis/ERC20abi"
+
 import { sign } from 'crypto';
 
 export default function Page() {
@@ -50,7 +52,7 @@ export default function Page() {
         }
     }
 
-    const handleSignEIP712=async()=>{
+    const handleSignEIP712 = async () => {
         const typedDataValidate: typedData.TypedData = {
             domain: {
                 chainId: "Starknet Mainnet",
@@ -88,12 +90,31 @@ export default function Page() {
                     },
                 ],
             },
-        }; 
+        };
         if (accountFromContext) {
-        const signature = await accountFromContext.signMessage(typedDataValidate) as WeierstrassSignatureType;
-    const res = await accountFromContext.verifyMessage(typedDataValidate, signature);
-    console.log("signature =",signature,"\nResult =",res);
-    }}
+            const signature = await accountFromContext.signMessage(typedDataValidate) as WeierstrassSignatureType;
+            const res = await accountFromContext.verifyMessage(typedDataValidate, signature);
+            console.log("signature =", signature, "\nResult =", res);
+        }
+    }
+
+    const handleMultiCall = async () => {
+        if (accountFromContext && wallet) {
+            const contractTST = new Contract(erc20Abi, "0x1e8294b01f549d27e135dbe54d30704ee4d3a6c6f9007e14e78010fc77e6c1d", wallet?.provider);
+            contractTST.connect(accountFromContext);
+            const transaction1 = contractTST.populate("mint", {
+                to: "0x060606d9fb329755e3849bc98d6aa284e946d92791f535f1cb0bd76b89d6a47d",
+                amount: cairo.uint256(100)
+            });
+            const transaction2 = contractTST.populate("mint", {
+                to: "0x069a9f965e3c8d7d84007904f3d872d90d075d156b1fc57624e560cf9a9c7f70",
+                amount: cairo.uint256(100)
+            });
+            const th = await accountFromContext.execute([transaction1, transaction2]);
+            await wallet.provider.waitForTransaction(th.transaction_hash);
+            console.log("Minted x2.");
+        }
+    }
 
     return (
         <ChakraProvider>
@@ -160,6 +181,17 @@ export default function Page() {
                                         }}
                                     >
                                         Sign EIP712
+                                    </Button> 
+                                    <Button
+                                        ml="4"
+                                        textDecoration="none !important"
+                                        outline="none !important"
+                                        boxShadow="none !important"
+                                        onClick={() => {
+                                            handleMultiCall();
+                                        }}
+                                    >
+                                        Execute MultiCall
                                     </Button>
                                 </Center>
                                 <p className={styles.text1}>
