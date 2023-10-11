@@ -19,6 +19,7 @@
 .DS_Store
 *.pem
 .yalc
+yarn.lock
 
 # debug
 npm-debug.log*
