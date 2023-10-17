@@ -10,7 +10,7 @@ import { useStoreWallet } from './components/Wallet/walletContext';
 import { encode, Provider } from "starknet";
 import { StarknetWindowObject, connect } from "get-starknet";
 
-import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
+import starknetjsImg from "../../public/Images/StarkNet-JS_logo.png";
 
 export default function Page() {
 
@@ -49,7 +49,7 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v3.0.1 with starknet.js v5.17.0
+                    Test get-starknet v3.0.1 with starknet.js v5.21.0
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} height={150} />
