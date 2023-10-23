@@ -6,13 +6,12 @@ import { useStoreWallet } from '../../Wallet/walletContext';
 
 import GetBalance from "./GetBalance";
 import PlayWithCairo1 from "./PlayWithCairo1";
+import * as constants from "../../../../type/constants";
 
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 // Test a Cairo 1 contrat already deployed in testnet:
-const addrETH = "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7";
-const addrTEST = "0x07394cBe418Daa16e42B87Ba67372d4AB4a5dF0B05C6e554D158458Ce245BC10";
 
 export default function InteractContract() {
     // wallet context
@@ -79,9 +78,9 @@ export default function InteractContract() {
             {!!blockFromContext.blockNumber &&
                 <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
                     <Center> Updated each new block :</Center>
-                    <GetBalance tokenAddress={addrETH} ></GetBalance>
+                    <GetBalance tokenAddress={constants.addrETH} ></GetBalance>
                     <Divider borderColor='gray.600'></Divider>
-                    <GetBalance tokenAddress={addrTEST} ></GetBalance>
+                    <GetBalance tokenAddress={constants.addrTEST} ></GetBalance>
 
                 </Box>
             }

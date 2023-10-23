@@ -39,7 +39,7 @@ export default function PlayWithCairo1() {
         , [blockFromContext.blockNumber]); // balance updated at each block
 
 
-    function IncreaseBalance() {
+    function increaseBalance() {
         cairo1Contract.increase_balance(10)
             .then((resp: InvokeFunctionResponse) => {
                 console.log("increaseBalance txH =", resp.transaction_hash)
@@ -67,7 +67,7 @@ export default function PlayWithCairo1() {
                                     boxShadow="none !important"
                                     bg='green.100'
                                     onClick={() => {
-                                        IncreaseBalance();
+                                        increaseBalance();
                                     }}
                                 >
                                     Increase balance (+10)
