@@ -22,7 +22,8 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.  
-<kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>I</kbd> to see debug informations.
+<kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>I</kbd> to see debug informations.  
+In `src/app/(site)/components/server/VisualWrapper.tsx`, you can set `DEBUG` to `true` to visualize which component are server rendered (RSC).
 
 ## Deploy on Vercel 🎊
 

@@ -1,6 +1,8 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { ProviderInterface, GetBlockResponse } from "starknet";
-import { useStoreBlock } from "./blockContext";
+import { useStoreBlock } from "../../server/blockContext";
 import { Text, Divider } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 

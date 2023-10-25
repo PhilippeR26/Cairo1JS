@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { GetBlockResponse } from "starknet";
 
-import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
-import { useStoreWallet } from '../../Wallet/walletContext';
+import { useStoreBlock, dataBlockInit } from "../../server/blockContext";
+import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 import GetBalance from "./GetBalance";
 import PlayWithCairo1 from "./PlayWithCairo1";
@@ -59,39 +59,12 @@ export default function InteractContract() {
 
     return (
         <>
-            <Box bg='gray.300' color='black' borderWidth='1px' borderRadius='lg'>
-                {!blockFromContext.blockNumber ? (
-                    <Center>
-                        <Spinner color="blue" size="sm" mr={4} />  Fetching data ...
-                    </Center>
-                ) :
-                    (
-                        <>
-                            <Text className={styles.text1}>Last block number = {blockFromContext.blockNumber} timerId = {timerId ? "Set" : "Not set"} </Text>
-                            <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
-                            <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
-                            <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
-                            <Divider></Divider>
-                        </>
-                    )
-                }
-            </Box>
-            {!!blockFromContext.blockNumber &&
-                <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
-                    <Center> Updated each new block :</Center>
-                    <GetBalance tokenAddress={addrETH} ></GetBalance>
-                    <Divider borderColor='gray.600'></Divider>
-                    <GetBalance tokenAddress={addrTEST} ></GetBalance>
-
-                </Box>
-            }
             {!!blockFromContext.blockNumber &&
                 <Box bg='mediumaquamarine' color='black' borderWidth='3px' borderColor='green.800' borderRadius='xl' p={2}>
                     <>
                         <Text textAlign='center' fontSize={20}>Balance of Cairo 1 🦀 contract :  </Text>
                         <PlayWithCairo1></PlayWithCairo1>
                     </>
-
                 </Box>
             }
         </>

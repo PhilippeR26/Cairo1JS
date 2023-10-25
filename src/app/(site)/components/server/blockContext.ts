@@ -1,4 +1,3 @@
-"use client";
 import { create } from "zustand";
 
 export interface DataBlock {
@@ -10,9 +9,9 @@ export interface DataBlock {
 
 export const dataBlockInit:DataBlock={
     timeStamp: 0,
-    blockHash: "",
+    blockHash: "N/A",
     blockNumber: 0,
-    gasPrice: "",
+    gasPrice: "N/A",
 }
 
 export interface BlockState {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Contract, InvokeFunctionResponse } from "starknet";
 
-import { useStoreBlock } from "../Block/blockContext";
-import { useStoreWallet } from '../../Wallet/walletContext';
+import { useStoreBlock } from "../../server/blockContext";
+import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 import { Text, Button, Center, Spinner, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
