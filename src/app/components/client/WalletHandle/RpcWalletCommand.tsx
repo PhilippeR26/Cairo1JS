@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { AddStarknetChainParameters, RequestAccountsParameters, SwitchStarknetChainParameter, WatchAssetParameters } from "@/type/types";
 import { Response, callRequest } from "./callRequest";
+import { formatAddress } from "@/utils/format";
 
 type Props = {
     command: constants.CommandWallet,
@@ -65,7 +66,7 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
                 let txtResponse: string = "N/A";
                 if (typeof (response) == "string") { txtResponse = response } else {
                     const tmp = response as string[];
-                    txtResponse = encode.addHexPrefix(encode.removeHexPrefix(tmp[0]).padStart(64, "0"));
+                    txtResponse = formatAddress(tmp[0]);
                 }
                 setResponse(txtResponse);
                 onOpen();

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GetBlockResponse, constants as SNconstants } from "starknet";
+import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
 import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core/StarknetWindowObject";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
@@ -91,9 +91,10 @@ export default function WalletHandle() {
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_switchStarknetChain}
-                    // param={SNconstants.StarknetChainId.SN_MAIN}
+                    param={SNconstants.StarknetChainId.SN_MAIN} // none are working
                     // param="SN_MAIN"
-                    param="mainnet-alpha"
+                    // param="mainnet-alpha"
+                    // param={shortString.encodeShortString("mainnet-alpha")}
                 />
 
                 <RpcWalletCommand

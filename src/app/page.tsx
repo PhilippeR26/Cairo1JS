@@ -17,6 +17,7 @@ import { scanObjectForWallets } from './core/wallet/scan';
 import { isWalletObj } from './core/wallet/isWalletObject';
 import { callRequest } from './components/client/WalletHandle/callRequest';
 import { isBooleanObject } from 'util/types';
+import { formatAddress } from '@/utils/format';
 
 export default function Page() {
 
@@ -54,7 +55,7 @@ export default function Page() {
             const result=await callRequest({type:"wallet_requestAccounts"});
             console.log("result=",result);
             if (Array.isArray(result)) {
-            const addr = encode.addHexPrefix(encode.removeHexPrefix(result[0]).padStart(64, "0"));
+            const addr = formatAddress( result[0]);
             setAddressAccount(addr);
             }
             setConnected(wallet?.isConnected);
