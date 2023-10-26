@@ -109,7 +109,7 @@ export interface AddDeclareTransactionParameters {
     /**
      * The class ABI, as supplied by the user declaring the class
      */
-    abi?: string
+    abi?: any
   }
 }
 export interface AddDeclareTransactionResult {

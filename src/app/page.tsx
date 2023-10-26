@@ -17,7 +17,7 @@ import { scanObjectForWallets } from './core/wallet/scan';
 import { isWalletObj } from './core/wallet/isWalletObject';
 import { callRequest } from './components/client/WalletHandle/callRequest';
 import { isBooleanObject } from 'util/types';
-import { formatAddress } from '@/utils/format';
+import { formatAddress } from '@/utils/utils';
 
 export default function Page() {
 

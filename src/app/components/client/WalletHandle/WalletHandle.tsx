@@ -1,18 +1,15 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
+import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
 import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core/StarknetWindowObject";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
 import * as constants from "../../../../utils/constants";
-
-
-
-import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
-import React from 'react';
 import RpcWalletCommand from './RpcWalletCommand';
-import { formatAddress } from '@/utils/format';
+import { formatAddress } from '@/utils/utils';
 
 function sendRequest(command: constants.CommandWallet, param: any) {
 
@@ -35,9 +32,9 @@ export default function WalletHandle() {
         () => {
             const handleAccount: AccountChangeEventHandler = (accounts: string[] | undefined) => {
                 console.log("accounts=", accounts);
-                if (!!accounts) { 
-                    const textAddr=formatAddress(accounts as unknown as string)
-                    setRespChangedAccount(textAddr); 
+                if (!!accounts) {
+                    const textAddr = formatAddress(accounts as unknown as string)
+                    setRespChangedAccount(textAddr);
                 };
                 setTime1(getTime());
             };
@@ -79,10 +76,11 @@ export default function WalletHandle() {
                     <Center>Response: {respChangedNetwork} </Center>
                 </Box>
             </SimpleGrid>
+
             <SimpleGrid minChildWidth="305px" spacing="20px" paddingBottom="20px">
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_requestAccounts}
-                    param={""}
+                    param=""
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_watchAsset}
@@ -92,30 +90,35 @@ export default function WalletHandle() {
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_switchStarknetChain}
                     param={SNconstants.StarknetChainId.SN_MAIN} // none are working
-                    // param="SN_MAIN"
-                    // param="mainnet-alpha"
-                    // param={shortString.encodeShortString("mainnet-alpha")}
+                // param="SN_MAIN"
+                // param="mainnet-alpha"
+                // param={shortString.encodeShortString("mainnet-alpha")}
+                />
+                <RpcWalletCommand
+                    command={constants.CommandWallet.wallet_addStarknetChain}
+                    param="ZORG"
                 />
 
                 <RpcWalletCommand
-                    command={constants.CommandWallet.wallet_addStarknetChain}
-                    param={"ZORG"}
-                    symbol={"ZORG"}
+                    command={constants.CommandWallet.starknet_addInvokeTransaction}
+                    param="10"
                 />
-
-                <Box color='black' borderWidth='0px' borderRadius='lg'>
-                    <Center><Button bg='blue.300'>starknet_addInvokeTransaction</Button></Center>
-                </Box>
-                <Box color='black' borderWidth='0px' borderRadius='lg'>
-                    <Center><Button bg='blue.300'>starknet_addDeclareTransaction</Button></Center>
-                </Box>
-                <Box color='black' borderWidth='0px' borderRadius='lg'>
-                    <Center><Button bg='blue.300'>starknet_addDeployAccountTransaction</Button></Center>
-                </Box>
-                <Box color='black' borderWidth='0px' borderRadius='lg'>
-                    <Center><Button bg='blue.300'>starknet_signTypedData</Button></Center>
-                </Box>
+                {/* <Tooltip hasArrow label="Declare only once the same contract. Change contract each time." bg='yellow.100' color='black'> */}
+                    <RpcWalletCommand
+                        command={constants.CommandWallet.starknet_addDeclareTransaction}
+                        param="Object"
+                    />
+                {/* </Tooltip> */}
+                <RpcWalletCommand
+                    command={constants.CommandWallet.starknet_addDeployAccountTransaction}
+                    param="Object"
+                />
+                 <RpcWalletCommand
+                    command={constants.CommandWallet.starknet_signTypedData}
+                    param="Object"
+                />
             </SimpleGrid>
+
             <SimpleGrid minChildWidth="320px" spacing="20px" paddingBottom="20px">
                 <Box bg="green.200" color='black' borderWidth='1px' borderRadius='lg'>
                     <Center>.id : {wallet?.id}</Center>
