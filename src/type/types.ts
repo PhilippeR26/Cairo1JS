@@ -29,3 +29,11 @@ export interface AddStarknetChainParameters {
     } // Currently ignored.
     iconUrls?: string[] // Currently ignored.
 }
+
+export interface RequestAccountsParameters {
+    /**
+     * If true, the wallet will not show the wallet-unlock UI in case of a locked wallet,
+     * nor the dApp-approve UI in case of a non-allowed dApp.
+     */
+    silentMode?: boolean
+  }

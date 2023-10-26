@@ -1,5 +1,5 @@
 {
-  "name": "Cairo1JS-for-starknet",
+  "name": "cairo1js_for_starknet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,8 +19,6 @@
     "axios": "^1.5.1",
     "dotenv": "^16.3.1",
     "framer-motion": "^10.16.4",
-    "get-starknet": "3.0.1",
-    "get-starknet-core": "^3.2.0",
     "material-react-toastify": "^2.0.1",
     "next": "^13.5.5",
     "react": "18.2.0",

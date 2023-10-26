@@ -8,10 +8,13 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
 import { encode, Provider } from "starknet";
-import { StarknetWindowObject, connect } from "get-starknet";
+import { StarknetWindowObject,  } from "./core/StarknetWindowObject";
+//import { connect } from "get-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
+import { scanObjectForWallets } from './core/wallet/scan';
+import { isWalletObj } from './core/wallet/isWalletObject';
 
 export default function Page() {
 
@@ -31,20 +34,23 @@ export default function Page() {
     // Component context
 
     const handleConnectClick = async () => {
-        const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-        setMyWallet(wallet!);
-        await wallet?.enable({ starknetVersion: "v5" } as any); 
-        setWallet(wallet);
-        const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
-        setAddressAccount(addr);
-        setConnected(!!wallet?.isConnected);
-        if (wallet?.account) {
-            setAccount(wallet.account);
-        }
-        if (wallet?.isConnected) {
-            setChain(wallet.chainId); // not provided by Braavos
-            setProvider(wallet.provider); // ********** for serial
-            // setProvider(new Provider({ sequencer: { baseUrl: "http://127.0.0.1:5050" } })); // ************* debug in devnet *********
+        // const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
+        const wallets:StarknetWindowObject[]=scanObjectForWallets(window,isWalletObj);
+        // console.log("wallets=", wallets);
+        const wallet=wallets.find((wallet)=>wallet.id=="braavos");
+        console.log("wallet=", wallet);
+
+        if (!!wallet) {
+            setMyWallet(wallet); // zustand
+            // await wallet?.enable({ starknetVersion: "v5" } as any); //not allowed by new Braavos
+            setWallet(wallet); // local state
+            
+            const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
+            setAddressAccount(addr);
+            setConnected(!!wallet?.isConnected);
+            if (wallet?.isConnected) {
+                setChain(wallet.chainId); // not provided by Braavos
+            }
         }
     }
 
@@ -72,7 +78,7 @@ export default function Page() {
                                     handleConnectClick();
                                 }}
                             >
-                                Connect Wallet
+                                Connect Braavos Wallet
                             </Button>
                         </Center>
                     ) : (
@@ -112,8 +118,8 @@ export default function Page() {
                                             <InteractContract ></InteractContract>}
                                     </TabPanel>
                                     <TabPanel>
-                                            <p></p>
-                                            <WalletHandle></WalletHandle>
+                                        <p></p>
+                                        <WalletHandle></WalletHandle>
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>

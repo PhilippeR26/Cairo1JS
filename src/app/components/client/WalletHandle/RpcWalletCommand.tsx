@@ -4,7 +4,7 @@ import { GetBlockResponse, constants as SNconstants } from "starknet";
 import * as constants from "@/type/constants";
 import React, { useEffect, useState } from "react";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddStarknetChainParameters, SwitchStarknetChainParameter, WatchAssetParameters } from "@/type/types";
+import { AddStarknetChainParameters, RequestAccountsParameters, SwitchStarknetChainParameter, WatchAssetParameters } from "@/type/types";
 
 type Props = {
     command: constants.CommandWallet,
@@ -22,7 +22,7 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
     const walletFromContext = useStoreWallet(state => state.wallet);
     async function callCommand(command: constants.CommandWallet, param: string) {
         async function executeRequest(myRequest: Request): Promise<string> {
-            let resp: boolean | undefined = undefined;
+            let resp: any | undefined = undefined;
             let crash: boolean = false;
             try {
                 resp = await walletFromContext?.request(myRequest);
@@ -33,15 +33,38 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
             console.log("request resp,crash =", resp, crash);
             let txtResponse: string;
             if (crash) { txtResponse = "Error" } else {
-                switch (resp) {
-                    case true: { txtResponse = "True"; break; }
-                    case false: { txtResponse = "False"; break; }
-                    case undefined: { txtResponse = "Undefined"; break; }
+                switch (myRequest.type) {
+                    case constants.CommandWallet.wallet_addStarknetChain ||
+                        constants.CommandWallet.wallet_watchAsset ||
+                        constants.CommandWallet.wallet_switchStarknetChain: {
+                            switch (resp) {
+                                case true: { txtResponse = "True"; break; }
+                                case false: { txtResponse = "False"; break; }
+                                case undefined: { txtResponse = "Undefined"; break; }
+                                default: {txtResponse="Imposible case 1"}
+                            }
+                            break;
+                        }
+                    case constants.CommandWallet.wallet_requestAccounts: {
+                      txtResponse=resp[0].toString()  ;
+                    }
+                    default: { txtResponse = "N/A" }
                 }
             }
             return txtResponse;
         }
         switch (command) {
+            case constants.CommandWallet.wallet_requestAccounts: {
+                const param: RequestAccountsParameters = {};
+                const myRequest = {
+                    type: command,
+                    params: param
+                }
+                const txtResponse = await executeRequest(myRequest);
+                setResponse(txtResponse);
+                onOpen();
+                break;
+            }
             case constants.CommandWallet.wallet_watchAsset: {
                 const myAsset: WatchAssetParameters = {
                     type: "ERC20",

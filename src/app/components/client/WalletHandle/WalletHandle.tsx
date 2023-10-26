@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GetBlockResponse, constants as SNconstants } from "starknet";
-import { AccountChangeEventHandler, NetworkChangeEventHandler } from "get-starknet-core";
+import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core/StarknetWindowObject";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
@@ -26,29 +26,37 @@ export default function WalletHandle() {
     const providerSN = useStoreWallet(state => state.provider);
     const wallet = useStoreWallet(state => state.wallet);
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [respChangedAccount, setRespChangedAccount] = useState<string>("");
-    const [respChangedNetwork, setRespChangedNetwork] = useState<string>("...");
+    const [respChangedAccount, setRespChangedAccount] = useState<string>("N/A");
+    const [respChangedNetwork, setRespChangedNetwork] = useState<string>("N/A");
+    const [time1, setTime1] = useState<string>("N/A");
+    const [time2, setTime2] = useState<string>("N/A");
     useEffect(
         () => {
-            const handleAccount: AccountChangeEventHandler = (accounts: string[]) => { setRespChangedAccount(accounts[0]) };
+            const handleAccount: AccountChangeEventHandler = (accounts: string[] | undefined) => {
+                console.log("accounts=", accounts);
+                if (!!accounts) { setRespChangedAccount(accounts as unknown as string) };
+                setTime1(getTime());
+            };
             wallet?.on("accountsChanged", handleAccount);
 
             const handleNetwork: NetworkChangeEventHandler = (network: string | undefined) => {
+                console.log("network=", network);
                 if (!!network) { setRespChangedNetwork(network) };
+                setTime2(getTime());
             }
             wallet?.on("networkChanged", handleNetwork);
 
             return () => {
-                wallet?.off("accountsChanged", () => {});
-                wallet?.off('networkChanged', () => {});
+                wallet?.off("accountsChanged", () => { });
+                wallet?.off('networkChanged', () => { });
             }
         },
         []
 
     )
 
-    function getTime():string {
-        const date=new Date();
+    function getTime(): string {
+        const date = new Date();
         return date.toLocaleTimeString();
     }
 
@@ -58,19 +66,20 @@ export default function WalletHandle() {
             <SimpleGrid minChildWidth="250px" spacing="20px" paddingBottom="20px">
                 <Box bg="pink.200" color='black' borderWidth='1px' borderRadius='lg'>
                     <Center> Last accountsChanged event : </Center>
-                    <Center>Time: {getTime()} </Center>
-                    <Center>Response: {!!respChangedAccount? respChangedAccount.slice(0, 20) + "..." : "undefined"} </Center>
+                    <Center>Time: {time1} </Center>
+                    <Center>Response: {!!respChangedAccount ? respChangedAccount.slice(0, 20) + "..." : "undefined"} </Center>
                 </Box>
                 <Box bg="pink.200" color='black' borderWidth='1px' borderRadius='lg'>
                     <Center> Last networkChanged event : </Center>
-                    <Center>Time: {getTime()} </Center>
+                    <Center>Time: {time2} </Center>
                     <Center>Response: {respChangedNetwork} </Center>
                 </Box>
             </SimpleGrid>
             <SimpleGrid minChildWidth="305px" spacing="20px" paddingBottom="20px">
-                <Box color='black' borderWidth='0px' borderRadius='lg'>
-                    <Center> <Button bg='blue.300'>wallet_requestAccounts</Button> </Center>
-                </Box>
+                <RpcWalletCommand
+                    command={constants.CommandWallet.wallet_requestAccounts}
+                    param={""}
+                />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_watchAsset}
                     param={constants.addrxASTR}
@@ -86,6 +95,7 @@ export default function WalletHandle() {
                     param={"ZORG"}
                     symbol={"ZORG"}
                 />
+
                 <Box color='black' borderWidth='0px' borderRadius='lg'>
                     <Center><Button bg='blue.300'>starknet_addInvokeTransaction</Button></Center>
                 </Box>
