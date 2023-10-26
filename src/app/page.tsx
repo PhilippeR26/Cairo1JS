@@ -15,19 +15,26 @@ import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
 import { scanObjectForWallets } from './core/wallet/scan';
 import { isWalletObj } from './core/wallet/isWalletObject';
+import { callRequest } from './components/client/WalletHandle/callRequest';
+import { isBooleanObject } from 'util/types';
 
 export default function Page() {
 
     // Connect Argent-X or Braavos wallet
     const [isConnected, setConnected] = useState(false);
-    const [wallet, setWallet] = useState<StarknetWindowObject | null>(null);
+    // const [wallet, setWallet] = useState<StarknetWindowObject | null>(null);
     const addressAccountFromContext = useStoreWallet(state => state.address);
     const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
+
+    const myWallet = useStoreWallet(state => state.wallet);
     const setMyWallet = useStoreWallet(state => state.setMyWallet);
+
     const chainFromContext = useStoreWallet(state => state.chain);
     const setChain = useStoreWallet(state => state.setChain);
+
     const accountFromContext = useStoreWallet(state => state.account);
     const setAccount = useStoreWallet(state => state.setAccount);
+
     const providerFromContext = useStoreWallet(state => state.provider);
     const setProvider = useStoreWallet(state => state.setProvider);
 
@@ -43,11 +50,14 @@ export default function Page() {
         if (!!wallet) {
             setMyWallet(wallet); // zustand
             // await wallet?.enable({ starknetVersion: "v5" } as any); //not allowed by new Braavos
-            setWallet(wallet); // local state
-            
-            const addr = encode.addHexPrefix(encode.removeHexPrefix(wallet?.selectedAddress ?? "0x").padStart(64, "0"));
+            //setWallet(wallet); // local state
+            const result=await callRequest({type:"wallet_requestAccounts"});
+            console.log("result=",result);
+            if (Array.isArray(result)) {
+            const addr = encode.addHexPrefix(encode.removeHexPrefix(result[0]).padStart(64, "0"));
             setAddressAccount(addr);
-            setConnected(!!wallet?.isConnected);
+            }
+            setConnected(wallet?.isConnected);
             if (wallet?.isConnected) {
                 setChain(wallet.chainId); // not provided by Braavos
             }
@@ -58,7 +68,7 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v3.0.1 with starknet.js v5.21.0
+                    Test experimental Braavos wallet with starknet.js v5.21.0
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} height={150} />
@@ -93,7 +103,7 @@ export default function Page() {
                                         setConnected(false);
                                     }}
                                 >
-                                    {accountFromContext
+                                    {addressAccountFromContext
                                         ? `Your wallet : ${addressAccountFromContext?.slice(0, 7)}...${addressAccountFromContext?.slice(-4)} is connected`
                                         : "No Account"}
                                 </Button>
@@ -110,8 +120,8 @@ export default function Page() {
                                             <p className={styles.text1}>
                                                 address = {addressAccountFromContext}<br />
                                                 chain = {chainFromContext}<br />
-                                                isConnected={isConnected ? "Yes" : "No"}<br />
-                                                account.address ={accountFromContext?.address}
+                                                isConnected={isConnected ? "Yes" : "No"}
+                                                
                                             </p>
                                         </Box>
                                         {!!providerFromContext &&

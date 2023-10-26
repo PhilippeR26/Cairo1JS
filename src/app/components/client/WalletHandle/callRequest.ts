@@ -1,15 +1,14 @@
 
-import { isBooleanObject } from "util/types";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { RpcMessage } from "@/app/core/StarknetWindowObject";
 
 type Response = Pick<RpcMessage, "result">["result"];
 
-export async function CallRequest(call: Omit<RpcMessage, "result">): Promise<string> {
+export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Response|string> {
     const myWallet = useStoreWallet.getState().wallet;
     if (!myWallet) {
         console.log("No wallet connected.");
-        throw new Error("No wallet connected.")
+        return ("No wallet");
     }
     let resp: Response | undefined = undefined;
     let crash: boolean = false;
@@ -21,9 +20,7 @@ export async function CallRequest(call: Omit<RpcMessage, "result">): Promise<str
         crash = true;
     }
     console.log("request resp,crash =", resp, crash);
-    let txtResponse: string;
-    if (crash) { return txtResponse = "Error" }
-    if (isBooleanObject(resp)) { return String(resp)}
-
-    return "N/A";
+    //let txtResponse: string;
+    if (crash || !resp) { return "Error" }
+    return resp;
 }
