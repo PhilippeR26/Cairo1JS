@@ -1,6 +1,7 @@
 import { CairoAssembly } from "starknet";
 
 export const contractCasm: CairoAssembly = {
+  "pythonic_hints":[],
   "prime": "0x800000000000011000000000000000000000000000000000000000000000001",
   "compiler_version": "2.1.0",
   "bytecode": [
@@ -1042,14 +1043,14 @@ export const contractCasm: CairoAssembly = {
     "EXTERNAL": [
       {
         "selector": "0x96b9e9fe5d74c2007f837942b56b3a984ea0490884e056f48ca4f3f93c769",
-        "offset": 0,
+        "offset": "0",
         "builtins": [
           "range_check"
         ]
       },
       {
         "selector": "0x11e8e8caedade09c333b865af974b57a88a87e673cee2ab5920dba841924fc1",
-        "offset": 177,
+        "offset": "177",
         "builtins": [
           "range_check"
         ]
