@@ -2,7 +2,7 @@
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { RpcMessage } from "@/app/core/StarknetWindowObject";
 
-type Response = Pick<RpcMessage, "result">["result"];
+export type Response = Pick<RpcMessage, "result">["result"];
 
 export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Response|string> {
     const myWallet = useStoreWallet.getState().wallet;

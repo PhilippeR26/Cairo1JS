@@ -4,7 +4,7 @@ import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
-import * as constants from "../../../../type/constants";
+import * as constants from "../../../../utils/constants";
 
 
 
@@ -12,6 +12,7 @@ import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure,
 import styles from '../../../page.module.css'
 import React from 'react';
 import RpcWalletCommand from './RpcWalletCommand';
+import { formatAddress } from '@/utils/format';
 
 function sendRequest(command: constants.CommandWallet, param: any) {
 
@@ -34,7 +35,10 @@ export default function WalletHandle() {
         () => {
             const handleAccount: AccountChangeEventHandler = (accounts: string[] | undefined) => {
                 console.log("accounts=", accounts);
-                if (!!accounts) { setRespChangedAccount(accounts as unknown as string) };
+                if (!!accounts) { 
+                    const textAddr=formatAddress(accounts as unknown as string)
+                    setRespChangedAccount(textAddr); 
+                };
                 setTime1(getTime());
             };
             wallet?.on("accountsChanged", handleAccount);
@@ -62,7 +66,7 @@ export default function WalletHandle() {
 
     return (
         <>
-            <Center>'Invoke/declare/deploy account' recommended in Devnet in a fork of testnet</Center>
+            <Center></Center>
             <SimpleGrid minChildWidth="250px" spacing="20px" paddingBottom="20px">
                 <Box bg="pink.200" color='black' borderWidth='1px' borderRadius='lg'>
                     <Center> Last accountsChanged event : </Center>
@@ -87,7 +91,9 @@ export default function WalletHandle() {
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_switchStarknetChain}
-                    param={SNconstants.StarknetChainId.SN_MAIN}
+                    // param={SNconstants.StarknetChainId.SN_MAIN}
+                    // param="SN_MAIN"
+                    param="mainnet-alpha"
                 />
 
                 <RpcWalletCommand

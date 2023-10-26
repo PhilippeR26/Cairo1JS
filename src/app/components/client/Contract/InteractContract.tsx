@@ -6,7 +6,7 @@ import { useStoreWallet } from '../../Wallet/walletContext';
 
 import GetBalance from "./GetBalance";
 import PlayWithCairo1 from "./PlayWithCairo1";
-import * as constants from "../../../../type/constants";
+import * as constants from "../../../../utils/constants";
 
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'

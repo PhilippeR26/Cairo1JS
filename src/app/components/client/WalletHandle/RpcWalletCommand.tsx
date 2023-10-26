@@ -1,10 +1,11 @@
 import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
-import { GetBlockResponse, constants as SNconstants } from "starknet";
+import { GetBlockResponse, constants as SNconstants, encode, shortString } from "starknet";
 
-import * as constants from "@/type/constants";
+import * as constants from "@/utils/constants";
 import React, { useEffect, useState } from "react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { AddStarknetChainParameters, RequestAccountsParameters, SwitchStarknetChainParameter, WatchAssetParameters } from "@/type/types";
+import { Response, callRequest } from "./callRequest";
 
 type Props = {
     command: constants.CommandWallet,
@@ -21,38 +22,38 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
     const [response, setResponse] = useState<string>("N/A");
     const walletFromContext = useStoreWallet(state => state.wallet);
     async function callCommand(command: constants.CommandWallet, param: string) {
-        async function executeRequest(myRequest: Request): Promise<string> {
-            let resp: any | undefined = undefined;
-            let crash: boolean = false;
-            try {
-                resp = await walletFromContext?.request(myRequest);
-            } catch {
-                (err: any) => { console.log("Wallet request", command, " failed.\n", err) };
-                crash = true;
-            }
-            console.log("request resp,crash =", resp, crash);
-            let txtResponse: string;
-            if (crash) { txtResponse = "Error" } else {
-                switch (myRequest.type) {
-                    case constants.CommandWallet.wallet_addStarknetChain ||
-                        constants.CommandWallet.wallet_watchAsset ||
-                        constants.CommandWallet.wallet_switchStarknetChain: {
-                            switch (resp) {
-                                case true: { txtResponse = "True"; break; }
-                                case false: { txtResponse = "False"; break; }
-                                case undefined: { txtResponse = "Undefined"; break; }
-                                default: {txtResponse="Imposible case 1"}
-                            }
-                            break;
-                        }
-                    case constants.CommandWallet.wallet_requestAccounts: {
-                      txtResponse=resp[0].toString()  ;
-                    }
-                    default: { txtResponse = "N/A" }
-                }
-            }
-            return txtResponse;
-        }
+        // async function executeRequest(myRequest: Request): Promise<string> {
+        //     let resp: any | undefined = undefined;
+        //     let crash: boolean = false;
+        //     try {
+        //         resp = await walletFromContext?.request(myRequest);
+        //     } catch {
+        //         (err: any) => { console.log("Wallet request", command, " failed.\n", err) };
+        //         crash = true;
+        //     }
+        //     console.log("request resp,crash =", resp, crash);
+        //     let txtResponse: string;
+        //     if (crash) { txtResponse = "Error" } else {
+        //         switch (myRequest.type) {
+        //             case constants.CommandWallet.wallet_addStarknetChain ||
+        //                 constants.CommandWallet.wallet_watchAsset ||
+        //                 constants.CommandWallet.wallet_switchStarknetChain: {
+        //                     switch (resp) {
+        //                         case true: { txtResponse = "True"; break; }
+        //                         case false: { txtResponse = "False"; break; }
+        //                         case undefined: { txtResponse = "Undefined"; break; }
+        //                         default: {txtResponse="Imposible case 1"}
+        //                     }
+        //                     break;
+        //                 }
+        //             case constants.CommandWallet.wallet_requestAccounts: {
+        //               txtResponse=resp[0].toString()  ;
+        //             }
+        //             default: { txtResponse = "N/A" }
+        //         }
+        //     }
+        //     return txtResponse;
+        // }
         switch (command) {
             case constants.CommandWallet.wallet_requestAccounts: {
                 const param: RequestAccountsParameters = {};
@@ -60,7 +61,12 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
                     type: command,
                     params: param
                 }
-                const txtResponse = await executeRequest(myRequest);
+                const response = await callRequest(myRequest);
+                let txtResponse: string = "N/A";
+                if (typeof (response) == "string") { txtResponse = response } else {
+                    const tmp = response as string[];
+                    txtResponse = encode.addHexPrefix(encode.removeHexPrefix(tmp[0]).padStart(64, "0"));
+                }
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -73,13 +79,16 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
                         decimals: 10,
                         name: "ZOZOZO",
                         symbol: "ZZZ"
-                    } // decimals, name, symbol options are useless and are not taken into account by the Wallets!
+                    } // decimals, name, symbol options are useless and are not taken into account by the Wallet
                 };
                 const myRequest = {
                     type: command,
                     params: myAsset
                 }
-                const txtResponse = await executeRequest(myRequest);
+                const response = (await callRequest(myRequest)) as boolean;
+                const txtResponse: string = typeof (response) == "string" ?
+                    response :
+                    (response ? "Succeed" : "Fail");
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -87,20 +96,23 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
             case constants.CommandWallet.wallet_switchStarknetChain: {
                 const myChainId: SwitchStarknetChainParameter = {
                     chainId: param
-                } // hex of string
+                } // hex of encoded string
                 const myRequest = {
                     type: command,
                     params: myChainId
                 }
-                const txtResponse = await executeRequest(myRequest);
+                const response = (await callRequest(myRequest)) as boolean;
+                const txtResponse: string = typeof (response) == "string" ?
+                    response :
+                    (response ? "Succeed" : "Fail");
                 setResponse(txtResponse);
                 onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_addStarknetChain: {
                 const myChainId: AddStarknetChainParameters = {
-                    id: "0x0a",
-                    chainId: SNconstants.StarknetChainId.SN_MAIN,  // A 0x-prefixed hexadecimal string
+                    id: param,
+                    chainId: shortString.encodeShortString(param),  // A 0x-prefixed hexadecimal string
                     chainName: param,
                     baseUrl: "http://192.168.1.44:6060",
                     nativeCurrency: {
@@ -114,7 +126,10 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
                     type: command,
                     params: myChainId
                 }
-                const txtResponse = await executeRequest(myRequest);
+                const response = (await callRequest(myRequest)) as boolean;
+                const txtResponse: string = typeof (response) == "string" ?
+                    response :
+                    (response ? "Succeed" : "Fail");
                 setResponse(txtResponse);
                 onOpen();
                 break;
