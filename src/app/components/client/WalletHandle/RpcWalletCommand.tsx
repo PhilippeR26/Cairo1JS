@@ -1,4 +1,4 @@
-import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, forwardRef, Tooltip } from "@chakra-ui/react";
 import { CallData, GetBlockResponse, constants as SNconstants, TypedData, cairo, ec, encode, hash, shortString, stark } from "starknet";
 import React, { useEffect, useState } from "react";
 
@@ -18,14 +18,16 @@ import { wait } from "@/utils/utils";
 type Props = {
     command: constants.CommandWallet,
     symbol?: string,
-    param: string
+    param: string,
+    tip?:string
 };
 type Request = {
     type: any,
     params: any
 }
 
-export default function RpcWalletCommand({ command, symbol, param }: Props) {
+ export default function RpcWalletCommand({ command, symbol, param,tip }: Props) {
+//    export const RpcWalletCommand=forwardRef(({ command, symbol, param,tip }: Props,ref)=> {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [response, setResponse] = useState<string>("N/A");
     const walletFromContext = useStoreWallet(state => state.wallet);
@@ -33,7 +35,7 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
         switch (command) {
             case constants.CommandWallet.wallet_requestAccounts: {
                 const param: RequestAccountsParameters = {};
-                const myRequest = {
+                const myRequest:Request = {
                     type: command,
                     params: param
                 }
@@ -269,7 +271,7 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
                 break;
             }
             default: {
-                console.log("wrong Wallet command", command);
+                console.log("wrong Wallet command :", command);
                 break;
             }
         }
@@ -280,8 +282,12 @@ export default function RpcWalletCommand({ command, symbol, param }: Props) {
     return (
         <>
             <Box color='black' borderWidth='0px' borderRadius='lg'>
-                <Center><Button bg='blue.100' onClick={() => { callCommand(command, param) }
-                } >{command} {symbol}</Button></Center>
+                <Center>
+                    <Tooltip hasArrow label={tip} bg='yellow.100' color='black'>
+                    <Button bg='blue.100' onClick={() => { callCommand(command, param) }
+                } >{command} {symbol}</Button>
+                </Tooltip>
+                </Center>
                 <Modal
                     isOpen={isOpen}
                     onClose={onClose}

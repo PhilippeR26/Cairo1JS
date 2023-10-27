@@ -103,12 +103,11 @@ export default function WalletHandle() {
                     command={constants.CommandWallet.starknet_addInvokeTransaction}
                     param="10"
                 />
-                {/* <Tooltip hasArrow label="Declare only once the same contract. Change contract each time." bg='yellow.100' color='black'> */}
                     <RpcWalletCommand
                         command={constants.CommandWallet.starknet_addDeclareTransaction}
                         param="Object"
+                        tip="Declare only once the same contract. Change contract in DAPP code each time."
                     />
-                {/* </Tooltip> */}
                 <RpcWalletCommand
                     command={constants.CommandWallet.starknet_addDeployAccountTransaction}
                     param="Object"
