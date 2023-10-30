@@ -19,15 +19,15 @@ type Props = {
     command: constants.CommandWallet,
     symbol?: string,
     param: string,
-    tip?:string
+    tip?: string
 };
 type Request = {
     type: any,
     params: any
 }
 
- export default function RpcWalletCommand({ command, symbol, param,tip }: Props) {
-//    export const RpcWalletCommand=forwardRef(({ command, symbol, param,tip }: Props,ref)=> {
+export default function RpcWalletCommand({ command, symbol, param, tip }: Props) {
+    //    export const RpcWalletCommand=forwardRef(({ command, symbol, param,tip }: Props,ref)=> {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [response, setResponse] = useState<string>("N/A");
     const walletFromContext = useStoreWallet(state => state.wallet);
@@ -35,7 +35,7 @@ type Request = {
         switch (command) {
             case constants.CommandWallet.wallet_requestAccounts: {
                 const param: RequestAccountsParameters = {};
-                const myRequest:Request = {
+                const myRequest: Request = {
                     type: command,
                     params: param
                 }
@@ -197,7 +197,7 @@ type Request = {
                 const response = await callRequest(myRequest);
                 console.log("Result deploy account=", response);
                 const txtResponse: string = typeof (response) == "string" ?
-                    response : "th:" + (response as AddDeployAccountTransactionResult).transaction_hash + " ad:" + (response as AddDeployAccountTransactionResult).contract_address + " (pk:" + privateKey+")";
+                    response : "th:" + (response as AddDeployAccountTransactionResult).transaction_hash + " ad:" + (response as AddDeployAccountTransactionResult).contract_address + " (pk:" + privateKey + ")";
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -260,11 +260,11 @@ type Request = {
                     type: command,
                     params: myTypedData
                 }
-                let txtResponse:string="N/A";
+                let txtResponse: string = "N/A";
                 const response = await callRequest(myRequest);
                 if (typeof (response) == "string") { txtResponse = response } else {
                     const tmp = response as string[];
-                    txtResponse = formatAddress(tmp[0])+" "+formatAddress(tmp[1]);
+                    txtResponse = formatAddress(tmp[0]) + " " + formatAddress(tmp[1]);
                 }
                 setResponse(txtResponse);
                 onOpen();
@@ -284,9 +284,9 @@ type Request = {
             <Box color='black' borderWidth='0px' borderRadius='lg'>
                 <Center>
                     <Tooltip hasArrow label={tip} bg='yellow.100' color='black'>
-                    <Button bg='blue.100' onClick={() => { callCommand(command, param) }
-                } >{command} {symbol}</Button>
-                </Tooltip>
+                        <Button bg='blue.100' onClick={() => { callCommand(command, param) }
+                        } >{command} {symbol}</Button>
+                    </Tooltip>
                 </Center>
                 <Modal
                     isOpen={isOpen}

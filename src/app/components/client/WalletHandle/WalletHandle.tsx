@@ -30,6 +30,7 @@ export default function WalletHandle() {
     const [time2, setTime2] = useState<string>("N/A");
     useEffect(
         () => {
+            console.log("subscribe to events.");
             const handleAccount: AccountChangeEventHandler = (accounts: string[] | undefined) => {
                 console.log("accounts=", accounts);
                 if (!!accounts) {
@@ -48,6 +49,7 @@ export default function WalletHandle() {
             wallet?.on("networkChanged", handleNetwork);
 
             return () => {
+                console.log("unsubscribe to events.");
                 wallet?.off("accountsChanged", () => { });
                 wallet?.off('networkChanged', () => { });
             }
