@@ -6,8 +6,7 @@ import { Button } from "@chakra-ui/react";
 import { StarknetWindowObject, connect } from "get-starknet";
 import { Account, encode, Provider, RpcProvider, constants as SNconstants } from "starknet";
 import { useStoreBackend } from '../../server/backEndStarknetContext';
-import { providerBackend } from '../../server/Provider/providerBackend';
-import { initAccountBackend } from '../../server/Provider/initAccountBackend';
+import { initAccountBackend } from '../../server/Account/initAccountBackend';
 
 
 export default function ConnectWallet() {
@@ -34,6 +33,7 @@ export default function ConnectWallet() {
             // setProvider(backEndProvider);
             // const backEndAccount: Account = await initAccountBackend(addressAccount);
         }
+
         console.log("handleClick =",useStoreWallet.getState().isConnected);
     }
     return (

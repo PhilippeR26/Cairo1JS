@@ -1,3 +1,4 @@
+"use server";
 
 import Image from 'next/image'
 import styles from './page.module.css'
@@ -15,8 +16,9 @@ import { SpecialButton } from './components/client/SpecialButton';
 import ConnectWallet from './components/client/ConnectWallet/ConnectWallet';
 import DisplayBlockChain from './components/client/Block/DisplayBlockchain';
 import { DisplayConnected } from './components/client/DisplayConnected';
+import { setProviderBackend } from './components/server/Provider/setProviderBackend';
 
-export default function Page() {
+export default async function Page() {
 
     // Connect Argent-X or Braavos wallet
     // const addressAccount = useStoreWallet(state => state.addressAccount);
@@ -24,12 +26,15 @@ export default function Page() {
     // const wallet = useStoreWallet(state => state.wallet);
     // const isConnected = useStoreWallet(state => state.isConnected);
     // const chainFromContext = useStoreWallet(state => state.chain);
-    
+
     // // from server
     // const providerBackend=useStoreBackend(state=>state.providerBackend);
-    
+
+    await setProviderBackend();
+    console.log("state back=",useStoreBackend.getState());
 
     return (
+        
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
@@ -43,7 +48,7 @@ export default function Page() {
                 </p>
                 <div>
                     <DisplayConnected></DisplayConnected>
-                    
+
                 </div>
             </div >
         </ChakraProvider>

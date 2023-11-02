@@ -8,7 +8,6 @@ import { useStoreWallet } from "./ConnectWallet/walletContext";
 
 // import styles from './page.module.css'
 import WalletDisplay from "../server/Wallet/WalletDisplay";
-import { providerBackend } from "../server/Provider/providerBackend";
 import VisualWrapper from "../server/VisualWrapper";
 import { StateWallet } from "../server/Wallet/types";
 
