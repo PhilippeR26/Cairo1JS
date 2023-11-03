@@ -49,7 +49,7 @@ export default function PlayWithCairo1() {
     }
 
     return (
-        <Box bg='green.200' color='black' borderWidth='1px' borderRadius='md'>
+        <Box bg='mediumaquamarine' color='black' borderWidth='1px' borderRadius='md' paddingBottom='3px'>
             {
                 !balance ? (
                     <Center>
