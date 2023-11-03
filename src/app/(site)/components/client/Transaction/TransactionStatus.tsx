@@ -11,7 +11,7 @@ type Props = { transactionHash: string };
 
 export default function GetBalance({ transactionHash }: Props) {
     // wallet context
-    const providerSN = useStoreWallet(state => state.provider);
+    const providerSN = useStoreWallet(state => state.providerW);
 
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);

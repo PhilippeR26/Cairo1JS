@@ -16,7 +16,7 @@ const addrTEST = "0x07394cBe418Daa16e42B87Ba67372d4AB4a5dF0B05C6e554D158458Ce245
 
 export default function InteractContract() {
     // wallet context
-    const providerSN = useStoreWallet(state => state.provider);
+    const providerSN = useStoreWallet(state => state.providerW);
 
     // read block
     const blockFromContext = useStoreBlock(state => state.dataBlock);
