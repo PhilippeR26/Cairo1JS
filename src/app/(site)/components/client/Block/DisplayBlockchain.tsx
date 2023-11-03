@@ -3,15 +3,15 @@
 import { useEffect, useState } from 'react';
 import { GetBlockResponse } from "starknet";
 
-import { useStoreBlock, dataBlockInit } from "../../server/blockContext";
-import { useStoreBackend } from '../../server/backEndStarknetContext';
+import { useStoreBlock, dataBlockInit } from "./blockContext";
+import { useStoreBackend } from '../../../../server/backEndStarknetContext';
 
 import GetBalance from "../Contract/GetBalance";
 
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
-import { getBlockBackend } from '../../server/Provider/getBlock';
+import { getBlockBackend, getChainId } from '@/app/server/provider/providerBackend';
 
 // Test a Cairo 1 contrat already deployed in testnet:
 export default function DisplayBlockChain() {
@@ -22,10 +22,13 @@ export default function DisplayBlockChain() {
     const blockFromContext = useStoreBlock(state => state.dataBlock);
     const setBlockData = useStoreBlock((state) => state.setBlockData);
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
+    const [chainId, setChainId] = useState<string>("unknown");
 
     async function catchBlock() {
-        setBlockData(await getBlockBackend());
+            setBlockData(await getBlockBackend());
+            setChainId(await getChainId());
     }
+
     useEffect(() => {
         catchBlock()
         const tim = setInterval(() => {
@@ -75,7 +78,7 @@ export default function DisplayBlockChain() {
 
                 </Box>
             }
-            
+
         </>
 
     )

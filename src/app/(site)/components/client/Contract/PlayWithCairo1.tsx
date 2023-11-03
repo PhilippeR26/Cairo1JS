@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Contract, InvokeFunctionResponse } from "starknet";
 
-import { useStoreBlock } from "../../server/blockContext";
+import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 import { Text, Button, Center, Spinner, Box } from "@chakra-ui/react";
@@ -14,8 +14,8 @@ const contractAddress = "0x697d3bc2e38d57752c28be0432771f4312d070174ae54eef67dd2
 
 export default function PlayWithCairo1() {
     // wallet context
-    const providerSN = useStoreWallet(state => state.provider);
-    const accountFromContext = useStoreWallet(state => state.account);
+    const providerW = useStoreWallet(state => state.providerW);
+    const accountFromContext = useStoreWallet(state => state.accountW);
 
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
@@ -24,7 +24,7 @@ export default function PlayWithCairo1() {
     const [balance, setBalance] = useState<number>(0);
     const [transactionHash, setTransactionHash] = useState<string>("");
 
-    const cairo1Contract = new Contract(test1Abi, contractAddress, providerSN);
+    const cairo1Contract = new Contract(test1Abi, contractAddress, providerW);
     if (accountFromContext) { cairo1Contract.connect(accountFromContext); }
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 "use server";
 
 import { Account, ProviderInterface, RpcProvider } from "starknet";
-import { useStoreBackend } from "../backEndStarknetContext";
+import { useStoreBackend } from "../../../../server/backEndStarknetContext";
 
 export async function initAccountBackend(address:string): Promise<Account> {
     const providerBackEnd = useStoreBackend(state => state.providerBackend);  

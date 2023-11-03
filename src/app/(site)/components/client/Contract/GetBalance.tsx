@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react';
 import { Contract, uint256, shortString } from "starknet";
 
-import { useStoreBlock } from "../../server/blockContext";
+import { useStoreBlock } from "../Block/blockContext";
 
 import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
-import { useStoreBackend } from '../../server/backEndStarknetContext';
 import VisualWrapper from '../../server/VisualWrapper';
-import { callERC20 } from '../../server/Contract/callERC20';
+import { callERC20 } from '../../../../server/contract/callERC20';
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 type Props = { tokenAddress: string };
@@ -35,7 +34,7 @@ export default function GetBalance({ tokenAddress }: Props) {
         const fetchData = async () => {
 
             const resp1 = await callERC20(tokenAddress, "decimals");
-            const res1 = resp1.decimals;
+            const res1 = resp1.decimals as bigint;
             console.log("resDecimals=", res1);
             setDecimals(Number(res1));
 
@@ -61,7 +60,7 @@ export default function GetBalance({ tokenAddress }: Props) {
         , [blockFromContext.blockNumber, decimals]); // balance updated at each block
 
     return (
-        <VisualWrapper name="GetBalance" rsc>
+        <>
             {
                 typeof (balance) !== "number" ? (
                     <>
@@ -75,7 +74,7 @@ export default function GetBalance({ tokenAddress }: Props) {
                     </>
                 )
             }
-        </VisualWrapper>
+        </>
 
     )
 }

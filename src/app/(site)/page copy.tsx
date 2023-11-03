@@ -5,7 +5,7 @@ import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
 import InteractContract from './components/client/Contract/InteractContract';
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/client/ConnectWallet/walletContext';
-import { useStoreBackend } from './components/server/backEndStarknetContext';
+import { useStoreBackend } from '../server/backEndStarknetContext';
 
 import { encode, Provider } from "starknet";
 import { StarknetWindowObject, connect } from "get-starknet";

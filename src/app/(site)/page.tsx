@@ -6,7 +6,7 @@ import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
 import InteractContract from './components/client/Contract/InteractContract';
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/client/ConnectWallet/walletContext';
-import { useStoreBackend } from './components/server/backEndStarknetContext';
+import { useStoreBackend } from '../server/backEndStarknetContext';
 
 import { encode, Provider } from "starknet";
 import { StarknetWindowObject, connect } from "get-starknet";
@@ -16,7 +16,7 @@ import { SpecialButton } from './components/client/SpecialButton';
 import ConnectWallet from './components/client/ConnectWallet/ConnectWallet';
 import DisplayBlockChain from './components/client/Block/DisplayBlockchain';
 import { DisplayConnected } from './components/client/DisplayConnected';
-import { setProviderBackend } from './components/server/Provider/setProviderBackend';
+// import { setProviderBackend } from '../server/provider/setProviderBackend';
 
 export default async function Page() {
 
@@ -30,11 +30,16 @@ export default async function Page() {
     // // from server
     // const providerBackend=useStoreBackend(state=>state.providerBackend);
 
-    await setProviderBackend();
-    console.log("state back=",useStoreBackend.getState());
+    // const providerBackend = useStoreBackend.getState().providerBackend;
+    // if (!providerBackend) {
+    //     await setProviderBackend();
+    //     console.log("state back initialized=", useStoreBackend.getState());
+    // } else {
+    //     console.log("providerBack already existing");
+    // }
 
     return (
-        
+
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>

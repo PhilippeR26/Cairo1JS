@@ -5,7 +5,7 @@ import { useStoreWallet } from './walletContext';
 import { Button } from "@chakra-ui/react";
 import { StarknetWindowObject, connect } from "get-starknet";
 import { Account, encode, Provider, RpcProvider, constants as SNconstants } from "starknet";
-import { useStoreBackend } from '../../server/backEndStarknetContext';
+import { useStoreBackend } from '../../../../server/backEndStarknetContext';
 import { initAccountBackend } from '../../server/Account/initAccountBackend';
 
 
@@ -21,6 +21,7 @@ export default function ConnectWallet() {
         const getWallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
         await getWallet?.enable({ starknetVersion: "v5" } as any);
         useStoreWallet.setState({ wallet: getWallet });
+        useStoreWallet.setState({ providerW: getWallet?.provider });
         const addr = encode.addHexPrefix(encode.removeHexPrefix(getWallet?.selectedAddress ?? "0x").padStart(64, "0"));
         useStoreWallet.setState({ addressAccount: addr });
         useStoreWallet.setState({ isConnected: getWallet?.isConnected });

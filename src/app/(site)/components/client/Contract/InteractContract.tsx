@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetBlockResponse } from "starknet";
 
-import { useStoreBlock, dataBlockInit } from "../../server/blockContext";
+import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 import GetBalance from "./GetBalance";

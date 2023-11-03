@@ -10,6 +10,7 @@ import { useStoreWallet } from "./ConnectWallet/walletContext";
 import WalletDisplay from "../server/Wallet/WalletDisplay";
 import VisualWrapper from "../server/VisualWrapper";
 import { StateWallet } from "../server/Wallet/types";
+import PlayWithCairo1 from "./Contract/PlayWithCairo1";
 
 
 export function DisplayConnected() {
@@ -55,7 +56,8 @@ export function DisplayConnected() {
                     <br />
                     <WalletDisplay walletData={stateWallet} ></WalletDisplay>
                     <DisplayBlockChain ></DisplayBlockChain>
-                    {/* Add interaction with contract */}
+                    
+                    <PlayWithCairo1></PlayWithCairo1>
                 </>
             )
             }
