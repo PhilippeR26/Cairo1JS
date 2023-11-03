@@ -49,7 +49,7 @@ export default function PlayWithCairo1() {
     }
 
     return (
-        <>
+        <Box bg='green.200' color='black' borderWidth='1px' borderRadius='md'>
             {
                 !balance ? (
                     <Center>
@@ -75,7 +75,7 @@ export default function PlayWithCairo1() {
                             </Center>
                         </div>
                         {!!transactionHash && (
-                            <Box bg='green.200' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} marginTop={2}>
+                            <Box bg='green.300' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} marginTop={2}>
                                 <Text className={styles.text1}>Last transaction status :</Text>
                                 <TransactionStatus transactionHash={transactionHash}></TransactionStatus>
                             </Box>
@@ -84,6 +84,6 @@ export default function PlayWithCairo1() {
                     </>
                 )
             }
-        </>
+        </Box>
     )
 }
