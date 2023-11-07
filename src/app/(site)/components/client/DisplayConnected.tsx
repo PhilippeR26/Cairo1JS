@@ -1,7 +1,7 @@
 "use client";
 
 import { Center, Button, Box } from "@chakra-ui/react";
-import DisplayBlockChain from "./Block/DisplayBlockchain";
+import DisplayBlockChain from "./provider/Block/DisplayBlockchain";
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import { useStoreWallet } from "./ConnectWallet/walletContext";
 // import { SpecialButton } from "./SpecialButton";

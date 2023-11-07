@@ -6,7 +6,6 @@ import { Center, Spinner, Text, Button, Divider, Box } from '@chakra-ui/react';
 import InteractContract from './components/client/Contract/InteractContract';
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/client/ConnectWallet/walletContext';
-import { useStoreBackend } from '../server/backEndStarknetContext';
 
 import { encode, Provider } from "starknet";
 import { StarknetWindowObject, connect } from "get-starknet";
@@ -14,7 +13,7 @@ import { StarknetWindowObject, connect } from "get-starknet";
 import starknetjsImg from "../../public/Images/StarkNet-JS_logo.png";
 import { SpecialButton } from './components/client/SpecialButton';
 import ConnectWallet from './components/client/ConnectWallet/ConnectWallet';
-import DisplayBlockChain from './components/client/Block/DisplayBlockchain';
+import DisplayBlockChain from './components/client/provider/Block/DisplayBlockchain';
 import { DisplayConnected } from './components/client/DisplayConnected';
 // import { setProviderBackend } from '../server/provider/setProviderBackend';
 

@@ -1,17 +1,18 @@
 "use client";
 
+import {useStoreProvider} from "../../provider/providerContext";
+
 import { useEffect, useState } from 'react';
-import { GetBlockResponse } from "starknet";
+import { GetBlockResponse, shortString } from "starknet";
 
-import { useStoreBlock, dataBlockInit } from "./blockContext";
-import { useStoreBackend } from '../../../../server/backEndStarknetContext';
+import { useStoreBlock, dataBlockInit, DataBlock } from "./blockContext";
 
-import GetBalance from "../Contract/GetBalance";
+import GetBalance from "../../Contract/GetBalance";
 
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
-import styles from '../../../page.module.css'
+import styles from "@/app/(site)/page.module.css"
 import * as constants from '@/type/constants';
-import { getBlockBackend, getChainId } from '@/app/server/provider/providerBackend';
+import { getBlockBackend, getChainIdBackend } from '@/app/server/provider/backendProvider';
 
 // Test a Cairo 1 contrat already deployed in testnet:
 export default function DisplayBlockChain() {
@@ -21,12 +22,30 @@ export default function DisplayBlockChain() {
     // read block
     const blockFromContext = useStoreBlock(state => state.dataBlock);
     const setBlockData = useStoreBlock((state) => state.setBlockData);
+
+    const providerServer = useStoreProvider(state => state.providerServer);
+
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
     const [chainId, setChainId] = useState<string>("unknown");
 
     async function catchBlock() {
-            setBlockData(await getBlockBackend());
-            setChainId(await getChainId());
+        let bloc: DataBlock;
+        try {
+            bloc = await getBlockBackend();
+        } catch (error) {
+            bloc = {
+                timeStamp: 0,
+                blockHash: "Error",
+                blockNumber: 0,
+                gasPrice: "Error"
+            }
+        }
+        setBlockData(bloc);
+        let chId: string;
+        try {
+            chId = shortString.decodeShortString(await providerServer.getChainId());
+        } catch (error) { chId = "Error" }
+        setChainId(chId);
     }
 
     useEffect(() => {
@@ -64,7 +83,8 @@ export default function DisplayBlockChain() {
                             <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
                             <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
                             <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
-                            <Divider></Divider>
+                            <Divider borderColor='gray.800'></Divider>
+                            <Text className={styles.text1}>Chain Id = {chainId}  </Text>
                         </>
                     )
                 }

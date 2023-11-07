@@ -1,17 +1,17 @@
 "use client";
 
 import { useStoreWallet } from './walletContext';
+import {useStoreProvider} from "../provider/providerContext";
 
 import { Button } from "@chakra-ui/react";
 import { StarknetWindowObject, connect } from "get-starknet";
 import { Account, encode, Provider, RpcProvider, constants as SNconstants } from "starknet";
-import { useStoreBackend } from '../../../../server/backEndStarknetContext';
-import { initAccountBackend } from '../../server/Account/initAccountBackend';
+import { ServerProvider } from '@/app/ServerProvider/ServerProvider';
 
 
 export default function ConnectWallet() {
-    const addressAccount = useStoreWallet(state => state.addressAccount);
-    const wallet = useStoreWallet(state => state.wallet);
+    // const addressAccount = useStoreWallet(state => state.addressAccount);
+    // const wallet = useStoreWallet(state => state.wallet);
 
 
     // Server
@@ -25,6 +25,7 @@ export default function ConnectWallet() {
         const addr = encode.addHexPrefix(encode.removeHexPrefix(getWallet?.selectedAddress ?? "0x").padStart(64, "0"));
         useStoreWallet.setState({ addressAccount: addr });
         useStoreWallet.setState({ isConnected: getWallet?.isConnected });
+        useStoreProvider.setState({providerServer:new ServerProvider});
         if (getWallet?.account) {
             useStoreWallet.setState({ accountW: getWallet.account });
             !!(getWallet.chainId) ?
@@ -34,6 +35,7 @@ export default function ConnectWallet() {
             // setProvider(backEndProvider);
             // const backEndAccount: Account = await initAccountBackend(addressAccount);
         }
+        useStoreProvider.setState({providerServer:new ServerProvider});
 
         console.log("handleClick =",useStoreWallet.getState().isConnected);
     }

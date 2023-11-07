@@ -1,7 +1,7 @@
 "use server";
 
 import { Contract, GetBlockResponse, RpcProvider } from "starknet";
-import { DataBlock, dataBlockInit } from "../../(site)/components/client/Block/blockContext";
+import { DataBlock, dataBlockInit } from "../../(site)/components/client/provider/Block/blockContext";
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { erc20Abi } from "../../(site)/contracts/abis/ERC20abi"
 

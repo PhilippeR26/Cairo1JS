@@ -13,7 +13,7 @@ import { StarknetWindowObject, connect } from "get-starknet";
 import starknetjsImg from "../../public/Images/StarkNet-JS_logo.png";
 import { SpecialButton } from './components/client/SpecialButton';
 import ConnectWallet from './components/client/ConnectWallet/ConnectWallet';
-import DisplayBlockChain from './components/client/Block/DisplayBlockchain';
+import DisplayBlockChain from './components/client/provider/Block/DisplayBlockchain';
 import { DisplayConnected } from './components/client/DisplayConnected';
 
 export default function Page() {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GetTransactionReceiptResponse } from "starknet";
 
-import { useStoreBlock } from "../Block/blockContext";
+import { useStoreBlock } from "../provider/Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 import { Text } from "@chakra-ui/react";

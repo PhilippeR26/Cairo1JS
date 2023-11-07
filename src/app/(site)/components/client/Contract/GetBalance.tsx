@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Contract, uint256, shortString } from "starknet";
 
-import { useStoreBlock } from "../Block/blockContext";
+import { useStoreBlock } from "../provider/Block/blockContext";
 
 import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
