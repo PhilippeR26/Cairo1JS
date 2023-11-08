@@ -3,7 +3,7 @@ import { RpcProvider } from "starknet";
 
 export  function initBackProvider(): RpcProvider {
     if (!process.env.PROVIDER_URL) {
-        throw new ApiErr(400, "providerBackend.ts = No PROVIDER_URL backend variable defined in .env.local.");
+        throw new ApiErr(520, "providerBackend.ts = No PROVIDER_URL backend variable defined in .env.local.");
     }
     const prov = process.env.PROVIDER_URL;
     const providerBackend = new RpcProvider({ nodeUrl: prov });

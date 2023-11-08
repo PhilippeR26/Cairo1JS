@@ -2,11 +2,11 @@
 import { create } from "zustand";
 import { ProviderInterface, AccountInterface } from "starknet";
 import { StarknetWindowObject } from "get-starknet";
-import { ServerProvider } from "@/app/ServerProvider/ServerProvider";
+import { ServerProviderNextJS } from "@/app/ServerProvider/ServerProvider";
 
 export interface WalletState {
     providerW: ProviderInterface | undefined,
-    providerServer: ServerProvider | undefined,
+    providerServer: ServerProviderNextJS | undefined,
     addressAccount: string,
     chainId: string,
     accountW: AccountInterface | undefined,

@@ -1,9 +1,9 @@
 "use client";
 
-import {useStoreProvider} from "../../provider/providerContext";
+import { useStoreProvider } from "../../provider/providerContext";
 
 import { useEffect, useState } from 'react';
-import { GetBlockResponse, shortString } from "starknet";
+import { BlockStatus, BlockTag, GetBlockResponse, shortString } from "starknet";
 
 import { useStoreBlock, dataBlockInit, DataBlock } from "./blockContext";
 
@@ -29,27 +29,60 @@ export default function DisplayBlockChain() {
     const [chainId, setChainId] = useState<string>("unknown");
 
     async function catchBlock() {
-        let bloc: DataBlock;
+        let block: DataBlock;
+        // console.log("DisplayBlockChain-providerServer", providerServer);
         try {
-            bloc = await getBlockBackend();
+            const bloc: GetBlockResponse = typeof providerServer === "undefined" ?
+                {
+                    timestamp: 0,
+                    block_hash: "undefined",
+                    block_number: 0,
+                    new_root: "undefined",
+                    parent_hash: "undefined",
+                    status: BlockStatus.PENDING,
+                    transactions: [],
+                    gas_price: "undefined",
+                    sequencer_address: "undefined",
+                    starknet_version: "undefined",
+                    transaction_receipts: "undefined",
+                }
+                :
+                await providerServer.getBlock(BlockTag.latest);
+            // onsole.log("bloc=", bloc);
+            block = {
+                timeStamp: bloc.timestamp,
+                blockHash: bloc.block_hash as string,
+                blockNumber: bloc.block_number,
+                gasPrice: bloc.gas_price ?? "Not defined in this block."
+            }
+            // console.log("block =",block);
         } catch (error) {
-            bloc = {
+            block = {
                 timeStamp: 0,
                 blockHash: "Error",
                 blockNumber: 0,
                 gasPrice: "Error"
             }
         }
-        setBlockData(bloc);
+        setBlockData(block);
+
+        
+    }
+
+    async function getChaId() {
         let chId: string;
         try {
-            chId = shortString.decodeShortString(await providerServer.getChainId());
+            chId = typeof providerServer === "undefined" ?
+                "Error."
+                :
+                shortString.decodeShortString(await providerServer.getChainId());
         } catch (error) { chId = "Error" }
         setChainId(chId);
     }
 
     useEffect(() => {
-        catchBlock()
+        getChaId();
+        catchBlock();
         const tim = setInterval(() => {
             catchBlock()
             console.log("timerId=", tim);

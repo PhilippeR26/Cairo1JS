@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  GetTransactionReceiptResponse,
   constants
 } from "starknet";
 import {
@@ -53,7 +54,7 @@ import {
 // import { LibraryError } from './errors';
 import { ProviderInterface } from 'starknet';
 // import { Block } from './utils';
-import { getChainIdBackend } from "../server/provider/backendProvider";
+import { callContractBackend, declareContractBackend, deployAccountContractBackend, getBlockBackend, getChainIdBackend, getClassAtBackend, getClassByHashBackend, getClassHashAtBackend, getContractVersionBackend, getDeclareEstimateFeeBackend, getDeployAccountEstimateFeeBackend, getEstimateFeeBackend, getEstimateFeeBulkBackend, getInvokeEstimateFeeBackend, getNonceForAddressBackend, getSimulateTransactionBackend, getStateUpdateBackend, getStorageAtBackend, getTransactionBackend, getTransactionReceiptBackend, invokeFunctionBackend, waitForTransactionBackend } from "../server/provider/backendProvider";
 import { ApiErr } from "../utils/ApiErr";
 
 // Default Pathfinder disabled pending block https://github.com/eqlabs/pathfinder/blob/main/README.md
@@ -64,83 +65,43 @@ const defaultOptions = {
   retries: 200,
 };
 
-export class ServerProvider implements ProviderInterface {
-  // public nodeUrl: string;
+export class ServerProviderNextJS implements ProviderInterface {
 
-  // public headers: object;
-
-  // private responseParser = new RPCResponseParser();
-
-  // private retries: number;
-
-  // private blockIdentifier: BlockIdentifier;
+  private blockIdentifier: BlockIdentifier;
 
   private chainId?: constants.StarknetChainId;
 
   constructor() {
-    // const { nodeUrl, retries, headers, blockIdentifier, chainId } = optionsOrProvider;
-    // this.nodeUrl = nodeUrl;
-    // this.retries = retries || defaultOptions.retries;
-    // this.headers = { ...defaultOptions.headers, ...headers };
-    // this.blockIdentifier = blockIdentifier || defaultOptions.blockIdentifier;
-    // this.chainId = chainId;
+    this.blockIdentifier = defaultOptions.blockIdentifier;
     this.getChainId(); // internally skipped if chainId has value
   }
 
-  // public fetch(method: any, params: any): Promise<any> {
-  //   const body = stringify({ method, jsonrpc: '2.0', params, id: 0 });
-  //   return fetch(this.nodeUrl, {
-  //     method: 'POST',
-  //     body,
-  //     headers: this.headers as Record<string, string>,
-  //   });
-  // }
 
-  // protected errorHandler(error: any) {
-  //   if (error) {
-  //     const { code, message } = error;
-  //     throw new LibraryError(`${code}: ${message}`);
-  //   }
-  // }
-
-  // protected async fetchEndpoint<T extends keyof RPC.Methods>(
-  //   method: T,
-  //   params?: RPC.Methods[T]['params']
-  // ): Promise<RPC.Methods[T]['result']> {
-  //   try {
-  //     const rawResult = await this.fetch(method, params);
-  //     const { error, result } = await rawResult.json();
-  //     this.errorHandler(error);
-  //     return result as RPC.Methods[T]['result'];
-  //   } catch (error: any) {
-  //     this.errorHandler(error?.response?.data);
-  //     throw error;
-  //   }
-  // }
-
-  // Methods from Interface
   public async getChainId(): Promise<constants.StarknetChainId> {
     if (typeof this.chainId === "undefined") {
       try {
-        console.log("before get chainId");
         this.chainId = (await getChainIdBackend()) as constants.StarknetChainId;
-        console.log("after get chainId");
-
       } catch (error: any) {
-        console.log("ServerProvider error from BackendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+        console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
         throw new ApiErr(error.statusCode, error.name, error.message);
       }
     }
     return this.chainId;
   }
 
-  // public async getBlock(
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<GetBlockResponse> {
-  //   return this.getBlockWithTxHashes(blockIdentifier).then(
-  //     this.responseParser.parseGetBlockResponse
-  //   );
-  // }
+  public async getBlock(
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<GetBlockResponse> {
+    let resp: GetBlockResponse;
+    try {
+      resp = (await getBlockBackend(blockIdentifier)) as GetBlockResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // public async getBlockHashAndNumber(): Promise<RPC.BlockHashAndNumber> {
   //   return this.fetchEndpoint('starknet_blockHashAndNumber');
@@ -160,27 +121,35 @@ export class ServerProvider implements ProviderInterface {
   //   return this.fetchEndpoint('starknet_getBlockWithTxs', { block_id });
   // }
 
-  // public async getClassHashAt(
-  //   contractAddress: RPC.ContractAddress,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<RPC.Felt> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   return this.fetchEndpoint('starknet_getClassHashAt', {
-  //     block_id,
-  //     contract_address: contractAddress,
-  //   });
-  // }
+  public async getClassHashAt(
+    contractAddress: RPC.ContractAddress,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<RPC.Felt> {
+    let resp: RPC.Felt;
+    try {
+      resp = (await getClassHashAtBackend(contractAddress, blockIdentifier)) as RPC.Felt;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getNonceForAddress(
-  //   contractAddress: string,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<RPC.Nonce> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   return this.fetchEndpoint('starknet_getNonce', {
-  //     contract_address: contractAddress,
-  //     block_id,
-  //   });
-  // }
+  public async getNonceForAddress(
+    contractAddress: string,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<RPC.Nonce> {
+    let resp: RPC.Nonce;
+    try {
+      resp = (await getNonceForAddressBackend(contractAddress, blockIdentifier)) as RPC.Nonce;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // public async getPendingTransactions(): Promise<RPC.PendingTransactions> {
   //   return this.fetchEndpoint('starknet_pendingTransactions');
@@ -190,31 +159,48 @@ export class ServerProvider implements ProviderInterface {
   //   throw new Error('Pathfinder does not implement this rpc 0.1.0 method');
   // }
 
-  // public async getStateUpdate(
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<RPC.StateUpdate> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   return this.fetchEndpoint('starknet_getStateUpdate', { block_id });
-  // }
+  public async getStateUpdate(
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<RPC.StateUpdate> {
+    let resp: RPC.StateUpdate;
+    try {
+      resp = (await getStateUpdateBackend(blockIdentifier)) as RPC.StateUpdate;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getStorageAt(
-  //   contractAddress: string,
-  //   key: BigNumberish,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<RPC.Storage> {
-  //   const parsedKey = toStorageKey(key);
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   return this.fetchEndpoint('starknet_getStorageAt', {
-  //     contract_address: contractAddress,
-  //     key: parsedKey,
-  //     block_id,
-  //   });
-  // }
+  public async getStorageAt(
+    contractAddress: string,
+    key: BigNumberish,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<RPC.Storage> {
+    let resp: RPC.Storage;
+    try {
+      resp = (await getStorageAtBackend(contractAddress, key, blockIdentifier)) as RPC.Storage;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // // Methods from Interface
-  // public async getTransaction(txHash: string): Promise<GetTransactionResponse> {
-  //   return this.getTransactionByHash(txHash).then(this.responseParser.parseGetTransactionResponse);
-  // }
+  // Methods from Interface
+  public async getTransaction(txHash: string): Promise<GetTransactionResponse> {
+    let resp: GetTransactionResponse;
+    try {
+      resp = (await getTransactionBackend(txHash)) as GetTransactionResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // public async getTransactionByHash(txHash: string): Promise<RPC.GetTransactionByHashResponse> {
   //   return this.fetchEndpoint('starknet_getTransactionByHash', { transaction_hash: txHash });
@@ -228,13 +214,29 @@ export class ServerProvider implements ProviderInterface {
   //   return this.fetchEndpoint('starknet_getTransactionByBlockIdAndIndex', { block_id, index });
   // }
 
-  // public async getTransactionReceipt(txHash: string): Promise<RPC.TransactionReceipt> {
-  //   return this.fetchEndpoint('starknet_getTransactionReceipt', { transaction_hash: txHash });
-  // }
+  public async getTransactionReceipt(txHash: string): Promise<RPC.TransactionReceipt> {
+    let resp: RPC.TransactionReceipt;
+    try {
+      resp = (await getTransactionReceiptBackend(txHash)) as RPC.TransactionReceipt;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getClassByHash(classHash: RPC.Felt): Promise<ContractClassResponse> {
-  //   return this.getClass(classHash);
-  // }
+  public async getClassByHash(classHash: RPC.Felt): Promise<ContractClassResponse> {
+    let resp: ContractClassResponse;
+    try {
+      resp = (await getClassByHashBackend(classHash)) as ContractClassResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // public async getClass(
   //   classHash: RPC.Felt,
@@ -247,234 +249,194 @@ export class ServerProvider implements ProviderInterface {
   //   }).then(this.responseParser.parseContractClassResponse);
   // }
 
-  // public async getClassAt(
-  //   contractAddress: string,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<ContractClassResponse> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   return this.fetchEndpoint('starknet_getClassAt', {
-  //     block_id,
-  //     contract_address: contractAddress,
-  //   }).then(this.responseParser.parseContractClassResponse);
-  // }
+  public async getClassAt(
+    contractAddress: string,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<ContractClassResponse> {
+    let resp: ContractClassResponse;
+    try {
+      resp = (await getClassAtBackend(contractAddress, blockIdentifier)) as ContractClassResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getCode(
-  //   _contractAddress: string,
-  //   _blockIdentifier?: BlockIdentifier
-  // ): Promise<GetCodeResponse> {
-  //   throw new Error('RPC does not implement getCode function');
-  // }
+  public async getCode(
+    _contractAddress: string,
+    _blockIdentifier?: BlockIdentifier
+  ): Promise<GetCodeResponse> {
+    throw new Error('RPC does not implement getCode function');
+  }
 
-  // public async getContractVersion(
-  //   contractAddress: string,
-  //   classHash?: undefined,
-  //   options?: getContractVersionOptions
-  // ): Promise<ContractVersion>;
-  // public async getContractVersion(
-  //   contractAddress: undefined,
-  //   classHash: string,
-  //   options?: getContractVersionOptions
-  // ): Promise<ContractVersion>;
+  public async getContractVersion(
+    contractAddress: string,
+    classHash?: undefined,
+    options?: getContractVersionOptions
+  ): Promise<ContractVersion>;
+  public async getContractVersion(
+    contractAddress: undefined,
+    classHash: string,
+    options?: getContractVersionOptions
+  ): Promise<ContractVersion>;
 
-  // public async getContractVersion(
-  //   contractAddress?: string,
-  //   classHash?: string,
-  //   { blockIdentifier = this.blockIdentifier, compiler = true }: getContractVersionOptions = {}
-  // ): Promise<ContractVersion> {
-  //   let contractClass;
-  //   if (contractAddress) {
-  //     contractClass = await this.getClassAt(contractAddress, blockIdentifier);
-  //   } else if (classHash) {
-  //     contractClass = await this.getClass(classHash, blockIdentifier);
-  //   } else {
-  //     throw Error('getContractVersion require contractAddress or classHash');
-  //   }
+  public async getContractVersion(
+    contractAddress?: string,
+    classHash?: string,
+    options: getContractVersionOptions = {}
+  ): Promise<ContractVersion> {
+    let resp: ContractVersion;
+    try {
+      resp = (await getContractVersionBackend(contractAddress,classHash,options)) as ContractVersion;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  //   if (isSierra(contractClass)) {
-  //     if (compiler) {
-  //       const abiTest = getAbiContractVersion(contractClass.abi);
-  //       return { cairo: '1', compiler: abiTest.compiler };
-  //     }
-  //     return { cairo: '1', compiler: undefined };
-  //   }
-  //   return { cairo: '0', compiler: '0' };
-  // }
+  public async getEstimateFee(
+    invocation: Invocation,
+    invocationDetails: InvocationsDetailsWithNonce,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<EstimateFeeResponse> {
+    let resp: EstimateFeeResponse;
+    try {
+      resp = (await getEstimateFeeBackend(invocation,invocationDetails,blockIdentifier)) as EstimateFeeResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getEstimateFee(
-  //   invocation: Invocation,
-  //   invocationDetails: InvocationsDetailsWithNonce,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<EstimateFeeResponse> {
-  //   return this.getInvokeEstimateFee(invocation, invocationDetails, blockIdentifier);
-  // }
+  public async getInvokeEstimateFee(
+    invocation: Invocation,
+    invocationDetails: InvocationsDetailsWithNonce,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<EstimateFeeResponse> {
+    let resp: EstimateFeeResponse;
+    try {
+      resp = (await getInvokeEstimateFeeBackend(invocation,invocationDetails,blockIdentifier)) as EstimateFeeResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getInvokeEstimateFee(
-  //   invocation: Invocation,
-  //   invocationDetails: InvocationsDetailsWithNonce,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<EstimateFeeResponse> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   const transaction = this.buildTransaction(
-  //     {
-  //       type: TransactionType.INVOKE,
-  //       ...invocation,
-  //       ...invocationDetails,
-  //     },
-  //     'fee'
-  //   );
-  //   return this.fetchEndpoint('starknet_estimateFee', {
-  //     request: [transaction],
-  //     block_id,
-  //   }).then(this.responseParser.parseFeeEstimateResponse);
-  // }
+  public async getDeclareEstimateFee(
+    invocation: DeclareContractTransaction,
+    details: InvocationsDetailsWithNonce,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<EstimateFeeResponse> {
+    let resp: EstimateFeeResponse;
+    try {
+      resp = (await getDeclareEstimateFeeBackend(invocation,details,blockIdentifier)) as EstimateFeeResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getDeclareEstimateFee(
-  //   invocation: DeclareContractTransaction,
-  //   details: InvocationsDetailsWithNonce,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<EstimateFeeResponse> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   const transaction = this.buildTransaction(
-  //     {
-  //       type: TransactionType.DECLARE,
-  //       ...invocation,
-  //       ...details,
-  //     },
-  //     'fee'
-  //   );
-  //   return this.fetchEndpoint('starknet_estimateFee', {
-  //     request: [transaction],
-  //     block_id,
-  //   }).then(this.responseParser.parseFeeEstimateResponse);
-  // }
+  public async getDeployAccountEstimateFee(
+    invocation: DeployAccountContractTransaction,
+    details: InvocationsDetailsWithNonce,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<EstimateFeeResponse> {
+    let resp: EstimateFeeResponse;
+    try {
+      resp = (await getDeployAccountEstimateFeeBackend(invocation,details,blockIdentifier)) as EstimateFeeResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getDeployAccountEstimateFee(
-  //   invocation: DeployAccountContractTransaction,
-  //   details: InvocationsDetailsWithNonce,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<EstimateFeeResponse> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   const transaction = this.buildTransaction(
-  //     {
-  //       type: TransactionType.DEPLOY_ACCOUNT,
-  //       ...invocation,
-  //       ...details,
-  //     },
-  //     'fee'
-  //   );
-  //   return this.fetchEndpoint('starknet_estimateFee', {
-  //     request: [transaction],
-  //     block_id,
-  //   }).then(this.responseParser.parseFeeEstimateResponse);
-  // }
+  public async getEstimateFeeBulk(
+    invocations: AccountInvocations,
+    { blockIdentifier = this.blockIdentifier, skipValidate = false }: getEstimateFeeBulkOptions
+  ): Promise<EstimateFeeResponseBulk> {
+    let resp: EstimateFeeResponseBulk;
+    try {
+      resp = (await getEstimateFeeBulkBackend(invocations,{ blockIdentifier , skipValidate  })) as EstimateFeeResponseBulk;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async getEstimateFeeBulk(
-  //   invocations: AccountInvocations,
-  //   { blockIdentifier = this.blockIdentifier, skipValidate = false }: getEstimateFeeBulkOptions
-  // ): Promise<EstimateFeeResponseBulk> {
-  //   if (skipValidate) {
-  //     // eslint-disable-next-line no-console
-  //     console.warn('getEstimateFeeBulk RPC does not support skipValidate');
-  //   }
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   return this.fetchEndpoint('starknet_estimateFee', {
-  //     request: invocations.map((it) => this.buildTransaction(it, 'fee')),
-  //     block_id,
-  //   }).then(this.responseParser.parseFeeEstimateBulkResponse);
-  // }
+  public async declareContract(
+    { contract, signature, senderAddress, compiledClassHash }: DeclareContractTransaction,
+    details: InvocationsDetailsWithNonce
+  ): Promise<DeclareContractResponse> {
+    let resp: DeclareContractResponse;
+    try {
+      resp = (await declareContractBackend({ contract, signature, senderAddress, compiledClassHash },details)) as DeclareContractResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async declareContract(
-  //   { contract, signature, senderAddress, compiledClassHash }: DeclareContractTransaction,
-  //   details: InvocationsDetailsWithNonce
-  // ): Promise<DeclareContractResponse> {
-  //   if (!isSierra(contract)) {
-  //     return this.fetchEndpoint('starknet_addDeclareTransaction', {
-  //       declare_transaction: {
-  //         type: RPC.TransactionType.DECLARE,
-  //         contract_class: {
-  //           program: contract.program,
-  //           entry_points_by_type: contract.entry_points_by_type,
-  //           abi: contract.abi,
-  //         },
-  //         version: HEX_STR_TRANSACTION_VERSION_1,
-  //         max_fee: toHex(details.maxFee || 0),
-  //         signature: signatureToHexArray(signature),
-  //         sender_address: senderAddress,
-  //         nonce: toHex(details.nonce),
-  //       },
-  //     });
-  //   }
-  //   return this.fetchEndpoint('starknet_addDeclareTransaction', {
-  //     declare_transaction: {
-  //       type: RPC.TransactionType.DECLARE,
-  //       contract_class: {
-  //         sierra_program: decompressProgram(contract.sierra_program),
-  //         contract_class_version: contract.contract_class_version,
-  //         entry_points_by_type: contract.entry_points_by_type,
-  //         abi: contract.abi,
-  //       },
-  //       compiled_class_hash: compiledClassHash || '',
-  //       version: HEX_STR_TRANSACTION_VERSION_2,
-  //       max_fee: toHex(details.maxFee || 0),
-  //       signature: signatureToHexArray(signature),
-  //       sender_address: senderAddress,
-  //       nonce: toHex(details.nonce),
-  //     },
-  //   });
-  // }
+  public async deployAccountContract(
+    { classHash, constructorCalldata, addressSalt, signature }: DeployAccountContractTransaction,
+    details: InvocationsDetailsWithNonce
+  ): Promise<DeployContractResponse> {
+    let resp: DeployContractResponse;
+    try {
+      resp = (await deployAccountContractBackend({ classHash, constructorCalldata, addressSalt, signature },details)) as DeployContractResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
-  // public async deployAccountContract(
-  //   { classHash, constructorCalldata, addressSalt, signature }: DeployAccountContractTransaction,
-  //   details: InvocationsDetailsWithNonce
-  // ): Promise<DeployContractResponse> {
-  //   return this.fetchEndpoint('starknet_addDeployAccountTransaction', {
-  //     deploy_account_transaction: {
-  //       constructor_calldata: CallData.toHex(constructorCalldata || []),
-  //       class_hash: toHex(classHash),
-  //       contract_address_salt: toHex(addressSalt || 0),
-  //       type: RPC.TransactionType.DEPLOY_ACCOUNT,
-  //       max_fee: toHex(details.maxFee || 0),
-  //       version: toHex(details.version || 0),
-  //       signature: signatureToHexArray(signature),
-  //       nonce: toHex(details.nonce),
-  //     },
-  //   });
-  // }
-
-  // public async invokeFunction(
-  //   functionInvocation: Invocation,
-  //   details: InvocationsDetailsWithNonce
-  // ): Promise<InvokeFunctionResponse> {
-  //   return this.fetchEndpoint('starknet_addInvokeTransaction', {
-  //     invoke_transaction: {
-  //       sender_address: functionInvocation.contractAddress,
-  //       calldata: CallData.toHex(functionInvocation.calldata),
-  //       type: RPC.TransactionType.INVOKE,
-  //       max_fee: toHex(details.maxFee || 0),
-  //       version: '0x1',
-  //       signature: signatureToHexArray(functionInvocation.signature),
-  //       nonce: toHex(details.nonce),
-  //     },
-  //   });
-  // }
+  public async invokeFunction(
+    functionInvocation: Invocation,
+    details: InvocationsDetailsWithNonce
+  ): Promise<InvokeFunctionResponse> {
+    let resp: InvokeFunctionResponse;
+    try {
+      resp = (await invokeFunctionBackend(functionInvocation,details)) as InvokeFunctionResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // // Methods from Interface
-  // public async callContract(
-  //   call: Call,
-  //   blockIdentifier: BlockIdentifier = this.blockIdentifier
-  // ): Promise<CallContractResponse> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-  //   const result = await this.fetchEndpoint('starknet_call', {
-  //     request: {
-  //       contract_address: call.contractAddress,
-  //       entry_point_selector: getSelectorFromName(call.entrypoint),
-  //       calldata: CallData.toHex(call.calldata),
-  //     },
-  //     block_id,
-  //   });
-
-  //   return this.responseParser.parseCallContractResponse(result);
-  // }
+  public async callContract(
+    call: Call,
+    blockIdentifier: BlockIdentifier = this.blockIdentifier
+  ): Promise<CallContractResponse> {
+    let resp: CallContractResponse;
+    try {
+      resp = (await callContractBackend(call,blockIdentifier)) as CallContractResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // public async traceTransaction(transactionHash: RPC.TransactionHash): Promise<RPC.Trace> {
   //   return this.fetchEndpoint('starknet_traceTransaction', { transaction_hash: transactionHash });
@@ -484,63 +446,17 @@ export class ServerProvider implements ProviderInterface {
   //   return this.fetchEndpoint('starknet_traceBlockTransactions', { block_hash: blockHash });
   // }
 
-  // public async waitForTransaction(txHash: string, options?: waitForTransactionOptions) {
-  //   let { retries } = this;
-  //   let onchain = false;
-  //   let isErrorState = false;
-  //   // eslint-disable-next-line no-undef-init
-  //   let txReceipt: any = {};
-  //   const retryInterval = options?.retryInterval ?? 5000;
-  //   const errorStates: any = options?.errorStates ?? [TransactionExecutionStatus.REVERTED];
-  //   const successStates: any = options?.successStates ?? [
-  //     TransactionExecutionStatus.SUCCEEDED,
-  //     TransactionFinalityStatus.ACCEPTED_ON_L1,
-  //     TransactionFinalityStatus.ACCEPTED_ON_L2,
-  //   ];
-
-  //   while (!onchain) {
-  //     // eslint-disable-next-line no-await-in-loop
-  //     await wait(retryInterval);
-  //     try {
-  //       // eslint-disable-next-line no-await-in-loop
-  //       txReceipt = await this.getTransactionReceipt(txHash);
-
-  //       // TODO: Hotfix until Pathfinder release fixed casing
-  //       const executionStatus = pascalToSnake(txReceipt.execution_status);
-  //       const finalityStatus = pascalToSnake(txReceipt.finality_status);
-
-  //       if (!executionStatus || !finalityStatus) {
-  //         // Transaction is potentially REJECTED or NOT_RECEIVED but RPC doesn't have dose statuses
-  //         // so we will retry '{ retries }' times
-  //         const error = new Error('waiting for transaction status');
-  //         throw error;
-  //       }
-
-  //       if (successStates.includes(executionStatus) || successStates.includes(finalityStatus)) {
-  //         onchain = true;
-  //       } else if (errorStates.includes(executionStatus) || errorStates.includes(finalityStatus)) {
-  //         const message = `${executionStatus}: ${finalityStatus}: ${txReceipt.revert_reason}`;
-  //         const error = new Error(message) as Error & { response: RPC.TransactionReceipt };
-  //         error.response = txReceipt;
-  //         isErrorState = true;
-  //         throw error;
-  //       }
-  //     } catch (error) {
-  //       if (error instanceof Error && isErrorState) {
-  //         throw error;
-  //       }
-
-  //       if (retries === 0) {
-  //         throw new Error(`waitForTransaction timed-out with retries ${this.retries}`);
-  //       }
-  //     }
-
-  //     retries -= 1;
-  //   }
-
-  //   await wait(retryInterval);
-  //   return txReceipt;
-  // }
+  public async waitForTransaction(txHash: string, options?: waitForTransactionOptions) {
+    let resp: GetTransactionReceiptResponse;
+    try {
+      resp = (await waitForTransactionBackend(txHash,options)) as GetTransactionReceiptResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // /**
   //  * Gets the transaction count from a block.
@@ -586,27 +502,20 @@ export class ServerProvider implements ProviderInterface {
   //   return this.fetchEndpoint('starknet_getEvents', { filter: eventFilter });
   // }
 
-  // public async getSimulateTransaction(
-  //   invocations: AccountInvocations,
-  //   {
-  //     blockIdentifier = this.blockIdentifier,
-  //     skipValidate = false,
-  //     skipExecute = false, // @deprecated
-  //     skipFeeCharge = true, // Pathfinder currently does not support `starknet_simulateTransactions` without `SKIP_FEE_CHARGE` simulation flag being set. This will become supported in a future release
-  //   }: getSimulateTransactionOptions
-  // ): Promise<SimulateTransactionResponse> {
-  //   const block_id = new Block(blockIdentifier).identifier;
-
-  //   const simulationFlags = [];
-  //   if (skipValidate) simulationFlags.push(SimulationFlag.SKIP_VALIDATE);
-  //   if (skipExecute || skipFeeCharge) simulationFlags.push(SimulationFlag.SKIP_FEE_CHARGE);
-
-  //   return this.fetchEndpoint('starknet_simulateTransactions', {
-  //     block_id,
-  //     transactions: invocations.map((it) => this.buildTransaction(it)),
-  //     simulation_flags: simulationFlags,
-  //   }).then(this.responseParser.parseSimulateTransactionResponse);
-  // }
+  public async getSimulateTransaction(
+    invocations: AccountInvocations,
+    options: getSimulateTransactionOptions
+  ): Promise<SimulateTransactionResponse> {
+    let resp: SimulateTransactionResponse;
+    try {
+      resp = (await getSimulateTransactionBackend(invocations,options)) as SimulateTransactionResponse;
+      // console.log("ServerProvider-getblock :",resp);
+    } catch (error: any) {
+      console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
+      throw new ApiErr(error.statusCode, error.name, error.message);
+    }
+    return resp;
+  }
 
   // public async getStarkName(address: BigNumberish, StarknetIdContract?: string): Promise<string> {
   //   return getStarkName(this, address, StarknetIdContract);
