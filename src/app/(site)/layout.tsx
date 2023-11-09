@@ -1,4 +1,4 @@
-import './globals.css'
+// import './globals.css'
 
 export const metadata = {
   title: 'Cairo1-JS',
