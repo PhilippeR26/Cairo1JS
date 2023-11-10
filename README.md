@@ -16,7 +16,14 @@ The DAPP is made in the next.js framework. Coded in Typescript. Using Starknet.j
 
 ## Getting Started 🚀
 
-First, run the development server:
+First, create a `.env.local` file in the root, including your configuration :
+```bash
+PROVIDER_URL = "https://json-rpc.starknet-testnet.xxx"
+ACCOUNT_PRIV_KEY0 = "0x123"
+ACCOUNT_PRIV_KEY1 = "0xabc"
+```
+
+Then, run the development server:
 
 ```bash
 npm i
