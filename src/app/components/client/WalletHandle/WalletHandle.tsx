@@ -50,8 +50,11 @@ export default function WalletHandle() {
 
             return () => {
                 console.log("unsubscribe to events.");
-                wallet?.off("accountsChanged", () => { });
-                wallet?.off('networkChanged', () => { });
+                if (!!wallet) {
+                    wallet.off("accountsChanged", () => {});
+                    console.log("events OFF");
+                    wallet.off('networkChanged', () => {});
+                }
             }
         },
         []
@@ -105,16 +108,16 @@ export default function WalletHandle() {
                     command={constants.CommandWallet.starknet_addInvokeTransaction}
                     param="10"
                 />
-                    <RpcWalletCommand
-                        command={constants.CommandWallet.starknet_addDeclareTransaction}
-                        param="Object"
-                        tip="Declare only once the same contract. Change contract in DAPP code each time."
-                    />
+                <RpcWalletCommand
+                    command={constants.CommandWallet.starknet_addDeclareTransaction}
+                    param="Object"
+                    tip="Declare only once the same contract. Change contract in DAPP code each time."
+                />
                 <RpcWalletCommand
                     command={constants.CommandWallet.starknet_addDeployAccountTransaction}
                     param="Object"
                 />
-                 <RpcWalletCommand
+                <RpcWalletCommand
                     command={constants.CommandWallet.starknet_signTypedData}
                     param="Object"
                 />
