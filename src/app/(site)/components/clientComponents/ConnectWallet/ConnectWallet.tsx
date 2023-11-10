@@ -22,7 +22,7 @@ export default function ConnectWallet() {
         const getWallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
         await getWallet?.enable({ starknetVersion: "v5" } as any);
         useStoreWallet.setState({ wallet: getWallet });
-        useStoreWallet.setState({ providerW: getWallet?.provider });
+        // useStoreWallet.setState({ providerW: getWallet?.provider });
         const addr = encode.addHexPrefix(encode.removeHexPrefix(getWallet?.selectedAddress ?? "0x").padStart(64, "0"));
         useStoreWallet.setState({ addressAccount: addr });
         useStoreWallet.setState({ isConnected: getWallet?.isConnected });

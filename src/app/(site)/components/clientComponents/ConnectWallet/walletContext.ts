@@ -6,8 +6,8 @@ import { ServerProviderNextJS } from "@/app/(site)/Classes/ServerProvider/Server
 import { ServerSignerNextJS } from "@/app/(site)/Classes/ServerSigner/ServerSigner";
 
 export interface WalletState {
-    providerW: ProviderInterface | undefined,
-    providerServer: ServerProviderNextJS | undefined,
+   //providerW: ProviderInterface | undefined,
+    //providerServer: ServerProviderNextJS | undefined,
     addressAccount: string,
     chainId: string,
     accountW: AccountInterface | undefined,
@@ -16,8 +16,8 @@ export interface WalletState {
 }
 
 export const useStoreWallet = create<WalletState>()((set) => ({
-    providerW: undefined,
-    providerServer: undefined,
+    //providerW: undefined,
+    //providerServer: undefined,
     addressAccount: "",
     chainId: "",
     accountW: undefined,
