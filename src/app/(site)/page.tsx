@@ -13,10 +13,13 @@ export default async function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v3.0.1 with starknet.js v5.22.0
+                    Test get-starknet v3.0.1 with Starknet.js v5.24.3
                 </p>
                 <Center>
-                    <Image src={starknetjsImg} alt='starknet.js' width={150} height={150} />
+                    using a provider located in the server
+                    </Center>
+                <Center>
+                    <Image src={starknetjsImg} alt='starknet.js' width={150} />
                 </Center>
                 <p className={styles.bgText}>
                     Please connect to testnet network
