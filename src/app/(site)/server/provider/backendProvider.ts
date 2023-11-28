@@ -82,10 +82,10 @@ export async function getNonceForAddressBackend(contractAddress: string,
 
 export async function getStorageAtBackend(contractAddress: string,
     key: BigNumberish,
-    blockIdentifier?: BlockIdentifier): Promise<RPC.Storage> {
-    let resp: RPC.Storage;
+    blockIdentifier?: BlockIdentifier): Promise<string> {
+    let resp: string;
     try {
-        resp = (await providerBackend.getStorageAt(contractAddress, key, blockIdentifier)) as RPC.Storage;
+        resp = (await providerBackend.getStorageAt(contractAddress, key, blockIdentifier)) as string;
     } catch (error) {
         console.log("Error 526 : backendProvider-getStorageAt.\n", error);
         throw new ApiErr(526, "backendProvider-getStorageAt", error as string);

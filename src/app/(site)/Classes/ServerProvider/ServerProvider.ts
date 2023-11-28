@@ -131,10 +131,10 @@ export class ServerProviderNextJS implements ProviderInterface {
     contractAddress: string,
     key: BigNumberish,
     blockIdentifier: BlockIdentifier = this.blockIdentifier
-  ): Promise<RPC.Storage> {
-    let resp: RPC.Storage;
+  ): Promise<string> {
+    let resp: string;
     try {
-      resp = (await getStorageAtBackend(contractAddress, key, blockIdentifier)) as RPC.Storage;
+      resp = (await getStorageAtBackend(contractAddress, key, blockIdentifier)) as string;
       // console.log("ServerProvider-getblock :",resp);
     } catch (error: any) {
       console.log("ServerProvider error from backendProvider #", error.statusCode, " :", error.name, "\n", error.message);
