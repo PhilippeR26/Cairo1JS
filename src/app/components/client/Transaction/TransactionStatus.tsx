@@ -22,8 +22,8 @@ export default function GetBalance({ transactionHash }: Props) {
     useEffect(() => {
         providerSN?.getTransactionReceipt(transactionHash)
             .then((resp: GetTransactionReceiptResponse) => {
-                console.log("TxStatus =", resp.status);
-                setTxStatus(resp.status ?? "");
+                console.log("TxStatus =", resp.execution_status);
+                setTxStatus(resp.execution_status ?? "");
             })
             .catch((e: any) => { console.log("error getTransactionStatus=", e) });
         return () => { }

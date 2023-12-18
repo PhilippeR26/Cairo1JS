@@ -14,13 +14,16 @@ export default function BlockDisplay({ providerSN }: Props) {
     useEffect(() => {
         const tim = setInterval(() => {
             providerSN.getBlock("latest").then((resp: GetBlockResponse) => {
-                setBlockData({
-                    timeStamp: resp.timestamp,
-                    blockHash: resp.block_hash,
-                    blockNumber: resp.block_number,
-                    gasPrice: resp.gas_price ?? ""
+                if (resp.status !== 'PENDING') {
+                    setBlockData({
+                        timeStamp: resp.timestamp,
+                        blockHash: resp.block_hash ?? "",
+                        blockNumber: resp.block_number,
+                        gasPrice: resp.l1_gas_price.price_in_wei ?? ""
+                    }
+
+                    )
                 }
-                )
             })
                 .catch((e) => { console.log("error getBloc=", e) })
             console.log("timerId=", tim);
