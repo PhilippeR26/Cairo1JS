@@ -21,7 +21,7 @@ export async function getBlockBackend(): Promise<DataBlock> {
         timeStamp: resp.timestamp,
         blockNumber: resp.block_number,
         blockHash: resp.block_hash,
-        gasPrice: resp.gas_price ?? "not defined in this block",
+        gasPrice: resp.l1_gas_price.price_in_wei ?? "not defined in this block",
     }
     revalidatePath("/"); // clear cache and update result
     return block;

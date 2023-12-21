@@ -26,15 +26,17 @@ export default function InteractContract() {
     function catchBlock() {
         providerSN?.getBlock("latest").then((resp: GetBlockResponse) => {
             // console.log("end getBloc");
-            setBlockData({
-                timeStamp: resp.timestamp,
-                blockHash: resp.block_hash,
-                blockNumber: resp.block_number,
-                gasPrice: resp.gas_price ?? ""
+            if (resp.status !== "PENDING") {
+                setBlockData({
+                    timeStamp: resp.timestamp,
+                    blockHash: resp.block_hash,
+                    blockNumber: resp.block_number,
+                    gasPrice: resp.l1_gas_price.price_in_wei 
+                }
+                )
             }
-            )
         })
-            .catch((e) => { console.log("error getBloc=", e) })
+            .catch((e:unknown) => { console.log("error getBloc=", e) })
     }
     useEffect(() => {
         catchBlock()
@@ -42,7 +44,7 @@ export default function InteractContract() {
             catchBlock()
             console.log("timerId=", tim);
         }
-            , 5000 //ms
+            , 8000 //ms
         );
         setTimerId(() => tim);
 
