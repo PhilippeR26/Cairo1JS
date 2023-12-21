@@ -25,7 +25,7 @@
     "react-dom": "18.2.0",
     "server-only": "^0.0.1",
     "sharp": "^0.32.6",
-    "starknet": "file:/D/starknetFork/starknet.js",
+    "starknet": "5.25.0",
     "swr": "^2.2.4",
     "typescript": "^5.2.2",
     "zustand": "^4.4.3"
