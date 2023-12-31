@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
-import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core/StarknetWindowObject";
+import {AccountChangeEventHandler, NetworkChangeEventHandler, StarknetChainId} from "@/app/core/StarknetWindowObject";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
@@ -32,18 +32,18 @@ export default function WalletHandle() {
         () => {
             console.log("subscribe to events.");
             const handleAccount: AccountChangeEventHandler = (accounts: string[] | undefined) => {
-                console.log("accounts=", accounts);
-                if (!!accounts) {
-                    const textAddr = formatAddress(accounts as unknown as string)
+                console.log("accounts change subscription=", accounts);
+                if (accounts?.length) {
+                    const textAddr = formatAddress(accounts[0])
                     setRespChangedAccount(textAddr);
                 };
                 setTime1(getTime());
             };
             wallet?.on("accountsChanged", handleAccount);
 
-            const handleNetwork: NetworkChangeEventHandler = (network: string | undefined) => {
-                console.log("network=", network);
-                if (!!network) { setRespChangedNetwork(network) };
+            const handleNetwork: NetworkChangeEventHandler = (chainId?: StarknetChainId, accounts?: string[]) => {
+                console.log("network change subscription=", chainId);
+                if (!!chainId) { setRespChangedNetwork(chainId) };
                 setTime2(getTime());
             }
             wallet?.on("networkChanged", handleNetwork);
@@ -51,9 +51,9 @@ export default function WalletHandle() {
             return () => {
                 console.log("unsubscribe to events.");
                 if (!!wallet) {
-                    wallet.off("accountsChanged", () => {});
+                    wallet.off("accountsChanged", handleAccount);
                     console.log("events OFF");
-                    wallet.off('networkChanged', () => {});
+                    wallet.off('networkChanged', handleNetwork);
                 }
             }
         },
@@ -85,6 +85,10 @@ export default function WalletHandle() {
             <SimpleGrid minChildWidth="305px" spacing="20px" paddingBottom="20px">
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_requestAccounts}
+                    param=""
+                />
+                <RpcWalletCommand
+                    command={constants.CommandWallet.wallet_requestChainId}
                     param=""
                 />
                 <RpcWalletCommand
@@ -121,6 +125,14 @@ export default function WalletHandle() {
                     command={constants.CommandWallet.starknet_signTypedData}
                     param="Object"
                 />
+                <RpcWalletCommand
+                    command={constants.CommandWallet.starknet_supportedSpecs}
+                    param=""
+                />
+                <RpcWalletCommand
+                    command={constants.CommandWallet.wallet_getPermissions}
+                    param=""
+                />
             </SimpleGrid>
 
             <SimpleGrid minChildWidth="320px" spacing="20px" paddingBottom="20px">
@@ -128,13 +140,13 @@ export default function WalletHandle() {
                     <Center>.id : {wallet?.id}</Center>
                     <Center>.name : {wallet?.name} </Center>
                     <Center>.version : {wallet?.version} </Center>
-                    <Center>.icon : {wallet?.icon.slice(0, 30)} </Center>
+                    <Center>.icon : { typeof(wallet?.icon)==="string" ? wallet?.icon.slice(0, 30) : "day "+wallet?.icon.light.slice(0, 30)+" | "+wallet?.icon.dark.slice(0, 30)} </Center>
                 </Box>
-                <Box bg="green.200" color='black' borderWidth='1px' borderRadius='lg'>
-                    <Center>.selectedAddress : {wallet?.selectedAddress?.slice(0, 20) + "..."} </Center>
-                    <Center>.chainId : {!!(wallet?.chainId) ? wallet.chainId : "undefined"} </Center>
-                    <Center>.isConnected : {!!(wallet?.isConnected) ? wallet.isConnected.toString() : "undefined"} </Center>
-                </Box>
+                {/*<Box bg="green.200" color='black' borderWidth='1px' borderRadius='lg'>*/}
+                {/*    <Center>.selectedAddress : {wallet?.selectedAddress?.slice(0, 20) + "..."} </Center>*/}
+                {/*    <Center>.chainId : {!!(wallet?.chainId) ? wallet.chainId : "undefined"} </Center>*/}
+                {/*    <Center>.isConnected : {!!(wallet?.isConnected) ? wallet.isConnected.toString() : "undefined"} </Center>*/}
+                {/*</Box>*/}
             </SimpleGrid>
         </>
 

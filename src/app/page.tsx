@@ -7,8 +7,8 @@ import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
-import { encode, Provider } from "starknet";
-import { StarknetWindowObject,  } from "./core/StarknetWindowObject";
+
+import { Permission, StarknetChainId, StarknetWindowObject, } from "./core/StarknetWindowObject";
 //import { connect } from "get-starknet";
 
 import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
@@ -43,24 +43,35 @@ export default function Page() {
 
     const handleConnectClick = async () => {
         // const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-        const wallets:StarknetWindowObject[]=scanObjectForWallets(window,isWalletObj);
+        const wallets: StarknetWindowObject[] = scanObjectForWallets(window, isWalletObj);
         // console.log("wallets=", wallets);
-        const wallet=wallets.find((wallet)=>wallet.id=="braavos");
+        const wallet = wallets.find((wallet) => wallet.id == "braavos");
         console.log("wallet=", wallet);
 
         if (!!wallet) {
+            // wallet.on("accountsChanged", (accounts?: string[]) => {
+            //     setAddressAccount(`${accounts?.[0]}`)
+            // })
+            // wallet.on("networkChanged", (chainId?: StarknetChainId, accounts?: string[]) => {
+            //     setChain(`${chainId}`)
+            //     setAddressAccount(`${accounts?.[0]}`)
+            // })
+
             setMyWallet(wallet); // zustand
             // await wallet?.enable({ starknetVersion: "v5" } as any); //not allowed by new Braavos
             //setWallet(wallet); // local state
-            const result=await callRequest({type:"wallet_requestAccounts"});
-            console.log("result=",result);
+            const result = await callRequest({ type: "wallet_requestAccounts" });
+            console.log("result=", result);
             if (Array.isArray(result)) {
-            const addr = formatAddress( result[0]);
-            setAddressAccount(addr);
+                const addr = formatAddress(result[0]);
+                setAddressAccount(addr);
             }
-            setConnected(wallet?.isConnected);
-            if (wallet?.isConnected) {
-                setChain(wallet.chainId); // not provided by Braavos
+
+            const isConnected = await callRequest({ type: "wallet_getPermissions" }).then(res => (res as Permission[])?.includes(Permission.Accounts));
+            setConnected(isConnected);
+            if (isConnected) {
+                const chainId = await callRequest({ type: "wallet_requestChainId" });
+                setChain(`${chainId}`);
             }
         }
     }
@@ -69,14 +80,11 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test experimental Braavos wallet with starknet.js v5.21.0
+                    Test experimental Braavos wallet with starknet.js v6.0.0-Beta.10
                 </p>
                 <Center>
-                    <Image src={starknetjsImg} alt='starknet.js' width={150} height={150} />
+                    <Image src={starknetjsImg} alt='starknet.js' width={150} />
                 </Center>
-                <p className={styles.bgText}>
-                    Please connect to testnet network
-                </p>
                 <div>
                     {!isConnected ? (
                         <Center>
@@ -85,6 +93,7 @@ export default function Page() {
                                 textDecoration="none !important"
                                 outline="none !important"
                                 boxShadow="none !important"
+                                marginTop={3}
                                 onClick={() => {
                                     handleConnectClick();
                                 }}
@@ -100,6 +109,7 @@ export default function Page() {
                                     textDecoration="none !important"
                                     outline="none !important"
                                     boxShadow="none !important"
+                                    marginTop={3}
                                     onClick={() => {
                                         setConnected(false);
                                     }}
@@ -122,7 +132,7 @@ export default function Page() {
                                                 address = {addressAccountFromContext}<br />
                                                 chain = {chainFromContext}<br />
                                                 isConnected={isConnected ? "Yes" : "No"}
-                                                
+
                                             </p>
                                         </Box>
                                         {!!providerFromContext &&

@@ -1,3 +1,15 @@
+import { num, shortString } from "starknet"
+
+export enum StarknetChainId {
+  SN_MAIN = "0x534e5f4d41494e",
+  SN_GOERLI = "0x534e5f474f45524c49",
+  SN_SEPOLIA = "0x534e5f5345504f4c4941",
+}
+
+export enum Permission {
+  Accounts = "accounts",
+}
+
 type FELT = string
 
 type Call = {
@@ -24,11 +36,11 @@ type StarknetMerkleType = {
  * standard.
  */
 type StarknetType =
-  | {
-      name: string
-      type: string
-    }
-  | StarknetMerkleType
+    | {
+  name: string
+  type: string
+}
+    | StarknetMerkleType
 
 /**
  * The EIP712 domain struct. Any of these fields are optional, but it must contain at least one field.
@@ -51,17 +63,20 @@ export interface TypedData {
 
 export type AccountChangeEventHandler = (accounts?: string[]) => void
 
-export type NetworkChangeEventHandler = (network?: string) => void
+export type NetworkChangeEventHandler = (
+    chainId?: StarknetChainId,
+    accounts?: string[],
+) => void
 
 export type WalletEvents =
-  | {
-      type: "accountsChanged"
-      handler: AccountChangeEventHandler
-    }
-  | {
-      type: "networkChanged"
-      handler: NetworkChangeEventHandler
-    }
+    | {
+  type: "accountsChanged"
+  handler: AccountChangeEventHandler
+}
+    | {
+  type: "networkChanged"
+  handler: NetworkChangeEventHandler
+}
 
 /**
  * INVOKE_TXN_V1
@@ -109,7 +124,7 @@ export interface AddDeclareTransactionParameters {
     /**
      * The class ABI, as supplied by the user declaring the class
      */
-    abi?: any
+    abi?: any[]
   }
 }
 export interface AddDeclareTransactionResult {
@@ -187,7 +202,6 @@ export interface AddStarknetChainParameters {
   id: string
   chainId: string // A 0x-prefixed hexadecimal string
   chainName: string
-  baseUrl: string
   rpcUrls?: string[]
   blockExplorerUrls?: string[]
 
@@ -204,90 +218,94 @@ export interface SwitchStarknetChainParameters {
   chainId: string // A 0x-prefixed hexadecimal string
 }
 
-export type RpcMessage =
-  | {
-      type: "wallet_requestAccounts"
-      params?: RequestAccountsParameters
-      result: string[]
-    }
-  | {
-      type: "wallet_watchAsset"
-      params: WatchAssetParameters
-      result: boolean
-    }
-  | {
-      type: "wallet_addStarknetChain"
-      params: AddStarknetChainParameters
-      result: boolean
-    }
-  | {
-      type: "wallet_switchStarknetChain"
-      params: SwitchStarknetChainParameters
-      result: boolean
-    }
-  | {
-      type: "starknet_addInvokeTransaction"
-      params: AddInvokeTransactionParameters
-      result: AddInvokeTransactionResult
-    }
-  | {
-      type: "starknet_addDeclareTransaction"
-      params: AddDeclareTransactionParameters
-      result: AddDeclareTransactionResult
-    }
-  | {
-      type: "starknet_addDeployAccountTransaction"
-      params: AddDeployAccountTransactionParameters
-      result: AddDeployAccountTransactionResult
-    }
-  | {
-      type: "starknet_signTypedData"
-      params: TypedData
-      result: string[]
-    }
+// see https://community.starknet.io/t/snip-deployment-interface-between-dapps-and-wallets/101923
+export interface GetDeploymentDataResult {
+  address: FELT // the expected address, used to double-check the returned data
+  class_hash: FELT // The class hash of the contract to deploy
+  salt: FELT // The salt used for the computation of the account address
+  calldata: FELT[] // An array of felts
+  sigdata?: FELT[] // An optional array of felts to be added in the signature
+  version: 0 | 1 // Cairo version (an integer)
+}
 
-export interface IStarknetWindowObject {
+export type RpcMessage =
+    | {
+  type: "wallet_getPermissions"
+  result: Permission[]
+}
+    | {
+  type: "wallet_requestAccounts"
+  params?: RequestAccountsParameters
+  result: string[]
+}
+    | {
+  type: "wallet_watchAsset"
+  params: WatchAssetParameters
+  result: boolean
+}
+    | {
+  type: "wallet_addStarknetChain"
+  params: AddStarknetChainParameters
+  result: boolean
+}
+    | {
+  type: "wallet_switchStarknetChain"
+  params: SwitchStarknetChainParameters
+  result: boolean
+}
+    | {
+  type: "wallet_requestChainId"
+  result: StarknetChainId // returns the chain ID of the current network
+}
+    | {
+  type: "wallet_deploymentData"
+  result: GetDeploymentDataResult
+}
+    | {
+  type: "starknet_addInvokeTransaction"
+  params: AddInvokeTransactionParameters
+  result: AddInvokeTransactionResult
+}
+    | {
+  type: "starknet_addDeclareTransaction"
+  params: AddDeclareTransactionParameters
+  result: AddDeclareTransactionResult
+}
+    | {
+  type: "starknet_addDeployAccountTransaction"
+  params: AddDeployAccountTransactionParameters
+  result: AddDeployAccountTransactionResult
+}
+    | {
+  type: "starknet_signTypedData"
+  params: TypedData
+  result: string[]
+}
+    | {
+  type: "starknet_supportedSpecs"
+  result: string[] // supported starknet specs' tags (see https://github.com/starkware-libs/starknet-specs)
+}
+
+export interface StarknetWindowObject {
   id: string
   name: string
   version: string
-  icon: string
+  icon: string | { dark: string; light: string }
   request: <T extends RpcMessage>(
-    call: Omit<T, "result">,
+      call: Omit<T, "result">,
   ) => Promise<T["result"]>
-  isPreauthorized: () => Promise<boolean>
   on: <E extends WalletEvents>(
-    event: E["type"],
-    handleEvent: E["handler"],
+      event: E["type"],
+      handleEvent: E["handler"],
   ) => void
   off: <E extends WalletEvents>(
-    event: E["type"],
-    handleEvent: E["handler"],
+      event: E["type"],
+      handleEvent: E["handler"],
   ) => void
-  selectedAddress?: string
-  chainId?: string
-  isConnected: boolean
 }
-
-export interface ConnectedStarknetWindowObject extends IStarknetWindowObject {
-  selectedAddress: string
-  chainId: string
-  isConnected: true
-}
-
-export interface DisconnectedStarknetWindowObject
-  extends IStarknetWindowObject {
-  isConnected: false
-}
-
-export type StarknetWindowObject =
-  | ConnectedStarknetWindowObject
-  | DisconnectedStarknetWindowObject
 
 declare global {
   interface Window {
-    starknet?: StarknetWindowObject
-    starknet_braavos?: StarknetWindowObject
-    starknet_argentX?: StarknetWindowObject
     [key: `starknet_${string}`]: StarknetWindowObject | undefined
   }
 }

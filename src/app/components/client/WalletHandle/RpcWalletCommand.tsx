@@ -49,6 +49,20 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 onOpen();
                 break;
             }
+            case constants.CommandWallet.wallet_requestChainId: {
+                const param: RequestAccountsParameters = {};
+                const myRequest: Request = {
+                    type: command,
+                    params: param
+                }
+                const response = await callRequest(myRequest);
+                const txtResponse: string = typeof (response) == "string" ?
+                response :
+                (response ? "Succeed" : "Fail");
+            setResponse(txtResponse);
+            onOpen();
+                break;
+            }
             case constants.CommandWallet.wallet_watchAsset: {
                 const myAsset: WatchAssetParameters = {
                     type: "ERC20",
@@ -92,7 +106,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                     id: param,
                     chainId: shortString.encodeShortString(param),  // A 0x-prefixed hexadecimal string
                     chainName: param,
-                    baseUrl: "http://192.168.1.44:6060",
+                    rpcUrls: ["http://192.168.1.44:6060"],
                     nativeCurrency: {
                         address: constants.addrETH, // Not part of the standard, but required by StarkNet as it can work with any ERC20 token as the fee token
                         name: "ETHEREUM",
@@ -266,6 +280,28 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                     const tmp = response as string[];
                     txtResponse = formatAddress(tmp[0]) + " " + formatAddress(tmp[1]);
                 }
+                setResponse(txtResponse);
+                onOpen();
+                break;
+            }
+            case constants.CommandWallet.starknet_supportedSpecs: {
+                const myRequest: Request = {
+                    type: command,
+                    params: undefined
+                }
+                const response = await callRequest(myRequest);
+                let txtResponse: string = typeof(response)=="string"?response: (response as string[]).join(", ");
+                setResponse(txtResponse);
+                onOpen();
+                break;
+            }
+            case constants.CommandWallet.wallet_getPermissions:{
+                const myRequest: Request = {
+                    type: command,
+                    params: undefined
+                }
+                const response = await callRequest(myRequest);
+                let txtResponse: string = typeof(response)=="string"?response: (response as string[]).join(", ");
                 setResponse(txtResponse);
                 onOpen();
                 break;

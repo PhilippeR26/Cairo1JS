@@ -5,11 +5,8 @@ export const isWalletObj = (wallet: any): boolean => {
       [
         // wallet's must have methods/members, see IStarknetWindowObject
         "request",
-        "isConnected",
-        "isPreauthorized",
         "on",
         "off",
-        "provider",
         "version",
         "id",
         "name",

@@ -9,5 +9,8 @@ export enum CommandWallet {
     starknet_addInvokeTransaction = "starknet_addInvokeTransaction",
     starknet_addDeclareTransaction = "starknet_addDeclareTransaction",
     starknet_addDeployAccountTransaction = "starknet_addDeployAccountTransaction",
-    starknet_signTypedData = "starknet_signTypedData"
+    starknet_signTypedData = "starknet_signTypedData",
+    starknet_supportedSpecs = "starknet_supportedSpecs",
+    wallet_requestChainId = "wallet_requestChainId",
+    wallet_getPermissions = "wallet_getPermissions",
 }
