@@ -133,6 +133,10 @@ export default function WalletHandle() {
                     command={constants.CommandWallet.wallet_getPermissions}
                     param=""
                 />
+                <RpcWalletCommand
+                    command={constants.CommandWallet.wallet_deploymentData}
+                    param=""
+                />
             </SimpleGrid>
 
             <SimpleGrid minChildWidth="320px" spacing="20px" paddingBottom="20px">

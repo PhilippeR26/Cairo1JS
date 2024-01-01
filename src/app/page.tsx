@@ -46,7 +46,7 @@ export default function Page() {
         const wallets: StarknetWindowObject[] = scanObjectForWallets(window, isWalletObj);
         // console.log("wallets=", wallets);
         const wallet = wallets.find((wallet) => wallet.id == "braavos");
-        console.log("wallet=", wallet);
+        console.log("Connected wallet=", wallet);
 
         if (!!wallet) {
             // wallet.on("accountsChanged", (accounts?: string[]) => {
@@ -58,10 +58,9 @@ export default function Page() {
             // })
 
             setMyWallet(wallet); // zustand
-            // await wallet?.enable({ starknetVersion: "v5" } as any); //not allowed by new Braavos
-            //setWallet(wallet); // local state
+            
             const result = await callRequest({ type: "wallet_requestAccounts" });
-            console.log("result=", result);
+            console.log("Current account addr =", result);
             if (Array.isArray(result)) {
                 const addr = formatAddress(result[0]);
                 setAddressAccount(addr);

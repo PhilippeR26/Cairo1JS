@@ -13,4 +13,5 @@ export enum CommandWallet {
     starknet_supportedSpecs = "starknet_supportedSpecs",
     wallet_requestChainId = "wallet_requestChainId",
     wallet_getPermissions = "wallet_getPermissions",
+    wallet_deploymentData = "wallet_deploymentData",
 }

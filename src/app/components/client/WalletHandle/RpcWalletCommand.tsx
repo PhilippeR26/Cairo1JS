@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/StarknetWindowObject";
+import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/StarknetWindowObject";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
 
@@ -171,7 +171,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
             }
             case constants.CommandWallet.starknet_addDeployAccountTransaction: {
 
-                const decClassHash = "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"; // cairo v2.1.0
+                const decClassHash = "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"; // OZ cairo v2.1.0
                 const privateKey = stark.randomAddress();
                 console.log('New account :\nprivateKey=', privateKey);
                 const starkKeyPub = ec.starkCurve.getStarkKey(privateKey);
@@ -302,6 +302,17 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 }
                 const response = await callRequest(myRequest);
                 let txtResponse: string = typeof(response)=="string"?response: (response as string[]).join(", ");
+                setResponse(txtResponse);
+                onOpen();
+                break;
+            }
+            case constants.CommandWallet.wallet_deploymentData:{
+                const myRequest: Request = {
+                    type: command,
+                    params: undefined
+                }
+                const response = await callRequest(myRequest);
+                let txtResponse: string = typeof(response)=="string"?response: JSON.stringify(response as GetDeploymentDataResult);
                 setResponse(txtResponse);
                 onOpen();
                 break;

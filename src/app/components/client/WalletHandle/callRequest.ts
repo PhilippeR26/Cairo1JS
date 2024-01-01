@@ -19,7 +19,7 @@ export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Res
         (err: any) => { console.log("Wallet request", call.type, " failed.\n", err) };
         crash = true;
     }
-    console.log("request",call.type,"resp =", resp, "crash =", crash);
+    console.log("request",call.type,"resp =", resp, ", crash =", crash);
     //let txtResponse: string;
     if (crash || !resp) { return "Error" }
     return resp;
