@@ -71,6 +71,7 @@ request starknet_addDeployAccountTransaction resp = {
 > The address is in fact an array. Same comment than `wallet_requestAccounts`.
   
 >  - If the user decline the request, the function throw an error. Impossible to differentiate with an internal browser problem.
+- The account address do not needs to be pre-funded. The current account will pay the deployment fees.
 
 # 12. starknet_signTypedData : 
 It works.
