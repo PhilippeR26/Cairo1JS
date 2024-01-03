@@ -1,7 +1,8 @@
 "use client";
 import Image from 'next/image'
 import styles from './page.module.css'
-import { Center, Spinner, Text, Button, Divider, Box, Tabs, TabList, Tab, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Center, Spinner, Text, Button, Divider, Box, Tabs, TabList, Tab, TabPanels, TabPanel, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, VStack, StackDivider } from '@chakra-ui/react';
+import { MdBuild } from "react-icons/md"
 import InteractContract from './components/client/Contract/InteractContract';
 import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
@@ -11,19 +12,20 @@ import { useStoreWallet } from './components/Wallet/walletContext';
 import { Permission, StarknetChainId, StarknetWindowObject, } from "./core/StarknetWindowObject";
 //import { connect } from "get-starknet";
 
-import starknetjsImg from '../../public/Images/StarkNet-JS_logo.png';
+import starknetJsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
 import { scanObjectForWallets } from './core/wallet/scan';
 import { isWalletObj } from './core/wallet/isWalletObject';
 import { callRequest } from './components/client/WalletHandle/callRequest';
 import { isBooleanObject } from 'util/types';
 import { formatAddress } from '@/utils/utils';
+import SelectWallet from './components/client/WalletHandle/SelectWallet';
 
 export default function Page() {
 
-    // Connect Argent-X or Braavos wallet
-    const [isConnected, setConnected] = useState(false);
-    // const [wallet, setWallet] = useState<StarknetWindowObject | null>(null);
+    const displaySelectWalletUI = useStoreWallet(state => state.displaySelectWalletUI);
+    const setSelectWalletUI = useStoreWallet(state => state.setSelectWalletUI);
+
     const addressAccountFromContext = useStoreWallet(state => state.address);
     const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
 
@@ -39,41 +41,12 @@ export default function Page() {
     const providerFromContext = useStoreWallet(state => state.provider);
     const setProvider = useStoreWallet(state => state.setProvider);
 
-    // Component context
+    const isConnected = useStoreWallet(state => state.isConnected);
+    const setConnected = useStoreWallet(state => state.setConnected);
 
-    const handleConnectClick = async () => {
-        // const wallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-        const wallets: StarknetWindowObject[] = scanObjectForWallets(window, isWalletObj);
-        // console.log("wallets=", wallets);
-        const wallet = wallets.find((wallet) => wallet.id == "braavos");
-        console.log("Connected wallet=", wallet);
 
-        if (!!wallet) {
-            // wallet.on("accountsChanged", (accounts?: string[]) => {
-            //     setAddressAccount(`${accounts?.[0]}`)
-            // })
-            // wallet.on("networkChanged", (chainId?: StarknetChainId, accounts?: string[]) => {
-            //     setChain(`${chainId}`)
-            //     setAddressAccount(`${accounts?.[0]}`)
-            // })
 
-            setMyWallet(wallet); // zustand
-            
-            const result = await callRequest({ type: "wallet_requestAccounts" });
-            console.log("Current account addr =", result);
-            if (Array.isArray(result)) {
-                const addr = formatAddress(result[0]);
-                setAddressAccount(addr);
-            }
 
-            const isConnected = await callRequest({ type: "wallet_getPermissions" }).then(res => (res as Permission[])?.includes(Permission.Accounts));
-            setConnected(isConnected);
-            if (isConnected) {
-                const chainId = await callRequest({ type: "wallet_requestChainId" });
-                setChain(`${chainId}`);
-            }
-        }
-    }
 
     return (
         <ChakraProvider>
@@ -82,24 +55,26 @@ export default function Page() {
                     Test experimental Braavos wallet with starknet.js v6.0.0-Beta.10
                 </p>
                 <Center>
-                    <Image src={starknetjsImg} alt='starknet.js' width={150} />
+                    <Image src={starknetJsImg} alt='starknet.js' width={150} />
                 </Center>
                 <div>
                     {!isConnected ? (
-                        <Center>
-                            <Button
-                                ml="4"
-                                textDecoration="none !important"
-                                outline="none !important"
-                                boxShadow="none !important"
-                                marginTop={3}
-                                onClick={() => {
-                                    handleConnectClick();
-                                }}
-                            >
-                                Connect Braavos Wallet
-                            </Button>
-                        </Center>
+                        <>
+                            <Center>
+                                <Button
+                                    ml="4"
+                                    textDecoration="none !important"
+                                    outline="none !important"
+                                    boxShadow="none !important"
+                                    marginTop={3}
+                                    onClick={() => setSelectWalletUI(true)}
+                                >
+                                    Connect a Wallet
+                                </Button>
+                                {displaySelectWalletUI ? <SelectWallet></SelectWallet> : null}
+
+                            </Center>
+                        </>
                     ) : (
                         <>
                             <Center>
@@ -111,6 +86,7 @@ export default function Page() {
                                     marginTop={3}
                                     onClick={() => {
                                         setConnected(false);
+                                        setSelectWalletUI(false)
                                     }}
                                 >
                                     {addressAccountFromContext
