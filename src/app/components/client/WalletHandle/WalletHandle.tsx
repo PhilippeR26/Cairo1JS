@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
-import {AccountChangeEventHandler, NetworkChangeEventHandler, StarknetChainId} from "@/app/core/StarknetWindowObject";
+import { AccountChangeEventHandler, NetworkChangeEventHandler, StarknetChainId } from "@/app/core/StarknetWindowObject";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
@@ -144,7 +144,7 @@ export default function WalletHandle() {
                     <Center>.id : {wallet?.id}</Center>
                     <Center>.name : {wallet?.name} </Center>
                     <Center>.version : {wallet?.version} </Center>
-                    <Center>.icon : { typeof(wallet?.icon)==="string" ? wallet?.icon.slice(0, 30) : "day "+wallet?.icon.light.slice(0, 30)+" | "+wallet?.icon.dark.slice(0, 30)} </Center>
+                    <Center>.icon : {typeof (wallet?.icon) === "string" ? wallet?.icon.slice(0, 30) : "day " + wallet?.icon.light.slice(0, 30) + " | " + wallet?.icon.dark.slice(0, 30)} </Center>
                 </Box>
                 {/*<Box bg="green.200" color='black' borderWidth='1px' borderRadius='lg'>*/}
                 {/*    <Center>.selectedAddress : {wallet?.selectedAddress?.slice(0, 20) + "..."} </Center>*/}

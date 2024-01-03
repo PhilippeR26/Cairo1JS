@@ -57,10 +57,10 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 }
                 const response = await callRequest(myRequest);
                 const txtResponse: string = typeof (response) == "string" ?
-                response :
-                (response ? "Succeed" : "Fail");
-            setResponse(txtResponse);
-            onOpen();
+                    response :
+                    (response ? "Succeed" : "Fail");
+                setResponse(txtResponse);
+                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_watchAsset: {
@@ -290,29 +290,29 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                     params: undefined
                 }
                 const response = await callRequest(myRequest);
-                let txtResponse: string = typeof(response)=="string"?response: (response as string[]).join(", ");
+                let txtResponse: string = typeof (response) == "string" ? response : (response as string[]).join(", ");
                 setResponse(txtResponse);
                 onOpen();
                 break;
             }
-            case constants.CommandWallet.wallet_getPermissions:{
+            case constants.CommandWallet.wallet_getPermissions: {
                 const myRequest: Request = {
                     type: command,
                     params: undefined
                 }
                 const response = await callRequest(myRequest);
-                let txtResponse: string = typeof(response)=="string"?response: (response as string[]).join(", ");
+                let txtResponse: string = typeof (response) == "string" ? response : (response as string[]).join(", ");
                 setResponse(txtResponse);
                 onOpen();
                 break;
             }
-            case constants.CommandWallet.wallet_deploymentData:{
+            case constants.CommandWallet.wallet_deploymentData: {
                 const myRequest: Request = {
                     type: command,
                     params: undefined
                 }
                 const response = await callRequest(myRequest);
-                let txtResponse: string = typeof(response)=="string"?response: JSON.stringify(response as GetDeploymentDataResult);
+                let txtResponse: string = typeof (response) == "string" ? response : JSON.stringify(response as GetDeploymentDataResult);
                 setResponse(txtResponse);
                 onOpen();
                 break;

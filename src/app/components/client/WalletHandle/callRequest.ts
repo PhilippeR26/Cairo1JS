@@ -4,7 +4,7 @@ import { RpcMessage } from "@/app/core/StarknetWindowObject";
 
 export type Response = Pick<RpcMessage, "result">["result"];
 
-export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Response|string> {
+export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Response | string> {
     const myWallet = useStoreWallet.getState().wallet;
     if (!myWallet) {
         console.log("No wallet connected.");
@@ -19,7 +19,7 @@ export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Res
         (err: any) => { console.log("Wallet request", call.type, " failed.\n", err) };
         crash = true;
     }
-    console.log("request",call.type,"resp =", resp, ", crash =", crash);
+    console.log("request", call.type, "resp =", resp, ", crash =", crash);
     //let txtResponse: string;
     if (crash || !resp) { return "Error" }
     return resp;

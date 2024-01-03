@@ -1,5 +1,5 @@
 import { Permission, StarknetWindowObject } from "@/app/core/StarknetWindowObject";
-import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useEffect } from "react";
 import { scanObjectForWallets } from "@/app/core/wallet/scan";
@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
 import { MdBuild } from "react-icons/md"
-
 
 export default function SelectWallet() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -28,7 +27,6 @@ export default function SelectWallet() {
     const [walletList, setWalletList] = useState<StarknetWindowObject[]>([]);
 
 
-
     const handleSelectedWallet = async (wallet: StarknetWindowObject) => {
         console.log("Trying to connect wallet=", wallet);
         setMyWallet(wallet); // zustand
@@ -39,13 +37,11 @@ export default function SelectWallet() {
             setSelectWalletUI(false);
             return;
         }
-
         console.log("Current account addr =", result);
         if (Array.isArray(result)) {
             const addr = formatAddress(result[0]);
             setAddressAccount(addr); // zustand
         }
-
         const isConnectedWallet: boolean = await callRequest({ type: "wallet_getPermissions" }).then(res => (res as Permission[])?.includes(Permission.Accounts));
         setConnected(isConnectedWallet); // zustand
         if (isConnected) {
@@ -53,7 +49,6 @@ export default function SelectWallet() {
             setChain(`${chainId}`);
         }
         setSelectWalletUI(false);
-
         // console.log("End of handleSelectedWallet", isConnected);
     }
 
@@ -71,9 +66,10 @@ export default function SelectWallet() {
     return (
         <Modal
             isOpen={isOpen}
-            onClose={()=>{
+            onClose={() => {
                 setSelectWalletUI(false);
-                onClose()}}
+                onClose()
+            }}
             closeOnOverlayClick={true}
         >
             <ModalOverlay />
@@ -90,9 +86,10 @@ export default function SelectWallet() {
                     >
                         {
                             walletList.map((wallet: StarknetWindowObject, index: number) => {
+                                const iconW: string = typeof (wallet.icon) == "string" ? wallet.icon : wallet.icon.light;
                                 return <>
-                                    <Button id={index.toString()}
-                                        leftIcon={<MdBuild />}
+                                    <Button id={"wId" + index.toString()}
+                                        leftIcon={<Image src={iconW} width={30} />}
                                         onClick={() => {
                                             handleSelectedWallet(wallet);
                                             onClose()
