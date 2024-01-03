@@ -28,4 +28,4 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-> You can test this DAPP ; it's already deployed [here](https://cairo1-js-git-testnewwallet-philipper26.vercel.app/).
+> You can test this DAPP ; it's already deployed [here](https://cairo1-js-git-testbraavos002-philipper26.vercel.app/).
