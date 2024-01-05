@@ -25,7 +25,7 @@ export const useStoreWallet = create<WalletState>()(set => ({
     setMyWallet: (wallet: StarknetWindowObject) => { set(state => ({ wallet: wallet })) },
     address: "",
     setAddressAccount: (address: string) => { set(state => ({ address })) },
-    chain: " ",
+    chain: "",
     setChain: (chain: string) => { set(state => ({ chain: chain })) },
     account: undefined,
     setAccount: (account: AccountInterface) => { set(state => ({ account })) },

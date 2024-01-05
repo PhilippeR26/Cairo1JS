@@ -1,6 +1,7 @@
-import { Permission, StarknetWindowObject } from "@/app/core/StarknetWindowObject";
+import { Permission, StarknetChainId, StarknetWindowObject } from "@/app/core/StarknetWindowObject";
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
+import { useFrontendProvider } from "../provider/providerContext";
 import { useEffect } from "react";
 import { scanObjectForWallets } from "@/app/core/wallet/scan";
 import { isWalletObj } from "@/app/core/wallet/isWalletObject";
@@ -14,6 +15,9 @@ export default function SelectWallet() {
 
     const myWallet = useStoreWallet(state => state.wallet);
     const setMyWallet = useStoreWallet(state => state.setMyWallet);
+
+    const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
+    const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
 
     const isConnected = useStoreWallet(state => state.isConnected);
     const setConnected = useStoreWallet(state => state.setConnected);
@@ -44,9 +48,11 @@ export default function SelectWallet() {
         }
         const isConnectedWallet: boolean = await callRequest({ type: "wallet_getPermissions" }).then(res => (res as Permission[])?.includes(Permission.Accounts));
         setConnected(isConnectedWallet); // zustand
-        if (isConnected) {
-            const chainId = await callRequest({ type: "wallet_requestChainId" });
-            setChain(`${chainId}`);
+        if (isConnectedWallet) {
+            const chainId = (await callRequest({ type: "wallet_requestChainId" })) as string;
+            setChain(chainId);
+            setCurrentFrontendProviderIndex((Object.values(StarknetChainId) as string[]).indexOf(chainId));
+            console.log("change Provider index to :",myFrontendProviderIndex);
         }
         setSelectWalletUI(false);
         // console.log("End of handleSelectedWallet", isConnected);

@@ -20,6 +20,9 @@ import { callRequest } from './components/client/WalletHandle/callRequest';
 import { isBooleanObject } from 'util/types';
 import { formatAddress } from '@/utils/utils';
 import SelectWallet from './components/client/WalletHandle/SelectWallet';
+import WalletAccount from './components/client/WalletHandle/WalletAccount';
+import { encode, shortString } from 'starknet';
+import { useFrontendProvider } from './components/client/provider/providerContext';
 
 export default function Page() {
 
@@ -28,6 +31,9 @@ export default function Page() {
 
     const addressAccountFromContext = useStoreWallet(state => state.address);
     const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
+
+    const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
+    const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
 
     const myWallet = useStoreWallet(state => state.wallet);
     const setMyWallet = useStoreWallet(state => state.setMyWallet);
@@ -98,14 +104,19 @@ export default function Page() {
                             <Tabs variant="enclosed" colorScheme='facebook' size="lg" isFitted >
                                 <TabList >
                                     <Tab> BlockChain</Tab>
-                                    <Tab>Wallet</Tab>
+                                    <Tab>Wallet API</Tab>
+                                    <Tab>WalletAccount</Tab>
                                 </TabList>
                                 <TabPanels>
                                     <TabPanel>
                                         <Box bg='pink.200' color='black' borderWidth='1px' borderRadius='md'>
                                             <p className={styles.text1}>
                                                 address = {addressAccountFromContext}<br />
-                                                chain = {chainFromContext}<br />
+                                                chain = {chainFromContext!=""? shortString.decodeShortString(chainFromContext):""}
+                                                <br />
+                                                provider = my frontend provider for {Object.keys(StarknetChainId)[myFrontendProviderIndex] 
+                                                 }
+                                                <br />
                                                 isConnected={isConnected ? "Yes" : "No"}
 
                                             </p>
@@ -116,6 +127,9 @@ export default function Page() {
                                     <TabPanel>
                                         <p></p>
                                         <WalletHandle></WalletHandle>
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <WalletAccount></WalletAccount>
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>

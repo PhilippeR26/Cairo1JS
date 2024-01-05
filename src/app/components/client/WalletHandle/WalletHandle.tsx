@@ -10,22 +10,26 @@ import * as constants from "../../../../utils/constants";
 import styles from '../../../page.module.css'
 import RpcWalletCommand from './RpcWalletCommand';
 import { formatAddress } from '@/utils/utils';
-
-function sendRequest(command: constants.CommandWallet, param: any) {
-
-    return (
-        <>
-        </>
-    )
-}
+import { useFrontendProvider } from '../provider/providerContext';
 
 export default function WalletHandle() {
     // wallet context
     const providerSN = useStoreWallet(state => state.provider);
     const wallet = useStoreWallet(state => state.wallet);
+
+    const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
+    const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
+
+    const chainFromContext = useStoreWallet(state => state.chain);
+    const setChain = useStoreWallet(state => state.setChain);
+    const addressAccountFromContext = useStoreWallet(state => state.address);
+    const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
+ 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [respChangedAccount, setRespChangedAccount] = useState<string>("N/A");
     const [respChangedNetwork, setRespChangedNetwork] = useState<string>("N/A");
+
+
     const [time1, setTime1] = useState<string>("N/A");
     const [time2, setTime2] = useState<string>("N/A");
     useEffect(
@@ -36,6 +40,7 @@ export default function WalletHandle() {
                 if (accounts?.length) {
                     const textAddr = formatAddress(accounts[0])
                     setRespChangedAccount(textAddr);
+                    setAddressAccount(textAddr);
                 };
                 setTime1(getTime());
             };
@@ -43,7 +48,13 @@ export default function WalletHandle() {
 
             const handleNetwork: NetworkChangeEventHandler = (chainId?: StarknetChainId, accounts?: string[]) => {
                 console.log("network change subscription=", chainId);
-                if (!!chainId) { setRespChangedNetwork(chainId) };
+                if (!!chainId) {
+                    setRespChangedNetwork(chainId);
+                    setChain(chainId); //zustand
+                    setCurrentFrontendProviderIndex((Object.values(StarknetChainId) as string[]).indexOf(chainId));
+                    console.log("change Provider index to",chainId," :", myFrontendProviderIndex);
+
+                };
                 setTime2(getTime());
             }
             wallet?.on("networkChanged", handleNetwork);
