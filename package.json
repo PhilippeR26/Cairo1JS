@@ -26,7 +26,7 @@
     "react-icons": "^4.12.0",
     "server-only": "^0.0.1",
     "sharp": "^0.32.6",
-    "starknet": "starknet-io/starknet.js#5c458153224a469a7d27ea44931a5864c6fa2251",
+    "starknet": "^6.0.0-beta.10",
     "swr": "^2.2.4",
     "typescript": "^5.2.2",
     "zustand": "^4.4.3"

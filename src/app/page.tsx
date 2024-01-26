@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import { Center, Spinner, Text, Button, Divider, Box, Tabs, TabList, Tab, TabPanels, TabPanel, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, VStack, StackDivider } from '@chakra-ui/react';
-import { MdBuild } from "react-icons/md"
 import InteractContract from './components/client/Contract/InteractContract';
 import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'

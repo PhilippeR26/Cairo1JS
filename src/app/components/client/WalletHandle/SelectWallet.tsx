@@ -8,7 +8,6 @@ import { isWalletObj } from "@/app/core/wallet/isWalletObject";
 import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
-import { MdBuild } from "react-icons/md"
 
 export default function SelectWallet() {
     const { isOpen, onOpen, onClose } = useDisclosure()
