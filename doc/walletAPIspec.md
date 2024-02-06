@@ -61,7 +61,7 @@ enum StarknetChainId {
   SN_SEPOLIA = "0x534e5f5345504f4c4941",
 }
 ```
-### Unsubscription :
+### Un-subscription :
 Similar to subscription, using `.off` method.
 ```typescript
 wallet.off("accountsChanged", handleAccount);
@@ -139,7 +139,7 @@ response : boolean
 ### Behavior :
 - The wallet opens a window to ask if you agree to add this token in the display list. If you agree, returns `true`. 
 - The optional parameters are useless, as they are automatically recovered from the blockchain. Whatever you provide, only the blockchain data are used.
-- If the address is not an ERC20, the result is `false`.
+- If the address is not an ERC20, the method fails.
 - If the token is already displayed, the result is `true`.
 ### Example :
 ```typescript

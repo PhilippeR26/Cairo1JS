@@ -1,6 +1,6 @@
 
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { RpcMessage } from "@/app/core/StarknetWindowObject";
+import { RpcMessage } from "@/app/core/rpcMessage";
 
 export type Response = Pick<RpcMessage, "result">["result"];
 
@@ -15,8 +15,8 @@ export async function callRequest(call: Omit<RpcMessage, "result">): Promise<Res
     try {
         resp = await myWallet.request(call);
 
-    } catch {
-        (err: any) => { console.log("Wallet request", call.type, " failed.\n", err) };
+    } catch (err: any) {
+         console.log("Wallet request", call.type, " failed.\n", err) ;
         crash = true;
     }
     console.log("request", call.type, "resp =", resp, ", crash =", crash);

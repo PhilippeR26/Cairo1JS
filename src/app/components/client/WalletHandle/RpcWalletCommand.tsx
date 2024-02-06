@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/StarknetWindowObject";
+import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/rpcMessage";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
 
@@ -68,9 +68,9 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                     type: "ERC20",
                     options: {
                         address: param,
-                        decimals: 10,
-                        name: "ZOZOZO",
-                        symbol: "ZZZ"
+                        decimals: 18,
+                        name: "snjs6-celebration",
+                        symbol: "snsj6"
                     } // decimals, name, symbol options are useless and are not taken into account by the Wallet
                 };
                 const myRequest = {
@@ -155,8 +155,16 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
 
 
                 const myParams: AddDeclareTransactionParameters = {
-                    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
-                    contract_class: contractSierra
+                     compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
+                    contract_class:
+                    {
+                        sierra_program: contractSierra.sierra_program,
+                        contract_class_version: "0x01",
+                        entry_points_by_type: contractSierra.entry_points_by_type,
+                        abi:"0x1234"
+                    },
+
+                    
                 }
                 const myRequest = {
                     type: command,

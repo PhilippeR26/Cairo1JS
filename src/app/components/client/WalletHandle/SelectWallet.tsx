@@ -1,4 +1,5 @@
-import { Permission, StarknetWindowObject } from "@/app/core/StarknetWindowObject";
+import { StarknetWindowObject } from "@/app/core/StarknetWindowObject";
+import { Permission } from "@/app/core/rpcMessage";
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useEffect } from "react";
@@ -7,7 +8,6 @@ import { isWalletObj } from "@/app/core/wallet/isWalletObject";
 import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
-import { MdBuild } from "react-icons/md"
 
 export default function SelectWallet() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -43,6 +43,7 @@ export default function SelectWallet() {
             setAddressAccount(addr); // zustand
         }
         const isConnectedWallet: boolean = await callRequest({ type: "wallet_getPermissions" }).then(res => (res as Permission[])?.includes(Permission.Accounts));
+        console.log("wallet permissioned");
         setConnected(isConnectedWallet); // zustand
         if (isConnected) {
             const chainId = await callRequest({ type: "wallet_requestChainId" });

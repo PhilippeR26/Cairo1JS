@@ -10,7 +10,7 @@ export function scanObjectForWallets(
     >((wallets, key) => {
       if (key.startsWith("starknet")) {
         const wallet = obj[key]
-
+        console.log("wallet=",wallet);
         if (isWalletObject(wallet) && !wallets[wallet.id]) {
           wallets[wallet.id] = wallet
         }

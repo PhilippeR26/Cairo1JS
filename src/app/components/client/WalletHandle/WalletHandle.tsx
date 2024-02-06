@@ -2,7 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
-import { AccountChangeEventHandler, NetworkChangeEventHandler, StarknetChainId } from "@/app/core/StarknetWindowObject";
+import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core/walletEvents";
+import {  StarknetChainId } from "@/app/core/rpcMessage";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
@@ -93,8 +94,8 @@ export default function WalletHandle() {
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_watchAsset}
-                    param={constants.addrxASTR}
-                    symbol={"xASTR"}
+                    param={"0x62376175ba2ddc307b30813312d8f09796f777b8c24dd327a5cdd65c3539fba"}
+                    symbol={"snjs6"}
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_switchStarknetChain}
