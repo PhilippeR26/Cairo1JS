@@ -1,5 +1,5 @@
 import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, forwardRef, Tooltip } from "@chakra-ui/react";
-import { CallData, GetBlockResponse, constants as SNconstants, TypedData, cairo, ec, encode, hash, shortString, stark } from "starknet";
+import { CallData, GetBlockResponse, constants as SNconstants, TypedData, cairo, ec, encode, hash, json, shortString, stark } from "starknet";
 import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
@@ -58,7 +58,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 const response = await callRequest(myRequest);
                 const txtResponse: string = typeof (response) == "string" ?
                     response :
-                    (response ? "Succeed" : "Fail");
+                    (response ? "True" : "False");
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -80,7 +80,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 const response = await callRequest(myRequest);
                 const txtResponse: string = typeof (response) == "string" ?
                     response :
-                    (response ? "Succeed" : "Fail");
+                    (response ? "True" : "False");
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -96,7 +96,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 const response = await callRequest(myRequest);
                 const txtResponse: string = typeof (response) == "string" ?
                     response :
-                    (response ? "Succeed" : "Fail");
+                    (response ? "True" : "False");
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -121,7 +121,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 const response = await callRequest(myRequest);
                 const txtResponse: string = typeof (response) == "string" ?
                     response :
-                    (response ? "Succeed" : "Fail");
+                    (response ? "True" : "False");
                 setResponse(txtResponse);
                 onOpen();
                 break;
@@ -161,7 +161,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                         sierra_program: contractSierra.sierra_program,
                         contract_class_version: "0x01",
                         entry_points_by_type: contractSierra.entry_points_by_type,
-                        abi:"0x1234"
+                        abi:json.stringify(contractSierra.abi),
                     },
 
                     

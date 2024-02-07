@@ -1,3 +1,5 @@
+> version : v1.0.1 07/feb/2024
+
 This temporary document has to be considered as the specification and the documentation of the new interface between DAPPS and Starknet browser wallets.
 
 # Connect the wallet :
@@ -34,6 +36,8 @@ You can subscribe to 2 events :
 - `networkChanged` : Triggered each time you change the current network in the wallet.
 
 At each change of network, both account and network events are occurring.  
+At each change of account, only the account event is occurring.  
+
 ### Subscription :  
 #### accountsChanged :
 ```typescript
@@ -246,7 +250,7 @@ enum StarknetChainId {
 }
 ```
 ### Behavior :
-- In case of network not listed in `StarknetChainId`, the function throw an Error.
+- In case of network not listed in `StarknetChainId`, the function throw an Error TBD.
 ### Example :
 ```typescript
 const resp = await myWallet.request(type: "wallet_requestChainId");
@@ -299,7 +303,7 @@ response : interface AddInvokeTransactionResult {
 ```
 ### Behavior :
 - If the user approved the transaction in the wallet, the response is the transaction hash.
-- If the user rejected the transaction in the wallet, the function throw an error.
+- If the user rejected the transaction in the wallet, the function throw an error TBD.
 ### Example :
 ```typescript
 const contractAddress = "0x697d3bc2e38d57752c28be0432771f4312d070174ae54eef67dd29e4afb174";
@@ -334,7 +338,7 @@ interface AddDeclareTransactionParameters {
       EXTERNAL: SIERRA_ENTRY_POINT[]
       L1_HANDLER: SIERRA_ENTRY_POINT[]
     }
-    abi?: any[] // The class ABI, as supplied by the user declaring the class
+    abi?: any // The class ABI, as supplied by the user declaring the class
   }
 }
 ```
@@ -347,14 +351,19 @@ response : interface AddDeclareTransactionResult {
 ```
 ### Behavior :
 - If the user approved the declaration in the wallet, the response type is `AddDeclareTransactionResult`.
-- If the user rejected the declaration in the wallet, the function throw an error.
-- If the user approved the declaration in the wallet, and if the class is already declared, the response is TBD.
+- If the user rejected the declaration in the wallet, the function throw an error TBD.
+- If the user approved the declaration in the wallet, and if the class is already declared, the function throw an error TBD.
 ### Example :
 ```typescript
 const myParams: AddDeclareTransactionParameters = {
-                    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
-                    contract_class: contractSierra
-                }
+    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
+    contract_class: {
+        sierra_program: contractSierra.sierra_program,
+        contract_class_version: "0x01",
+        entry_points_by_type: contractSierra.entry_points_by_type,
+        abi:json.stringify(contractSierra.abi),
+    },
+}
 const resp = await myWallet.request(type: "starknet_addDeclareTransaction", params: myParams);
 // resp = {transaction_hash: "0x067f5a62ec72010308cee6368a8488c8df74f1d375b989f96d48cde1c88c7929", class_hash: "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"}
 ```
@@ -379,7 +388,7 @@ response : interface AddDeployAccountTransactionResult {
 ```
 ### Behavior :
 - If the user approved the deployment of account in the wallet, the response type is `AddDeployAccountTransactionResult`.
-- If the user rejected the deployment in the wallet, the function throw an error.
+- If the user rejected the deployment in the wallet, the function throw an error TBD.
 - If the user rejected the deployment in the wallet, and if this contract is already deployed at this address, the result is TBD.
 - The account address do not needs to be pre-funded. The current account in wallet will pay the deployment fees.
 - The address of deployment can be pre-calculated. Ex :  
@@ -440,7 +449,7 @@ response : string[] // Signature. Standard signature is 2 felts.
 ```
 ### Behavior :
 - If the user accepted to sign, the response type is the signature.
-- If the user rejected to sign, the function throw an error.
+- If the user rejected to sign, the function throw an error TBD.
 - If the message is inconsistent, the wallet authorize only to decline the signature.
 ### Example :
 ```typescript

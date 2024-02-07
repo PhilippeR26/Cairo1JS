@@ -99,10 +99,7 @@ export default function WalletHandle() {
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_switchStarknetChain}
-                    param={SNconstants.StarknetChainId.SN_MAIN} // none are working
-                // param="SN_MAIN"
-                // param="mainnet-alpha"
-                // param={shortString.encodeShortString("mainnet-alpha")}
+                    param={SNconstants.StarknetChainId.SN_MAIN} 
                 />
                 <RpcWalletCommand
                     command={constants.CommandWallet.wallet_addStarknetChain}
