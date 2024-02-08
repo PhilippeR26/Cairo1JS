@@ -78,7 +78,7 @@ All these commands can be used with `myWallet.request()` :
 
 ## wallet_getPermissions :
 ### Usage :
-Opens a window in the wallet and ask the authorization to connect your DAPP. 
+Indicate if the active account is authorized by the wallet to interact with the DAPP. 
 ### Input :
 No parameters.
 ### Output :
@@ -91,8 +91,8 @@ enum Permission {
 
 ```
 ### Behavior :
-- In case of authorization, returns an array of strings. The first item content is  `accounts`.
-- If the user declines the permission, the response is an empty array.
+- If authorized, returns an array of strings. The first item content is  `accounts` (equal to `Permission.Accounts` enum).
+- If not authorized, the response is an empty array.
 ### Example :
 ```typescript
 const resp = await myWallet.request(type: "wallet_getPermissions");
