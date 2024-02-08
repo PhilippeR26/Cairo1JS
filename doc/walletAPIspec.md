@@ -1,3 +1,4 @@
+> version : v1.0.2 08/feb/2024
 > version : v1.0.1 07/feb/2024
 
 This temporary document has to be considered as the specification and the documentation of the new interface between DAPPS and Starknet browser wallets.
@@ -251,6 +252,7 @@ enum StarknetChainId {
 ```
 ### Behavior :
 - In case of network not listed in `StarknetChainId`, the function throw an Error TBD.
+- This method do not need to be first authorized with [wallet_getPermissions](#wallet_getpermissions) TBD
 ### Example :
 ```typescript
 const resp = await myWallet.request(type: "wallet_requestChainId");
