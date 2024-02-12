@@ -11,7 +11,6 @@
     "module": "ESNext",
     "moduleResolution": "Node10",
     "resolveJsonModule": true,
-    "verbatimModuleSyntax":true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
