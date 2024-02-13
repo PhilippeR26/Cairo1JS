@@ -1,7 +1,7 @@
 
 import { create } from "zustand";
 import {  ProviderInterface, AccountInterface, RpcProvider } from "starknet";
-import { StarknetWindowObject } from "get-starknet";
+import { StarknetWindowObject } from "get-wallet-starknet-ui";
 
 export interface WalletState {
     providerW:ProviderInterface|undefined,

@@ -9,7 +9,7 @@ import { useStoreWallet } from './components/client/ConnectWallet/walletContext'
 import { useStoreBackend } from '../server/backEndStarknetContext';
 
 import { encode, Provider } from "starknet";
-import { StarknetWindowObject, connect } from "get-starknet";
+import { StarknetWindowObject, connect } from "get-wallet-starknet-ui";
 
 import starknetjsImg from "../../public/Images/StarkNet-JS_logo.png";
 import { SpecialButton } from './components/client/SpecialButton';
@@ -43,7 +43,7 @@ export default async function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v3.0.1 with starknet.js v5.24.3
+                    Test get-wallet-starknet-ui v3.3.3 with starknet.js v6.0.0
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} />

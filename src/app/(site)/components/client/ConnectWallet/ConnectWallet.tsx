@@ -3,7 +3,7 @@
 import { useStoreWallet } from './walletContext';
 
 import { Button } from "@chakra-ui/react";
-import { StarknetWindowObject, connect } from "get-starknet";
+import { StarknetWindowObject, connect } from "get-wallet-starknet-ui";
 import { Account, encode, Provider, RpcProvider, constants as SNconstants } from "starknet";
 import { useStoreBackend } from '../../../../server/backEndStarknetContext';
 import { initAccountBackend } from '../../server/Account/initAccountBackend';
