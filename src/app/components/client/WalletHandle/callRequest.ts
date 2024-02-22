@@ -1,6 +1,6 @@
 
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { RpcMessage } from "@/app/core/rpcMessage";
+import { type RpcMessage } from "get-starknet-core";
 
 export type Response = Pick<RpcMessage, "result">["result"];
 

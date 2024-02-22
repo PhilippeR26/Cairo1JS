@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { ProviderInterface, AccountInterface } from "starknet";
-import { StarknetWindowObject } from "@/app/core/StarknetWindowObject";
+import { StarknetWindowObject } from "get-starknet-core";
 
 export interface WalletState {
     wallet: StarknetWindowObject | undefined,

@@ -6,17 +6,9 @@ import InteractContract from './components/client/Contract/InteractContract';
 import { useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
-99000000000000000
-
 //import { connect } from "get-starknet";
-
 import starknetJsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
-import { scanObjectForWallets } from './core/wallet/scan';
-import { isWalletObj } from './core/wallet/isWalletObject';
-import { callRequest } from './components/client/WalletHandle/callRequest';
-import { isBooleanObject } from 'util/types';
-import { formatAddress } from '@/utils/utils';
 import SelectWallet from './components/client/WalletHandle/SelectWallet';
 
 export default function Page() {

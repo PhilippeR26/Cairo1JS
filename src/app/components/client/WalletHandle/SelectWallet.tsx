@@ -1,10 +1,10 @@
-import { StarknetWindowObject } from "@/app/core/StarknetWindowObject";
-import { Permission } from "@/app/core/rpcMessage";
+import { StarknetWindowObject } from "get-starknet-core";
+import { Permission } from "get-starknet-core";
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useEffect } from "react";
-import { scanObjectForWallets } from "@/app/core/wallet/scan";
-import { isWalletObj } from "@/app/core/wallet/isWalletObject";
+import { scanObjectForWallets } from "get-starknet-core";
+import { isWalletObj } from "get-starknet-core";
 import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
