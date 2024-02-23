@@ -1,9 +1,12 @@
 "use client";
+import type { StarknetWindowObject as SNWO } from "get-starknet-core";
+type StarknetWindowObject = typeof SNWO;
+
 import Image from 'next/image'
 import styles from './page.module.css'
 import { Center, Spinner, Text, Button, Divider, Box, Tabs, TabList, Tab, TabPanels, TabPanel, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, VStack, StackDivider } from '@chakra-ui/react';
 import InteractContract from './components/client/Contract/InteractContract';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 //import { connect } from "get-starknet";
@@ -11,6 +14,7 @@ import starknetJsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
 import SelectWallet from './components/client/WalletHandle/SelectWallet';
 import LowerBanner from './components/client/LowerBanner';
+import { addAddressPadding } from "starknet";
 
 export default function Page() {
 
@@ -36,9 +40,28 @@ export default function Page() {
     const setConnected = useStoreWallet(state => state.setConnected);
 
 
-
-
-
+    const handleSelectedWalletNew = async (wallet: StarknetWindowObject) => {
+      
+      const accountAddress = await wallet.request({ type: "wallet_requestAccounts" });
+      console.log("account address from wallet =", accountAddress);
+      setAddressAccount(addAddressPadding(accountAddress[0])); // zustand
+      const chainId = (await wallet.request({ type: "wallet_requestChainId" })).toString();
+      setChain(chainId); // zustand
+      setSelectWalletUI(false); // zustand
+      setConnected(true); // zustand
+    }
+  
+    useEffect(
+        () => {
+          console.log("try to initialize wallet.")
+          if (!!myWallet) {
+            handleSelectedWalletNew(myWallet).then((_res) => console.log("wallet initialized."));
+          }
+          return () => { }
+        },
+        [myWallet]
+      );
+    
     return (
         <ChakraProvider>
             <div>
@@ -58,7 +81,10 @@ export default function Page() {
                                     outline="none !important"
                                     boxShadow="none !important"
                                     marginTop={3}
-                                    onClick={() => setSelectWalletUI(true)}
+                                    onClick={() => {
+                                        setSelectWalletUI(true);
+                                        setMyWallet(undefined);
+                                    }}
                                 >
                                     Connect a Wallet
                                 </Button>
@@ -78,6 +104,7 @@ export default function Page() {
                                     onClick={() => {
                                         setConnected(false);
                                         setSelectWalletUI(false)
+                                        setAddressAccount("");
                                     }}
                                 >
                                     {addressAccountFromContext
