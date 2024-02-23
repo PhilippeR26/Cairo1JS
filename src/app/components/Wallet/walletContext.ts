@@ -1,4 +1,7 @@
 "use client";
+import type { StarknetWindowObject as SNWO } from "get-starknet-core";
+type StarknetWindowObject = typeof SNWO;
+
 import { create } from "zustand";
 import { ProviderInterface, AccountInterface } from "starknet";
 import type { StarknetWindowObject } from "get-starknet-core";

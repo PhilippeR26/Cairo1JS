@@ -2,7 +2,12 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
-import { AccountChangeEventHandler, NetworkChangeEventHandler } from "get-starknet-core";
+import  type { AccountChangeEventHandler  as ACEH} from "get-starknet-core";
+type NetworkChangeEventHandler=typeof ACEH;
+import  type { NetworkChangeEventHandler  as NCEH} from "get-starknet-core";
+type AccountChangeEventHandler=typeof NCEH;
+import  type { StarknetChainId  as SCI} from "get-starknet-core";
+type StarknetChainId=typeof SCI;
 import {  StarknetChainId } from "get-starknet-core";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";

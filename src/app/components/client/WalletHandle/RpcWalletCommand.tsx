@@ -4,7 +4,41 @@ import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "get-starknet-core";
+
+import  type { RequestAccountsParameters  as Tmp1} from "get-starknet-core";
+type RequestAccountsParameters=typeof Tmp1;
+
+import  type { WatchAssetParameters  as Tmp2} from "get-starknet-core";
+type WatchAssetParameters=typeof Tmp2;
+
+import  type { AddDeployAccountTransactionResult  as Tmp3} from "get-starknet-core";
+type AddDeployAccountTransactionResult=typeof Tmp3;
+
+import  type { AddInvokeTransactionResult  as Tmp4} from "get-starknet-core";
+type AddInvokeTransactionResult=typeof Tmp4;
+
+import  type { AddDeclareTransactionResult  as Tmp5} from "get-starknet-core";
+type AddDeclareTransactionResult=typeof Tmp5;
+
+import  type { AddDeclareTransactionParameters  as Tmp6} from "get-starknet-core";
+type AddDeclareTransactionParameters=typeof Tmp6;
+
+import  type { GetDeploymentDataResult  as Tmp7} from "get-starknet-core";
+type GetDeploymentDataResult=typeof Tmp7;
+
+import  type { AddDeployAccountTransactionParameters  as Tmp8} from "get-starknet-core";
+type AddDeployAccountTransactionParameters=typeof Tmp8;
+
+import  type { AddInvokeTransactionParameters  as Tmp9} from "get-starknet-core";
+type AddInvokeTransactionParameters=typeof Tmp9;
+
+import  type { SwitchStarknetChainParameters  as Tmp10} from "get-starknet-core";
+type SwitchStarknetChainParameters=typeof Tmp10;
+
+import  type { AddStarknetChainParameters  as Tmp11} from "get-starknet-core";
+type AddStarknetChainParameters=typeof Tmp11;
+
+import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, SwitchStarknetChainParameters, WatchAssetParameters } from "get-starknet-core";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
 

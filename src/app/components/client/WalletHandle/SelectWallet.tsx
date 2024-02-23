@@ -1,13 +1,24 @@
-import type { StarknetWindowObject } from "get-starknet-core";
-import { Permission } from "get-starknet-core";
+import type { StarknetWindowObject as SNWO } from "get-starknet-core";
+type StarknetWindowObject = typeof SNWO;
+
+
+
+
+//import  { Permission  } from "get-starknet-core";
+//   import  { Permission as PERM } from "get-starknet-core";
+//  type Permission=typeof PERM;
+
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useEffect } from "react";
-import { scanObjectForWallets } from "get-starknet-core";
-import { isWalletObj } from "get-starknet-core";
 import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
+import { isWalletObj, scanObjectForWallets } from "@/core/scanWallet";
+
+enum Permission {
+    Accounts = "accounts",
+}
 
 export default function SelectWallet() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -64,6 +75,7 @@ export default function SelectWallet() {
         []
     )
 
+    
     return (
         <Modal
             isOpen={isOpen}

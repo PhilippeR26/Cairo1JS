@@ -10,6 +10,7 @@ import { useStoreWallet } from './components/Wallet/walletContext';
 import starknetJsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
 import SelectWallet from './components/client/WalletHandle/SelectWallet';
+import LowerBanner from './components/client/LowerBanner';
 
 export default function Page() {
 
@@ -42,7 +43,7 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test experimental Braavos/ArgentX wallets with Starknet.js v6.1.3
+                    Test experimental Braavos/ArgentX wallets
                 </p>
                 <Center>
                     <Image src={starknetJsImg} alt='starknet.js' width={150} />
@@ -114,6 +115,7 @@ export default function Page() {
                     )
                     }
                 </div>
+                <LowerBanner></LowerBanner>
             </div >
         </ChakraProvider>
     )
