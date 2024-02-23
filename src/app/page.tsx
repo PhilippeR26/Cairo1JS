@@ -42,7 +42,7 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test experimental Braavos wallet with starknet.js v6.0.0
+                    Test experimental Braavos/ArgentX wallets with Starknet.js v6.1.3
                 </p>
                 <Center>
                     <Image src={starknetJsImg} alt='starknet.js' width={150} />
