@@ -19,9 +19,9 @@ export enum CommandWallet {
 }
 
 export const myFrontendProviders: ProviderInterface[] = [
-    new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0.5" }),
-    new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0.5" }),
-    new RpcProvider({ nodeUrl: "https://free-rpc.nethermind.io/sepolia-juno/v0_5" })];
+    new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_7" }),
+    new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_7" }),
+    new RpcProvider({ nodeUrl: "https://free-rpc.nethermind.io/sepolia-juno/v0_7" })];
 
 export const Cairo1ContractAddress: string[] = [
     "0x02bD907B978F58ceDf616cFf5CdA213d63Daa3AD28Dd3C1Ea17cA6CF5E1D395F", // mainnet

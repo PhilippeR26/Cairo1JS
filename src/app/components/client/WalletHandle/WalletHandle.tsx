@@ -2,7 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
-import { AccountChangeEventHandler, NetworkChangeEventHandler, StarknetChainId } from "@/app/core/StarknetWindowObject";
+import {  StarknetChainId } from "@/app/core/rpcMessage";
+import { AccountChangeEventHandler, NetworkChangeEventHandler } from "@/app/core/walletEvents";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
@@ -15,7 +16,7 @@ import { useFrontendProvider } from '../provider/providerContext';
 export default function WalletHandle() {
     // wallet context
     const providerSN = useStoreWallet(state => state.provider);
-    const wallet = useStoreWallet(state => state.wallet);
+    const wallet = useStoreWallet(state => state.walletObject);
 
     const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
     const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);

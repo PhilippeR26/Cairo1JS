@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/StarknetWindowObject";
+import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/rpcMessage";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
 
@@ -30,7 +30,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
     //    export const RpcWalletCommand=forwardRef(({ command, symbol, param,tip }: Props,ref)=> {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [response, setResponse] = useState<string>("N/A");
-    const walletFromContext = useStoreWallet(state => state.wallet);
+    const walletFromContext = useStoreWallet(state => state.walletObject);
     async function callCommand(command: constants.CommandWallet, param: string) {
         switch (command) {
             case constants.CommandWallet.wallet_requestAccounts: {

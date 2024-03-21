@@ -1,15 +1,17 @@
 "use client";
 import { create } from "zustand";
-import { ProviderInterface, AccountInterface } from "starknet";
+import { ProviderInterface, AccountInterface, type WalletAccount } from "starknet";
 import { StarknetWindowObject } from "@/app/core/StarknetWindowObject";
 
 export interface WalletState {
-    wallet: StarknetWindowObject | undefined,
-    setMyWallet: (wallet: StarknetWindowObject) => void,
+    walletObject: StarknetWindowObject | undefined,
+    setMyWalletObject: (wallet: StarknetWindowObject) => void,
     address: string,
     setAddressAccount: (address: string) => void,
     chain: string,
     setChain: (chain: string) => void,
+    myWalletAccount: WalletAccount|undefined;
+    setMyWalletAccount: (myWAccount:WalletAccount)=>void;
     account: AccountInterface | undefined,
     setAccount: (account: AccountInterface) => void,
     provider: ProviderInterface | undefined,
@@ -21,12 +23,14 @@ export interface WalletState {
 }
 
 export const useStoreWallet = create<WalletState>()(set => ({
-    wallet: undefined,
-    setMyWallet: (wallet: StarknetWindowObject) => { set(state => ({ wallet: wallet })) },
+    walletObject: undefined,
+    setMyWalletObject: (wallet: StarknetWindowObject) => { set(state => ({ walletObject: wallet })) },
     address: "",
     setAddressAccount: (address: string) => { set(state => ({ address })) },
     chain: "",
     setChain: (chain: string) => { set(state => ({ chain: chain })) },
+    myWalletAccount: undefined,
+    setMyWalletAccount: (myWAccount: WalletAccount) => { set(state => ({ myWalletAccount: myWAccount })) },
     account: undefined,
     setAccount: (account: AccountInterface) => { set(state => ({ account })) },
     provider: undefined,

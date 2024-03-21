@@ -1,4 +1,5 @@
-import { Permission, StarknetChainId, StarknetWindowObject } from "@/app/core/StarknetWindowObject";
+import { Permission, StarknetChainId } from "@/app/core/rpcMessage";
+import {  StarknetWindowObject } from "@/app/core/StarknetWindowObject";
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
@@ -8,13 +9,20 @@ import { isWalletObj } from "@/app/core/wallet/isWalletObject";
 import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
+import { WalletAccount } from "starknet";
+import { myFrontendProviders } from "@/utils/constants";
+
+export interface StarknetWalletProvider extends StarknetWindowObject {}
+
 
 export default function SelectWallet() {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const myWallet = useStoreWallet(state => state.wallet);
-    const setMyWallet = useStoreWallet(state => state.setMyWallet);
-
+    const myWallet = useStoreWallet(state => state.walletObject);
+    const setMyWallet = useStoreWallet(state => state.setMyWalletObject);
+    
+    const myWalletAccount = useStoreWallet(state => state.myWalletAccount);
+    const setMyWalletAccount = useStoreWallet(state => state.setMyWalletAccount);
     const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
     const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
 
@@ -29,10 +37,10 @@ export default function SelectWallet() {
 
     const [walletList, setWalletList] = useState<StarknetWindowObject[]>([]);
 
-
     const handleSelectedWallet = async (wallet: StarknetWindowObject) => {
         console.log("Trying to connect wallet=", wallet);
         setMyWallet(wallet); // zustand
+        setMyWalletAccount(new WalletAccount(myFrontendProviders[2], wallet));
 
         const result = await callRequest({ type: "wallet_requestAccounts" });
         if (typeof (result) == "string") {
