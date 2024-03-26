@@ -12,7 +12,7 @@ import { formatAddress } from "@/utils/utils";
 import { WalletAccount } from "starknet";
 import { myFrontendProviders } from "@/utils/constants";
 
-export interface StarknetWalletProvider extends StarknetWindowObject {}
+// export interface StarknetWalletProvider extends StarknetWindowObject {}
 
 
 export default function SelectWallet() {
