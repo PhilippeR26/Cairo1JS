@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "@/app/core/rpcMessage";
+import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "get-starknet/packages/core/src/main";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
 
@@ -151,24 +151,24 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 onOpen();
                 break;
             }
-            case constants.CommandWallet.starknet_addDeclareTransaction: {
+            // case constants.CommandWallet.starknet_addDeclareTransaction: {
 
 
-                const myParams: AddDeclareTransactionParameters = {
-                    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
-                    contract_class: contractSierra
-                }
-                const myRequest = {
-                    type: command,
-                    params: myParams
-                };
-                const response = await callRequest(myRequest);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response : (response as AddDeclareTransactionResult).transaction_hash + " " + (response as AddDeclareTransactionResult).class_hash;
-                setResponse(txtResponse);
-                onOpen();
-                break;
-            }
+            //     const myParams: AddDeclareTransactionParameters = {
+            //         compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
+            //         contract_class: contractSierra
+            //     }
+            //     const myRequest = {
+            //         type: command,
+            //         params: myParams
+            //     };
+            //     const response = await callRequest(myRequest);
+            //     const txtResponse: string = typeof (response) == "string" ?
+            //         response : (response as AddDeclareTransactionResult).transaction_hash + " " + (response as AddDeclareTransactionResult).class_hash;
+            //     setResponse(txtResponse);
+            //     onOpen();
+            //     break;
+            // }
             case constants.CommandWallet.starknet_addDeployAccountTransaction: {
 
                 const decClassHash = "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"; // OZ cairo v2.1.0

@@ -7,7 +7,7 @@ import { Contract, WalletAccount } from "starknet";
 import { rejectContract } from "@/app/contracts/reject.sierra.json";
 import { Cairo1ContractAddress, myFrontendProviders } from "@/utils/constants";
 import { useFrontendProvider } from "../provider/providerContext";
-import { StarknetChainId } from "@/app/core/rpcMessage";
+import { StarknetChainId } from "get-starknet/packages/core/src/main";
 
 export default function WalletAccountTag() {
     const DISPLAY_DURATION = 10 * 1000 // ms

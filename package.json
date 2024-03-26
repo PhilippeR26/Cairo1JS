@@ -11,6 +11,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/system": "^2.6.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@types/node": "20.11.30",
@@ -19,6 +20,7 @@
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.0.15",
+    "get-starknet": "starknet-io/get-starknet#198f0ed2c6e5aaf293f9dab04061323cc6680e7d",
     "material-react-toastify": "^2.0.1",
     "next": "^14.1.4",
     "react": "18.2.0",
