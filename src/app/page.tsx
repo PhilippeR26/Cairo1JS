@@ -8,13 +8,11 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { useStoreWallet } from './components/Wallet/walletContext';
 
 
-import { Permission, StarknetChainId, StarknetWindowObject, } from "./core_old/StarknetWindowObject";
+import { Permission, StarknetChainId, StarknetWindowObject, } from "../../old/core_old/StarknetWindowObject";
 //import { connect } from "get-starknet";
 
 import starknetJsImg from '../../public/Images/StarkNet-JS_logo.png';
 import WalletHandle from './components/client/WalletHandle/WalletHandle';
-import { scanObjectForWallets } from './core_old/wallet/scan';
-import { isWalletObj } from './core_old/wallet/isWalletObject';
 import { callRequest } from './components/client/WalletHandle/callRequest';
 import { isBooleanObject } from 'util/types';
 import { formatAddress } from '@/utils/utils';
@@ -57,7 +55,7 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test experimental wallet with Starknet.js v6.5.0 
+                    Test WalletAccount of Starknet.js v6.6.6 
                 </p>
                 <Center>
                     <Image src={starknetJsImg} alt='starknet.js' width={150} />

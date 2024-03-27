@@ -1,11 +1,11 @@
-import { Permission, StarknetChainId } from "get-starknet/packages/core/src/main";
-import {  StarknetWindowObject } from "get-starknet/packages/core/src/main";
+import { Permission, StarknetChainId } from "get-starknet/packages/core";
+import {  StarknetWindowObject } from "get-starknet/packages/core";
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
 import { useEffect } from "react";
-import { scanObjectForWallets } from "get-starknet/packages/core/src/wallet/scan";
-import { isWalletObj } from "get-starknet/packages/core/src/wallet/isWalletObject";
+import { scanObjectForWallets } from "get-starknet/packages/core";
+import { isWalletObj } from "get-starknet/packages/core";
 import { useState } from "react";
 import { Response, callRequest } from "./callRequest";
 import { formatAddress } from "@/utils/utils";
@@ -40,7 +40,7 @@ export default function SelectWallet() {
     const handleSelectedWallet = async (wallet: StarknetWindowObject) => {
         console.log("Trying to connect wallet=", wallet);
         setMyWallet(wallet); // zustand
-        setMyWalletAccount(new WalletAccount(myFrontendProviders[2], wallet));
+        setMyWalletAccount(new WalletAccount(myFrontendProviders[2], wallet as any));
 
         const result = await callRequest({ type: "wallet_requestAccounts" });
         if (typeof (result) == "string") {

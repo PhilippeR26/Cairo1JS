@@ -2,8 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Text, Spinner, Center, Divider, Box, SimpleGrid, Button, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tooltip } from "@chakra-ui/react";
 import { GetBlockResponse, constants as SNconstants, shortString } from "starknet";
-import {  StarknetChainId } from "get-starknet/packages/core/src/main";
-import { AccountChangeEventHandler, NetworkChangeEventHandler } from "get-starknet/packages/core/src/main";
+import {  StarknetChainId } from "get-starknet/packages/core";
+import { AccountChangeEventHandler, NetworkChangeEventHandler } from "get-starknet/packages/core";
 
 import { useStoreBlock, dataBlockInit } from "../Block/blockContext";
 import { useStoreWallet } from '../../Wallet/walletContext';
