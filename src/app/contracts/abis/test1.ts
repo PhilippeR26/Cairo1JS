@@ -1,68 +1,54 @@
 export const test1Abi= [
   {
-    "type": "function",
-    "name": "test1",
-    "inputs": [
-      {
-        "name": "p1",
-        "type": "core::felt252"
-      }
-    ],
-    "outputs": [
-      {
-        "type": "core::felt252"
-      }
-    ],
-    "state_mutability": "view"
+    "type": "impl",
+    "name": "TestReject",
+    "interface_name": "reject::reject::ITestReject"
   },
   {
-    "type": "function",
-    "name": "test2",
-    "inputs": [
+    "type": "interface",
+    "name": "reject::reject::ITestReject",
+    "items": [
       {
-        "name": "p1",
-        "type": "core::integer::u128"
-      }
-    ],
-    "outputs": [
+        "type": "function",
+        "name": "test_fail",
+        "inputs": [
+          {
+            "name": "p1",
+            "type": "core::integer::u8"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
+      },
       {
-        "type": "core::integer::u128"
+        "type": "function",
+        "name": "get_counter",
+        "inputs": [],
+        "outputs": [
+          {
+            "type": "core::integer::u8"
+          }
+        ],
+        "state_mutability": "view"
+      },
+      {
+        "type": "function",
+        "name": "init_count",
+        "inputs": [
+          {
+            "name": "p1",
+            "type": "core::integer::u8"
+          }
+        ],
+        "outputs": [],
+        "state_mutability": "external"
       }
-    ],
-    "state_mutability": "view"
+    ]
   },
   {
-    "type": "function",
-    "name": "test3",
-    "inputs": [],
-    "outputs": [
-      {
-        "type": "core::integer::u128"
-      }
-    ],
-    "state_mutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "increase_balance",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "core::felt252"
-      }
-    ],
-    "outputs": [],
-    "state_mutability": "external"
-  },
-  {
-    "type": "function",
-    "name": "get_balance",
-    "inputs": [],
-    "outputs": [
-      {
-        "type": "core::felt252"
-      }
-    ],
-    "state_mutability": "view"
+    "type": "event",
+    "name": "reject::reject::MyTestReject::Event",
+    "kind": "enum",
+    "variants": []
   }
 ]

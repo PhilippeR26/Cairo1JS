@@ -1,4 +1,8 @@
-This temporary document has to be considered as the specification and the documentation of the new interface between DAPPS and Starknet browser wallets.
+> version : v1.1.0 xx/xx/2024, in accordance with official spec https://github.com/starkware-libs/starknet-specs/pull/203/files
+> version : v1.0.2 08/feb/2024
+> version : v1.0.1 07/feb/2024
+
+This temporary document has to be considered as the documentation of the new interface between DAPPS and Starknet browser wallets.
 
 # Connect the wallet :
 You have first to select which wallet to use.
@@ -7,7 +11,6 @@ import { StarknetWindowObject, connect } from "get-starknet";
 
 const myWallet: StarknetWindowObject = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
 ```
-Then you have to authorize the wallet to communicate with your DAPP : see [wallet_getPermissions](#2-wallet_getpermissions)
 
 You can now use the commands proposed by the wallet :
 ```typescript
@@ -34,6 +37,8 @@ You can subscribe to 2 events :
 - `networkChanged` : Triggered each time you change the current network in the wallet.
 
 At each change of network, both account and network events are occurring.  
+At each change of account, only the account event is occurring.  
+
 ### Subscription :  
 #### accountsChanged :
 ```typescript
@@ -61,7 +66,7 @@ enum StarknetChainId {
   SN_SEPOLIA = "0x534e5f5345504f4c4941",
 }
 ```
-### Unsubscription :
+### Un-subscription :
 Similar to subscription, using `.off` method.
 ```typescript
 wallet.off("accountsChanged", handleAccount);
@@ -73,7 +78,7 @@ All these commands can be used with `myWallet.request()` :
 
 ## wallet_getPermissions :
 ### Usage :
-Opens a window in the wallet and ask the authorization to connect your DAPP. 
+Indicate if the active account is authorized by the wallet to interact with the DAPP. 
 ### Input :
 No parameters.
 ### Output :
@@ -86,8 +91,8 @@ enum Permission {
 
 ```
 ### Behavior :
-- In case of authorization, returns an array of strings. The first item content is  `accounts`.
-- If the user declines the permission, the response is an empty array.
+- If authorized, returns an array of strings. The first item content is  `accounts` (equal to `Permission.Accounts` enum).
+- If not authorized, the response is an empty array.
 ### Example :
 ```typescript
 const resp = await myWallet.request(type: "wallet_getPermissions");
@@ -139,8 +144,9 @@ response : boolean
 ### Behavior :
 - The wallet opens a window to ask if you agree to add this token in the display list. If you agree, returns `true`. 
 - The optional parameters are useless, as they are automatically recovered from the blockchain. Whatever you provide, only the blockchain data are used.
-- If the address is not an ERC20, the result is `false`.
+- If the address is not an ERC20, the method fails.
 - If the token is already displayed, the result is `true`.
+- If there is no ERC20 at this address, fails an error 111 "Asset is not an ERC20".
 ### Example :
 ```typescript
 const addrxASTR = "0x005EF67D8c38B82ba699F206Bf0dB59f1828087A710Bad48Cc4d51A2B0dA4C29";
@@ -185,6 +191,9 @@ response : boolean
 - The wallet opens a window to ask if you agree to add this network in the wallet. If you agree, returns `true`. 
 - If something is inconsistent in the input data, the result is `false`.
 - If the network is already displayed, the result is `true`.
+- If the network is not existing, fails with Error 112 "Network details are incorrect".
+- If declined by the user, fails with Error 113 "User refused the operation".
+
 ### Example :
 ```typescript
 const myChain: AddStarknetChainParameters = {
@@ -220,6 +229,8 @@ response : boolean
 - The wallet opens a window to ask if you agree to change the current network in the wallet. If you agree, returns `true`. 
 - If something is inconsistent in the input data, the result is `false`.
 - If the network is already the current one, the result is `true`.
+- If the network is not existing, fails with Error 112 "Network details are incorrect".
+- If declined by the user, fails with Error 113 "User refused the operation".
 ### Example :
 ```typescript
 const myChainId: SwitchStarknetChainParameters = {
@@ -246,7 +257,7 @@ enum StarknetChainId {
 }
 ```
 ### Behavior :
-- In case of network not listed in `StarknetChainId`, the function throw an Error.
+- In case of network not listed in `StarknetChainId`, the function throw an Error TBD.
 ### Example :
 ```typescript
 const resp = await myWallet.request(type: "wallet_requestChainId");
@@ -255,7 +266,7 @@ const resp = await myWallet.request(type: "wallet_requestChainId");
 
 ## wallet_deploymentData :
 ### Usage :
-Good question. 
+Request from the current wallet the data required to deploy the account at the current address. 
 ### Input :
 No parameters.
 ### Output :
@@ -270,14 +281,14 @@ response : interface GetDeploymentDataResult {
 }
 ```
 ### Behavior :
-TBD.
+Provides the necessary data to create an account proposed by the wallet.
 ### Example :
 ```typescript
 const resp = await myWallet.request(type: "wallet_deploymentData");
 // resp = TBD
 ```
 
-## starknet_addInvokeTransaction :
+## wallet_addInvokeTransaction :
 ### Usage :
 Send one or several transaction(s) to the network. 
 ### Input :
@@ -299,7 +310,9 @@ response : interface AddInvokeTransactionResult {
 ```
 ### Behavior :
 - If the user approved the transaction in the wallet, the response is the transaction hash.
-- If the user rejected the transaction in the wallet, the function throw an error.
+- If an error occurred in the network, fails with Error 163 "An unexpected error occurred".
+- If declined by the user, fails with Error 113 "User refused the operation".
+
 ### Example :
 ```typescript
 const contractAddress = "0x697d3bc2e38d57752c28be0432771f4312d070174ae54eef67dd29e4afb174";
@@ -315,11 +328,11 @@ const myParams: AddInvokeTransactionParameters = {
         calldata: myCalldata
     }]
 }
-const resp = await myWallet.request(type: "starknet_addInvokeTransaction", params: myParams);
+const resp = await myWallet.request(type: "wallet_addInvokeTransaction", params: myParams);
 // resp = {transaction_hash: "0x067f5a62ec72010308cee6368a8488c8df74f1d375b989f96d48cde1c88c7929"}
 ```
 
-## starknet_addDeclareTransaction :
+## wallet_addDeclareTransaction :
 ### Usage :
 Declare a new class in the current network. 
 ### Input :
@@ -334,7 +347,7 @@ interface AddDeclareTransactionParameters {
       EXTERNAL: SIERRA_ENTRY_POINT[]
       L1_HANDLER: SIERRA_ENTRY_POINT[]
     }
-    abi?: any[] // The class ABI, as supplied by the user declaring the class
+    abi?: string // The stringified class ABI, as supplied by the user declaring the class
   }
 }
 ```
@@ -347,19 +360,26 @@ response : interface AddDeclareTransactionResult {
 ```
 ### Behavior :
 - If the user approved the declaration in the wallet, the response type is `AddDeclareTransactionResult`.
-- If the user rejected the declaration in the wallet, the function throw an error.
-- If the user approved the declaration in the wallet, and if the class is already declared, the response is TBD.
+- If the user approved the declaration in the wallet, and if the class is already declared, the function throw an error TBD.
+- If an error occurred in the network, fails with Error 163 "An unexpected error occurred".
+- If declined by the user, fails with Error 113 "User refused the operation".
+
 ### Example :
 ```typescript
 const myParams: AddDeclareTransactionParameters = {
-                    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
-                    contract_class: contractSierra
-                }
-const resp = await myWallet.request(type: "starknet_addDeclareTransaction", params: myParams);
+    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
+    contract_class: {
+        sierra_program: contractSierra.sierra_program,
+        contract_class_version: "0x01",
+        entry_points_by_type: contractSierra.entry_points_by_type,
+        abi:json.stringify(contractSierra.abi),
+    },
+}
+const resp = await myWallet.request(type: "wallet_addDeclareTransaction", params: myParams);
 // resp = {transaction_hash: "0x067f5a62ec72010308cee6368a8488c8df74f1d375b989f96d48cde1c88c7929", class_hash: "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"}
 ```
 
-## starknet_addDeployAccountTransaction :
+## wallet_addDeployAccountTransaction (DEPRECATED?):
 ### Usage :
 Deploy a new account in the current network. It's not linked to the type of accounts provided by the wallet ; you have to define which class to use.
 ### Input :
@@ -379,10 +399,11 @@ response : interface AddDeployAccountTransactionResult {
 ```
 ### Behavior :
 - If the user approved the deployment of account in the wallet, the response type is `AddDeployAccountTransactionResult`.
-- If the user rejected the deployment in the wallet, the function throw an error.
-- If the user rejected the deployment in the wallet, and if this contract is already deployed at this address, the result is TBD.
+- If an error occurred in the network, fails with Error 163 "An unexpected error occurred".
+- If declined by the user, fails with Error 113 "User refused the operation".
 - The account address do not needs to be pre-funded. The current account in wallet will pay the deployment fees.
-- The address of deployment can be pre-calculated. Ex :  
+- The address of deployment can NOT be pre-calculated. 
+Ex :  
 ``` typescript 
 const decClassHash = "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"; // OZ cairo v2.1.0
 const starkKeyPub = "0x03cb804773b6a237db952b1d4b651a90ee08651fbe74b5b05f8fabb2529acb45";
@@ -402,11 +423,11 @@ const myParams: AddDeployAccountTransactionParameters = {
     contract_address_salt: starkKeyPub,
     constructor_calldata: OZaccountConstructorCallData,
 }
-const resp = await myWallet.request(type: "starknet_addDeployAccountTransaction", params: myParams);
+const resp = await myWallet.request(type: "wallet_addDeployAccountTransaction", params: myParams);
 // resp = {transaction_hash: "0x067f5a62ec72010308cee6368a8488c8df74f1d375b989f96d48cde1c88c7929", contract_address: "0x360ccaecfd9fb321de0b70da56bc9b96510b75a6ee21e8e9b547f4710ad007f"}
 ```
 
-## starknet_signTypedData : 
+## wallet_signTypedData : 
 ### Usage :
 Returns the signature of an EIP712 "like" message, made by the current account of the wallet. 
 ### Input :
@@ -440,8 +461,8 @@ response : string[] // Signature. Standard signature is 2 felts.
 ```
 ### Behavior :
 - If the user accepted to sign, the response type is the signature.
-- If the user rejected to sign, the function throw an error.
-- If the message is inconsistent, the wallet authorize only to decline the signature.
+- If an error occurred in the network, fails with Error 163 "An unexpected error occurred".
+- If declined by the user, fails with Error 113 "User refused the operation".
 ### Example :
 ```typescript
 const myTypedData: TypedData = {
@@ -488,7 +509,7 @@ const myTypedData: TypedData = {
       },
   }
 }
-const resp = await myWallet.request(type: "starknet_signTypedData", params: myTypedData);
+const resp = await myWallet.request(type: "wallet_signTypedData", params: myTypedData);
 // resp = ["0x490864293786342333657489548354947743460397232672997805795441858116745355019", "0x2855273948349341532300559537680769749551471477465497884530979636925080056604"]
 ```
 
@@ -507,4 +528,4 @@ response : string[]
 ```typescript
 const resp = await myWallet.request(type: "starknet_supportedSpecs");
 // resp = ["0.4","0.5"]
-```
+``

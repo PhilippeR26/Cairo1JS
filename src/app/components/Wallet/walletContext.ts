@@ -1,13 +1,13 @@
 "use client";
 import { create } from "zustand";
 import { ProviderInterface, AccountInterface, type WalletAccount } from "starknet";
-import {  StarknetWindowObject } from "get-starknet/packages/core";
+import {  StarknetWindowObject } from "get-starknet-core";
 
 // import { StarknetWindowObject } from "@/app/core/StarknetWindowObject";
 
 export interface WalletState {
-    walletObject: StarknetWindowObject | undefined,
-    setMyWalletObject: (wallet: StarknetWindowObject) => void,
+    StarknetWalletObject: StarknetWindowObject | undefined,
+    setMyStarknetWalletObject: (wallet: StarknetWindowObject) => void,
     address: string,
     setAddressAccount: (address: string) => void,
     chain: string,
@@ -25,8 +25,8 @@ export interface WalletState {
 }
 
 export const useStoreWallet = create<WalletState>()(set => ({
-    walletObject: undefined,
-    setMyWalletObject: (wallet: StarknetWindowObject) => { set(state => ({ walletObject: wallet })) },
+    StarknetWalletObject: undefined,
+    setMyStarknetWalletObject: (wallet: StarknetWindowObject) => { set(state => ({ StarknetWalletObject: wallet })) },
     address: "",
     setAddressAccount: (address: string) => { set(state => ({ address })) },
     chain: "",

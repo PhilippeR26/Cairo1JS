@@ -12,10 +12,9 @@ import { Permission, StarknetChainId, StarknetWindowObject, } from "../../old/co
 //import { connect } from "get-starknet";
 
 import starknetJsImg from '../../public/Images/StarkNet-JS_logo.png';
-import WalletHandle from './components/client/WalletHandle/WalletHandle';
+import WalletApiTag from './components/client/WalletHandle/WalletApiTag';
 import { callRequest } from './components/client/WalletHandle/callRequest';
 import { isBooleanObject } from 'util/types';
-import { formatAddress } from '@/utils/utils';
 import SelectWallet from './components/client/WalletHandle/SelectWallet';
 import WalletAccountTag from './components/client/WalletHandle/WalletAccountTag';
 import { encode, shortString } from 'starknet';
@@ -32,8 +31,8 @@ export default function Page() {
     const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
     const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
 
-    const myWallet = useStoreWallet(state => state.walletObject);
-    const setMyWallet = useStoreWallet(state => state.setMyWalletObject);
+    const myWallet = useStoreWallet(state => state.StarknetWalletObject);
+    const setMyWallet = useStoreWallet(state => state.setMyStarknetWalletObject);
 
     const chainFromContext = useStoreWallet(state => state.chain);
     const setChain = useStoreWallet(state => state.setChain);
@@ -55,7 +54,7 @@ export default function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test WalletAccount of Starknet.js v6.6.6 
+                    Test WalletAccount of Starknet.js v6.7.0 
                 </p>
                 <Center>
                     <Image src={starknetJsImg} alt='starknet.js' width={150} />
@@ -123,7 +122,7 @@ export default function Page() {
                                     </TabPanel>
                                     <TabPanel>
                                         <p></p>
-                                        <WalletHandle></WalletHandle>
+                                        <WalletApiTag></WalletApiTag>
                                     </TabPanel>
                                     <TabPanel>
                                         <WalletAccountTag></WalletAccountTag>

@@ -1,17 +1,17 @@
 import { Box, Button, Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, forwardRef, Tooltip } from "@chakra-ui/react";
-import { CallData, GetBlockResponse, constants as SNconstants, TypedData, cairo, ec, encode, hash, shortString, stark } from "starknet";
+import { CallData, GetBlockResponse, constants as SNconstants, TypedData, cairo, ec, encode, hash, json, shortString, stark, addAddressPadding, wallet } from "starknet";
 import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
+import { StarknetChainId, StarknetChainIdEntry } from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
-import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters } from "get-starknet/packages/core/src/main";
-import { Response, callRequest } from "./callRequest";
-import { formatAddress } from "@/utils/utils";
+import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters, type StarknetWindowObject } from "get-starknet-core";
 
 import { test1Abi } from "../../../contracts/abis/test1";
 import { contractSierra } from "@/app/contracts/tmpTest.sierra.json";
 import { contractCasm } from "@/app/contracts/tmpTest.casm.json";
 import { wait } from "@/utils/utils";
+import { resolve } from "path";
 
 
 
@@ -28,77 +28,74 @@ type Request = {
 
 export default function RpcWalletCommand({ command, symbol, param, tip }: Props) {
     //    export const RpcWalletCommand=forwardRef(({ command, symbol, param,tip }: Props,ref)=> {
+    const myWallet = useStoreWallet(state => state.StarknetWalletObject);
+    const myWalletAccount = useStoreWallet(state => state.myWalletAccount);
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [response, setResponse] = useState<string>("N/A");
-    const walletFromContext = useStoreWallet(state => state.walletObject);
+    const walletFromContext = useStoreWallet(state => state.StarknetWalletObject);
+    const getChainId = useStoreWallet(state => state.chain);
+
     async function callCommand(command: constants.CommandWallet, param: string) {
         switch (command) {
             case constants.CommandWallet.wallet_requestAccounts: {
-                const param: RequestAccountsParameters = {};
-                const myRequest: Request = {
-                    type: command,
-                    params: param
+                if (myWallet) {
+                    const response = await wallet.requestAccounts(myWallet);
+                    const txtResponse = addAddressPadding(response[0]);
+                    setResponse(txtResponse);
+                    onOpen();
                 }
-                const response = await callRequest(myRequest);
-                let txtResponse: string = "N/A";
-                if (typeof (response) == "string") { txtResponse = response } else {
-                    const tmp = response as string[];
-                    txtResponse = formatAddress(tmp[0]);
-                }
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_requestChainId: {
-                const param: RequestAccountsParameters = {};
-                const myRequest: Request = {
-                    type: command,
-                    params: param
+                if (myWallet) {
+                    const param: RequestAccountsParameters = {};
+                    const response = await wallet.requestChainId(myWallet);
+                    setResponse(response + " (" + shortString.decodeShortString(response) + ")");
+                    onOpen();
                 }
-                const response = await callRequest(myRequest);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response :
-                    (response ? "Succeed" : "Fail");
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_watchAsset: {
-                const myAsset: WatchAssetParameters = {
-                    type: "ERC20",
-                    options: {
-                        address: param,
-                        decimals: 10,
-                        name: "ZOZOZO",
-                        symbol: "ZZZ"
-                    } // decimals, name, symbol options are useless and are not taken into account by the Wallet
-                };
-                const myRequest = {
-                    type: command,
-                    params: myAsset
+                if (myWallet) {
+                    const myAsset: WatchAssetParameters = {
+                        type: "ERC20",
+                        options: {
+                            address: param,
+                            decimals: 10,
+                            name: "ZOZOZO",
+                            symbol: "ZZZ"
+                        } // decimals, name, symbol options are useless and are not taken into account by the Wallet
+                    };
+                    const myRequest = {
+                        type: command,
+                        params: myAsset
+                    }
+                    let response: string = "";
+                    try {
+                        response = (await wallet.watchAsset(myWallet, myAsset)) ? "true" : "false";
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                const response = await callRequest(myRequest);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response :
-                    (response ? "Succeed" : "Fail");
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_switchStarknetChain: {
-                const myChainId: SwitchStarknetChainParameters = {
-                    chainId: param
-                } // hex of encoded string
-                const myRequest = {
-                    type: command,
-                    params: myChainId
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        response = (await wallet.switchStarknetChain(myWallet, param as StarknetChainId)) ? "true" : "false";
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                const response = await callRequest(myRequest);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response :
-                    (response ? "Succeed" : "Fail");
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_addStarknetChain: {
@@ -114,24 +111,28 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                         decimals: 18,
                     }
                 } // hex of string
-                const myRequest = {
-                    type: command,
-                    params: myChainId
+                
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        response = (await wallet.addStarknetChain(myWallet, myChainId)) ? "true" : "false";
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                const response = await callRequest(myRequest);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response :
-                    (response ? "Succeed" : "Fail");
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.starknet_addInvokeTransaction: {
-                const contractAddress = "0x697d3bc2e38d57752c28be0432771f4312d070174ae54eef67dd29e4afb174";
+                // param other than 100 will be reverted.
+                const contractAddress = getChainId === StarknetChainId.SN_MAIN ?  "0x02bD907B978F58ceDf616cFf5CdA213d63Daa3AD28Dd3C1Ea17cA6CF5E1D395F" : "0x037BFDeB9c262566183211B89E85b871518eb0c32CBcb026dcE9A486560a03E0"; // Sepolia Testnet
                 const contractCallData = new CallData(test1Abi);
-                const funcName = "increase_balance";
+                const funcName = "test_fail";
                 const myCalldata = contractCallData.compile(funcName, {
-                    amount: Number(param)
+                    p1: Number(param)
                 });
                 const myParams: AddInvokeTransactionParameters = {
                     calls: [{
@@ -140,38 +141,46 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                         calldata: myCalldata
                     }]
                 }
-                const myRequest = {
-                    type: command,
-                    params: myParams
-                };
-                const response = await callRequest(myRequest);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response : (response as AddInvokeTransactionResult).transaction_hash;
-                setResponse(txtResponse);
-                onOpen();
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        console.log("execute call =",myParams)
+                        const resp = (await wallet.addInvokeTransaction(myWallet, myParams)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
+                }
                 break;
             }
-            // case constants.CommandWallet.starknet_addDeclareTransaction: {
-
-
-            //     const myParams: AddDeclareTransactionParameters = {
-            //         compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
-            //         contract_class: contractSierra
-            //     }
-            //     const myRequest = {
-            //         type: command,
-            //         params: myParams
-            //     };
-            //     const response = await callRequest(myRequest);
-            //     const txtResponse: string = typeof (response) == "string" ?
-            //         response : (response as AddDeclareTransactionResult).transaction_hash + " " + (response as AddDeclareTransactionResult).class_hash;
-            //     setResponse(txtResponse);
-            //     onOpen();
-            //     break;
-            // }
+            case constants.CommandWallet.starknet_addDeclareTransaction: {
+                const myParams: AddDeclareTransactionParameters = {
+                    compiled_class_hash: hash.computeCompiledClassHash(contractCasm),
+                    contract_class: contractSierra,
+                }
+                
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        const resp = (await wallet.addDeclareTransaction(myWallet, myParams)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
+                }
+                break;
+            }
             case constants.CommandWallet.starknet_addDeployAccountTransaction: {
 
-                const decClassHash = "0x2bfd9564754d9b4a326da62b2f22b8fea7bbeffd62da4fcaea986c323b7aeb"; // OZ cairo v2.1.0
+                const decClassHash = "0x061dac032f228abef9c6626f995015233097ae253a7f72d68552db02f2971b8f"; // OZ 0.8.1
                 const privateKey = stark.randomAddress();
                 console.log('New account :\nprivateKey=', privateKey);
                 const starkKeyPub = ec.starkCurve.getStarkKey(privateKey);
@@ -204,117 +213,103 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                     contract_address_salt: starkKeyPub,
                     constructor_calldata: [starkKeyPub]
                 }
-                const myRequest = {
-                    type: command,
-                    params: myParams
-                };
-                const response = await callRequest(myRequest);
-                console.log("Result deploy account=", response);
-                const txtResponse: string = typeof (response) == "string" ?
-                    response : "th:" + (response as AddDeployAccountTransactionResult).transaction_hash + " ad:" + (response as AddDeployAccountTransactionResult).contract_address + " (pk:" + privateKey + ")";
-                setResponse(txtResponse);
-                onOpen();
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        const resp = (await wallet.addDeployAccountTransaction(myWallet, myParams)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
+                }
                 break;
             }
             case constants.CommandWallet.starknet_signTypedData: {
                 const myTypedData: TypedData = {
-                    types: {
-                        StarkNetDomain: [
-                            { name: "name", type: "string" },
-                            { name: "version", type: "felt" },
-                            { name: "chainId", type: "felt" },
-                        ],
-                        Airdrop: [
-                            { name: "address", type: "felt" },
-                            { name: "amount", type: "felt" }
-                        ],
-                        Validate: [
-                            { name: "id", type: "felt" },
-                            { name: "from", type: "felt" },
-                            { name: "amount", type: "felt" },
-                            { name: "nameGamer", type: "string" },
-                            { name: "endDate", type: "felt" },
-                            { name: "itemsAuthorized", type: "felt*" }, // array of felt
-                            { name: "chkFunction", type: "selector" }, // name of function
-                            { name: "rootList", type: "merkletree", contains: "Airdrop" } // root of a merkle tree
-                        ]
-                    },
-                    primaryType: "Validate",
                     domain: {
-                        name: "myDapp", // put the name of your dapp to ensure that the signatures will not be used by other DAPP
-                        version: "1",
-                        chainId: shortString.encodeShortString("SN_GOERLI"), // shortString of 'SN_GOERLI' (or 'SN_MAIN' or 'SN_GOERLI2'), to be sure that signature can't be used by other network.
+                      name: "Example DApp",
+                      chainId: StarknetChainId.SN_SEPOLIA,
+                      version: "0.0.3",
                     },
+                    types: {
+                      StarkNetDomain: [
+                        { name: "name", type: "string" },
+                        { name: "chainId", type: "felt" },
+                        { name: "version", type: "string" },
+                      ],
+                      Message: [{ name: "message", type: "felt" }],
+                    },
+                    primaryType: "Message",
                     message: {
-                        id: "0x0000004f000f",
-                        from: "0x2c94f628d125cd0e86eaefea735ba24c262b9a441728f63e5776661829a4066",
-                        amount: "400",
-                        nameGamer: "Hector26",
-                        endDate: "0x27d32a3033df4277caa9e9396100b7ca8c66a4ef8ea5f6765b91a7c17f0109c",
-                        itemsAuthorized: ["0x01", "0x03", "0x0a", "0x0e"],
-                        chkFunction: "check_authorization",
-                        rootList: [
-                            {
-                                address: "0x69b49c2cc8b16e80e86bfc5b0614a59aa8c9b601569c7b80dde04d3f3151b79",
-                                amount: "1554785",
-                            }, {
-                                address: "0x7447084f620ba316a42c72ca5b8eefb3fe9a05ca5fe6430c65a69ecc4349b3b",
-                                amount: "2578248",
-                            }, {
-                                address: "0x3cad9a072d3cf29729ab2fad2e08972b8cfde01d4979083fb6d15e8e66f8ab1",
-                                amount: "4732581",
-                            }, {
-                                address: "0x7f14339f5d364946ae5e27eccbf60757a5c496bf45baf35ddf2ad30b583541a",
-                                amount: "913548",
-                            },
-                        ]
+                      message: "1234",
                     },
+                  
                 };
-                const myRequest = {
-                    type: command,
-                    params: myTypedData
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        const resp = (await wallet.signMessage(myWallet, myTypedData)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                let txtResponse: string = "N/A";
-                const response = await callRequest(myRequest);
-                if (typeof (response) == "string") { txtResponse = response } else {
-                    const tmp = response as string[];
-                    txtResponse = formatAddress(tmp[0]) + " " + formatAddress(tmp[1]);
-                }
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.starknet_supportedSpecs: {
-                const myRequest: Request = {
-                    type: command,
-                    params: undefined
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        const resp = (await wallet.supportedSpecs(myWallet)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                const response = await callRequest(myRequest);
-                let txtResponse: string = typeof (response) == "string" ? response : (response as string[]).join(", ");
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_getPermissions: {
-                const myRequest: Request = {
-                    type: command,
-                    params: undefined
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        const resp = (await wallet.getPermissions(myWallet)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                const response = await callRequest(myRequest);
-                let txtResponse: string = typeof (response) == "string" ? response : (response as string[]).join(", ");
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             case constants.CommandWallet.wallet_deploymentData: {
-                const myRequest: Request = {
-                    type: command,
-                    params: undefined
+                if (myWallet) {
+                    let response: string = "";
+                    try {
+                        const resp = (await wallet.deploymentData(myWallet)) ;
+                        response=json.stringify(resp,undefined,2);
+                    } catch (err: any) {
+                        response = "Error = " + err.message
+                    }
+                    finally {
+                        setResponse(response);
+                        onOpen();
+                    }
                 }
-                const response = await callRequest(myRequest);
-                let txtResponse: string = typeof (response) == "string" ? response : JSON.stringify(response as GetDeploymentDataResult);
-                setResponse(txtResponse);
-                onOpen();
                 break;
             }
             default: {
@@ -328,7 +323,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
 
     return (
         <>
-            <Box color='black' borderWidth='0px' borderRadius='lg'>
+            <Box color='black' borderWidth='px' borderRadius='lg'>
                 <Center>
                     <Tooltip hasArrow label={tip} bg='yellow.100' color='black'>
                         <Button bg='blue.100' onClick={() => { callCommand(command, param) }

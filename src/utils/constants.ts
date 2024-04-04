@@ -18,13 +18,20 @@ export enum CommandWallet {
     wallet_deploymentData = "wallet_deploymentData",
 }
 
+export enum StarknetChainId {
+    SN_MAIN = "0x534e5f4d41494e",
+    SN_GOERLI = "0x534e5f474f45524c49",
+    SN_SEPOLIA = "0x534e5f5345504f4c4941",
+  }
+export type StarknetChainIdEntry = keyof typeof StarknetChainId;
+
 export const myFrontendProviders: ProviderInterface[] = [
     new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_7" }),
     new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_7" }),
     new RpcProvider({ nodeUrl: "https://free-rpc.nethermind.io/sepolia-juno/v0_7" })];
 
 export const Cairo1ContractAddress: string[] = [
-    "0x02bD907B978F58ceDf616cFf5CdA213d63Daa3AD28Dd3C1Ea17cA6CF5E1D395F", // mainnet
+    "0x02bd907b978f58cedf616cff5cda213d63daa3ad28dd3c1ea17ca6cf5e1d395f", // mainnet
     "0x002e9aB2D7DbD8eb3a3cBE628dB705ce5f797Dd256Bd3EAf57bb654f5dEc7512", // testnet
     "0x037bfdeb9c262566183211b89e85b871518eb0c32cbcb026dce9a486560a03e0", // sepolia
 ];

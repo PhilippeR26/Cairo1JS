@@ -7,7 +7,7 @@ import { create } from "zustand";
 //   2  SN_SEPOLIA = "0x534e5f5345504f4c4941",
 //   
 
-export interface FrontEndProviderState {
+interface FrontEndProviderState {
     currentFrontendProviderIndex: number,
     setCurrentFrontendProviderIndex: (currentFrontendProviderIndex: number) => void,
 }

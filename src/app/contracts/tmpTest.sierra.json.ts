@@ -1,4 +1,33 @@
-export const contractSierra = {
+import { json } from "starknet";
+
+type FELT=string;
+type SIERRA_ENTRY_POINT = {
+  selector: FELT
+  function_idx: number
+}
+export const contractSierra: {
+  /**
+   * The list of Sierra instructions of which the program consists
+   */
+  sierra_program: FELT[]
+  /**
+   * The version of the contract class object. Currently, the Starknet OS supports version 0.1.0
+   */
+  contract_class_version: string
+  /**
+   * Entry points by type
+   */
+  entry_points_by_type: {
+    CONSTRUCTOR: SIERRA_ENTRY_POINT[]
+    EXTERNAL: SIERRA_ENTRY_POINT[]
+    L1_HANDLER: SIERRA_ENTRY_POINT[]
+  }
+  sierra_program_debug_info?: any
+  /**
+   * The class ABI, as supplied by the user declaring the class
+   */
+  abi?: string
+} = {
   "sierra_program": [
     "0x1",
     "0x3",
@@ -424,7 +453,7 @@ export const contractSierra = {
     "L1_HANDLER": [],
     "CONSTRUCTOR": []
   },
-  "abi": [
+  "abi": json.stringify([
     {
       "type": "impl",
       "name": "TestFelt",
@@ -486,5 +515,5 @@ export const contractSierra = {
       "kind": "enum",
       "variants": []
     }
-  ]
+  ])
 }
