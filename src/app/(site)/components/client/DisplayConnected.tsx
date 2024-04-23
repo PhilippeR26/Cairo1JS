@@ -4,6 +4,7 @@ import { Center, Button, Box } from "@chakra-ui/react";
 import DisplayBlockChain from "./Block/DisplayBlockchain";
 import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import { useStoreWallet } from "./ConnectWallet/walletContext";
+import WalletDisplay, { StateWallet } from "./ConnectWallet/DisplayWallet";
 // import { SpecialButton } from "./SpecialButton";
 
 // import styles from './page.module.css'
@@ -54,7 +55,7 @@ export function DisplayConnected() {
                     <WalletDisplay walletData={stateWallet} ></WalletDisplay>
                     <DisplayBlockChain ></DisplayBlockChain>
                     
-                    <PlayWithCairo1></PlayWithCairo1>
+                    {/* <PlayWithCairo1></PlayWithCairo1> */}
                 </>
             )
             }

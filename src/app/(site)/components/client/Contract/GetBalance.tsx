@@ -8,8 +8,8 @@ import { useStoreBlock } from "../Block/blockContext";
 import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
-import { useStoreWallet } from '../ConnectWallet/walletContext';
-import { callERC20 } from './callERC20';
+import { erc20Abi } from "../../../contracts/abis/ERC20abi"
+import { useStoreWallet } from "../ConnectWallet/walletContext";;
 
 type Props = { tokenAddress: string };
 
@@ -29,16 +29,32 @@ export default function GetBalance({ tokenAddress }: Props) {
     const [symbol, setSymbol] = useState<string>("");
 
     //const myContract = new Contract(erc20Abi, tokenAddress, providerBackend);
+
+    async function callERC20(contractAddress: string, functionCall: string, param?: string): Promise<any> {
+        const providerW = useStoreWallet(state => state.providerW);
+    
+    
+        const contract = new Contract(erc20Abi, contractAddress, providerW);
+        console.log("ERC20 func =",functionCall,", param =",param);
+        let resp: any;
+        if (!param) {
+            resp = await contract[functionCall]();
+        } else {
+            resp = await contract[functionCall](param);
+        }
+        console.log("ERC20 result =",resp)
+        return resp;
+    }
+
     useEffect(() => {
         const fetchData = async () => {
 
             const resp1 = await callERC20(tokenAddress, "decimals");
-            const res1 = resp1.decimals as bigint;
-            console.log("resDecimals=", res1);
-            setDecimals(Number(res1));
+            console.log("resDecimals=", resp1);
+            setDecimals(Number(resp1));
 
             const resp2 = await callERC20(tokenAddress, "symbol");
-            const res2 = shortString.decodeShortString(resp2.symbol);
+            const res2 = shortString.decodeShortString(resp2);
             console.log("ressymbol=", res2);
             setSymbol(res2);
         }
@@ -46,18 +62,18 @@ export default function GetBalance({ tokenAddress }: Props) {
     }
         , []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const resp3 = await callERC20(tokenAddress, "balanceOf", accountAddress);
-            //const res2 = resp3.balance;
-            //const res3 = Number(uint256.uint256ToBN(res2));
-            const res3=resp3;
-            console.log("res3=", res3);
-            setBalance(res3 / Math.pow(10, decimals));
-        }
-        fetchData().catch(console.error);
-    }
-        , [blockFromContext.block_number, decimals]); // balance updated at each block
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const resp3 = await callERC20(tokenAddress, "balanceOf", accountAddress);
+    //         //const res2 = resp3.balance;
+    //         //const res3 = Number(uint256.uint256ToBN(res2));
+    //         const res3=resp3;
+    //         console.log("res3=", res3);
+    //         setBalance(res3 / Math.pow(10, decimals));
+    //     }
+    //     fetchData().catch(console.error);
+    // }
+    //     , [blockFromContext.block_number, decimals]); // balance updated at each block
 
     return (
         <>

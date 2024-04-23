@@ -12,7 +12,7 @@ import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
-// Test a Cairo 1 contrat already deployed in testnet:
+// Test a Cairo 1 contract already deployed in testnet:
 export default function DisplayBlockChain() {
     // wallet context
     //const providerBackend = useStoreBackend(state => state.providerBackend);
@@ -26,13 +26,15 @@ export default function DisplayBlockChain() {
 
     async function catchBlock() {
         if(!!providerW){
+            //console.log("catchBlock");
             const bl=await providerW.getBlockWithTxHashes("latest") as RPC.RPCSPEC07.SPEC.BLOCK_WITH_TX_HASHES;
             const dataBlock:DataBlock={
                 block_hash:bl.block_hash,
                 block_number:bl.block_number,
                 timestamp:bl.timestamp,
                 l1_gas_price: bl.l1_gas_price
-            }
+            };
+            //console.log("datablock =",dataBlock);
             setBlockData(dataBlock);
             setChainId(await providerW.getChainId());
         }
@@ -80,10 +82,10 @@ export default function DisplayBlockChain() {
             </Box>
             {!!blockFromContext.block_number &&
                 <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
-                    <Center> Updated each new block :</Center>
+                     <Center> Updated each new block :</Center>
                     <GetBalance tokenAddress={constants.addrETH} ></GetBalance>
-                    <Divider borderColor='gray.600'></Divider>
-                    <GetBalance tokenAddress={constants.addrTEST} ></GetBalance>
+                   {/* <Divider borderColor='gray.600'></Divider>
+                    <GetBalance tokenAddress={constants.addrTEST} ></GetBalance> */}
 
                 </Box>
             }
