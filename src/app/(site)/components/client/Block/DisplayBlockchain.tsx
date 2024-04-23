@@ -27,12 +27,18 @@ export default function DisplayBlockChain() {
     async function catchBlock() {
         if(!!providerW){
             //console.log("catchBlock");
-            const bl=await providerW.getBlockWithTxHashes("latest") as RPC.RPCSPEC07.SPEC.BLOCK_WITH_TX_HASHES;
+            // const bl=await providerW.getBlockWithTxHashes("latest") as RPC.RPCSPEC07.SPEC.BLOCK_WITH_TX_HASHES;
+            // const dataBlock:DataBlock={
+            //     block_hash:bl.block_hash,
+            //     block_number:bl.block_number,
+            //     timestamp:bl.timestamp,
+            //     l1_gas_price: bl.l1_gas_price
+            // };
             const dataBlock:DataBlock={
-                block_hash:bl.block_hash,
-                block_number:bl.block_number,
-                timestamp:bl.timestamp,
-                l1_gas_price: bl.l1_gas_price
+                block_hash:"0x01",
+                block_number:600,
+                timestamp:800,
+                l1_gas_price: {price_in_fri:"0x45", price_in_wei:"0x6"}
             };
             //console.log("datablock =",dataBlock);
             setBlockData(dataBlock);

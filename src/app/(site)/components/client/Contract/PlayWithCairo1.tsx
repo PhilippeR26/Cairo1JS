@@ -14,8 +14,8 @@ const contractAddress = "0x6713161c85c2063aaf601690daa2bf9362b8aa00266e246b3839a
 
 export default function PlayWithCairo1() {
     // wallet context
-    const myProvider = useStoreWallet(state => state.myProvider);
     const accountWalletFromContext = useStoreWallet(state => state.accountW);
+    const providerW = useStoreWallet(state => state.providerW);
 
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
@@ -24,7 +24,7 @@ export default function PlayWithCairo1() {
     const [balance, setBalance] = useState<number>(0);
     const [transactionHash, setTransactionHash] = useState<string>("");
 
-    const [cairo1ReadContract, setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, myProvider));
+    const [cairo1ReadContract, setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, providerW));
 
     useEffect(() => {
         cairo1ReadContract.get_balance()

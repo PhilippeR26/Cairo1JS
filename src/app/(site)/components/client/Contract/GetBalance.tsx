@@ -29,6 +29,8 @@ export default function GetBalance({ tokenAddress }: Props) {
     const [symbol, setSymbol] = useState<string>("");
 
     //const myContract = new Contract(erc20Abi, tokenAddress, providerBackend);
+    const providerW = useStoreWallet(state => state.providerW);
+    const contract = new Contract(erc20Abi, tokenAddress, providerW);
 
     async function callERC20(contractAddress: string, functionCall: string, param?: string): Promise<any> {
         const providerW = useStoreWallet(state => state.providerW);
@@ -47,20 +49,35 @@ export default function GetBalance({ tokenAddress }: Props) {
     }
 
     useEffect(() => {
-        const fetchData = async () => {
+        contract.call("decimals")
+            .then((resp: any) => {
+                console.log("resDecimals=", resp);
+                setDecimals(Number(resp));
+            })
+            .catch((e: any) => { console.log("error getDecimals=", e) });
 
-            const resp1 = await callERC20(tokenAddress, "decimals");
-            console.log("resDecimals=", resp1);
-            setDecimals(Number(resp1));
-
-            const resp2 = await callERC20(tokenAddress, "symbol");
-            const res2 = shortString.decodeShortString(resp2);
-            console.log("ressymbol=", res2);
-            setSymbol(res2);
-        }
-        fetchData().catch(console.error);
+        contract.symbol()
+            .then((resp: any) => {
+                const res2 = shortString.decodeShortString(resp);
+                console.log("ressymbol=", res2);
+                setSymbol(res2);
+            })
+            .catch((e: any) => { console.log("error getSymbol=", e) });
     }
         , []);
+
+    useEffect(() => {
+        contract.balanceOf(accountAddress)
+            .then((resp: any) => {
+                const res3 = Number(resp);
+                console.log("res3=", res3);
+                setBalance(res3 / Math.pow(10, decimals));
+            }
+            )
+            .catch((e: any) => { console.log("error balanceOf=", e) });
+    }
+    , [blockFromContext.block_number, decimals]); // balance updated at each block
+
 
     // useEffect(() => {
     //     const fetchData = async () => {
