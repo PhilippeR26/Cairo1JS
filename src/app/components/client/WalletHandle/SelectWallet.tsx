@@ -1,13 +1,13 @@
 import { Permission  } from "get-starknet-core";
-import { StarknetWindowObject } from "get-starknet-core";
+import { StarknetWindowObject, scanObjectForWallets, isWalletObj } from "get-starknet-core";
 import { Box, Button, Center, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, StackDivider, VStack, useDisclosure } from "@chakra-ui/react";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
 import { useEffect } from "react";
-import { isWalletObj } from "@/app/core/wallet/isWalletObject";
+// import { isWalletObj } from "@/app/core/wallet/isWalletObject";
 import { useState } from "react";
-import { WalletAccount, wallet, validateAndParseAddress } from "starknet";
-import { myFrontendProviders, StarknetChainId } from "@/utils/constants";
+import { WalletAccount, wallet, validateAndParseAddress, constants as SNconstants } from "starknet";
+import { myFrontendProviders } from "@/utils/constants";
 
 // export interface StarknetWalletProvider extends StarknetWindowObject {}
 type ValidWallet = {
@@ -97,7 +97,7 @@ export default function SelectWallet() {
         if (isConnectedWallet) {
             const chainId = (await wallet.requestChainId(selectedWallet)) as string;
             setChain(chainId);
-            setCurrentFrontendProviderIndex((Object.values(StarknetChainId) as string[]).indexOf(chainId));
+            setCurrentFrontendProviderIndex((Object.values(SNconstants.StarknetChainId) as string[]).indexOf(chainId));
             console.log("change Provider index to :", myFrontendProviderIndex);
         }
         setSelectWalletUI(false);

@@ -3,9 +3,9 @@ import { Box, Button, StackDivider, VStack, Text, Center, Tooltip } from "@chakr
 import { useEffect } from "react";
 import { useState } from "react";
 import styles from '../../../page.module.css'
-import { Contract, WalletAccount, json, num, shortString, validateAndParseAddress, type TypedData } from "starknet";
+import { Contract, WalletAccount, json, num, shortString, validateAndParseAddress, type TypedData, constants as SNconstants } from "starknet";
 import { rejectContract } from "@/app/contracts/reject.sierra.json";
-import { Cairo1ContractAddress, StarknetChainId, myFrontendProviders } from "@/utils/constants";
+import { Cairo1ContractAddress, myFrontendProviders } from "@/utils/constants";
 import { useFrontendProvider } from "../provider/providerContext";
 import { useStoreWallet } from "../../Wallet/walletContext";
 
@@ -109,7 +109,7 @@ export default function WalletAccountTag() {
         const myTypedData: TypedData = {
             domain: {
               name: "Example DApp",
-              chainId: StarknetChainId.SN_SEPOLIA,
+              chainId: SNconstants.StarknetChainId.SN_SEPOLIA,
               version: "0.0.3",
             },
             types: {
@@ -205,7 +205,7 @@ export default function WalletAccountTag() {
             spacing={3}
         >
             <>
-                <Center fontSize={16} fontWeight={700} color={"firebrick"}> Use of {Object.keys(StarknetChainId)[myFrontendProviderIndex]} network </Center>
+                <Center fontSize={16} fontWeight={700} color={"firebrick"}> Use of {Object.keys(SNconstants.StarknetChainId)[myFrontendProviderIndex]} network </Center>
                 <Center fontSize={14} color={"darkred"}> my frontend provider Id : {myFrontendProviderIndex}  </Center>
                 <Center fontSize={13} color={"darkred"}> contractAddress : {validateAndParseAddress(testContract.address)}  </Center>
                 <Center fontSize={13} color={"darkred"}> WalletAccountAddress : {!!myWalletAccount ? validateAndParseAddress(myWalletAccount.address) : ""}  </Center>

@@ -1,4 +1,4 @@
-import { ProviderInterface, RpcProvider } from "starknet";
+import { ProviderInterface, RpcProvider, constants as SNconstants } from "starknet";
 
 export const addrETH = "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7";
 export const addrTEST = "0x07394cBe418Daa16e42B87Ba67372d4AB4a5dF0B05C6e554D158458Ce245BC10";
@@ -18,12 +18,7 @@ export enum CommandWallet {
     wallet_deploymentData = "wallet_deploymentData",
 }
 
-export enum StarknetChainId {
-    SN_MAIN = "0x534e5f4d41494e",
-    SN_GOERLI = "0x534e5f474f45524c49",
-    SN_SEPOLIA = "0x534e5f5345504f4c4941",
-  }
-export type StarknetChainIdEntry = keyof typeof StarknetChainId;
+export type StarknetChainIdEntry = keyof typeof SNconstants.StarknetChainId;
 
 export const myFrontendProviders: ProviderInterface[] = [
     new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_7" }),

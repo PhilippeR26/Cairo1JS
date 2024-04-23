@@ -3,7 +3,7 @@ import { CallData, GetBlockResponse, constants as SNconstants, TypedData, cairo,
 import React, { useEffect, useState } from "react";
 
 import * as constants from "@/utils/constants";
-import { StarknetChainId, StarknetChainIdEntry } from "@/utils/constants";
+import { StarknetChainIdEntry } from "@/utils/constants";
 import { useStoreWallet } from "../../Wallet/walletContext";
 import { AddDeclareTransactionParameters, AddDeclareTransactionResult, AddDeployAccountTransactionParameters, AddDeployAccountTransactionResult, AddInvokeTransactionParameters, AddInvokeTransactionResult, AddStarknetChainParameters, GetDeploymentDataResult, RequestAccountsParameters, SwitchStarknetChainParameters, WatchAssetParameters, type StarknetWindowObject } from "get-starknet-core";
 
@@ -87,7 +87,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 if (myWallet) {
                     let response: string = "";
                     try {
-                        response = (await wallet.switchStarknetChain(myWallet, param as StarknetChainId)) ? "true" : "false";
+                        response = (await wallet.switchStarknetChain(myWallet, param as SNconstants.StarknetChainId)) ? "true" : "false";
                     } catch (err: any) {
                         response = "Error = " + err.message
                     }
@@ -128,7 +128,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
             }
             case constants.CommandWallet.starknet_addInvokeTransaction: {
                 // param other than 100 will be reverted.
-                const contractAddress = getChainId === StarknetChainId.SN_MAIN ?  "0x02bD907B978F58ceDf616cFf5CdA213d63Daa3AD28Dd3C1Ea17cA6CF5E1D395F" : "0x037BFDeB9c262566183211B89E85b871518eb0c32CBcb026dcE9A486560a03E0"; // Sepolia Testnet
+                const contractAddress = getChainId === SNconstants.StarknetChainId.SN_MAIN ?  "0x02bD907B978F58ceDf616cFf5CdA213d63Daa3AD28Dd3C1Ea17cA6CF5E1D395F" : "0x037BFDeB9c262566183211B89E85b871518eb0c32CBcb026dcE9A486560a03E0"; // Sepolia Testnet
                 const contractCallData = new CallData(test1Abi);
                 const funcName = "test_fail";
                 const myCalldata = contractCallData.compile(funcName, {
@@ -232,7 +232,7 @@ export default function RpcWalletCommand({ command, symbol, param, tip }: Props)
                 const myTypedData: TypedData = {
                     domain: {
                       name: "Example DApp",
-                      chainId: StarknetChainId.SN_SEPOLIA,
+                      chainId: SNconstants.StarknetChainId.SN_SEPOLIA,
                       version: "0.0.3",
                     },
                     types: {
