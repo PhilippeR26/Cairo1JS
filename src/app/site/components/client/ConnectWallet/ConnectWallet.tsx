@@ -5,8 +5,6 @@ import { useStoreWallet } from './walletContext';
 import { Button } from "@chakra-ui/react";
 import { StarknetWindowObject, connect } from "get-wallet-starknet-ui";
 import { Account, encode, Provider, RpcProvider, constants as SNconstants } from "starknet";
-import { useStoreBackend } from '../../../../server/backEndStarknetContext';
-import { initAccountBackend } from '../../server/Account/initAccountBackend';
 
 
 export default function ConnectWallet() {
@@ -29,7 +27,7 @@ export default function ConnectWallet() {
             useStoreWallet.setState({ accountW: getWallet.account });
             !!(getWallet.chainId) ?
                 useStoreWallet.setState({ chainId: getWallet.chainId }) :
-                useStoreWallet.setState({ chainId: SNconstants.StarknetChainId.SN_GOERLI });
+                useStoreWallet.setState({ chainId: SNconstants.StarknetChainId.SN_SEPOLIA });
             // const backEndProvider = await providerBackend();
             // setProvider(backEndProvider);
             // const backEndAccount: Account = await initAccountBackend(addressAccount);

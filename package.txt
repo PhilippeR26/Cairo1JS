@@ -1,0 +1,2 @@
+"get-wallet-starknet-ui": "3.3.3",
+"get-starknet": "3.0.1",

@@ -8,9 +8,8 @@ import { useStoreBlock } from "../Block/blockContext";
 import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
-import VisualWrapper from '../../server/VisualWrapper';
-import { callERC20 } from '../../../../server/contract/callERC20';
 import { useStoreWallet } from '../ConnectWallet/walletContext';
+import { callERC20 } from './callERC20';
 
 type Props = { tokenAddress: string };
 
@@ -50,19 +49,20 @@ export default function GetBalance({ tokenAddress }: Props) {
     useEffect(() => {
         const fetchData = async () => {
             const resp3 = await callERC20(tokenAddress, "balanceOf", accountAddress);
-            const res2 = resp3.balance;
-            const res3 = Number(uint256.uint256ToBN(res2));
+            //const res2 = resp3.balance;
+            //const res3 = Number(uint256.uint256ToBN(res2));
+            const res3=resp3;
             console.log("res3=", res3);
             setBalance(res3 / Math.pow(10, decimals));
         }
         fetchData().catch(console.error);
     }
-        , [blockFromContext.blockNumber, decimals]); // balance updated at each block
+        , [blockFromContext.block_number, decimals]); // balance updated at each block
 
     return (
         <>
             {
-                typeof (balance) !== "number" ? (
+                typeof (balance) !== "bigint" ? (
                     <>
                         <Center>
                             <Spinner color="blue" size="sm" mr={4} />  Fetching data ...

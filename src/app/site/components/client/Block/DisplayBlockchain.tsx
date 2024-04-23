@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { GetBlockResponse } from "starknet";
+import { GetBlockResponse, RPC, json } from "starknet";
 
-import { useStoreBlock, dataBlockInit } from "./blockContext";
-import { useStoreBackend } from '../../../../server/backEndStarknetContext';
+import { useStoreBlock, dataBlockInit, type DataBlock } from "./blockContext";
 
 import GetBalance from "../Contract/GetBalance";
 
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
-import { getBlockBackend, getChainId } from '@/app/server/provider/providerBackend';
+import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 // Test a Cairo 1 contrat already deployed in testnet:
 export default function DisplayBlockChain() {
@@ -23,10 +22,20 @@ export default function DisplayBlockChain() {
     const setBlockData = useStoreBlock((state) => state.setBlockData);
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
     const [chainId, setChainId] = useState<string>("unknown");
+    const providerW= useStoreWallet(state=>state.providerW);
 
     async function catchBlock() {
-            setBlockData(await getBlockBackend());
-            setChainId(await getChainId());
+        if(!!providerW){
+            const bl=await providerW.getBlockWithTxHashes("latest") as RPC.RPCSPEC07.SPEC.BLOCK_WITH_TX_HASHES;
+            const dataBlock:DataBlock={
+                block_hash:bl.block_hash,
+                block_number:bl.block_number,
+                timestamp:bl.timestamp,
+                l1_gas_price: bl.l1_gas_price
+            }
+            setBlockData(dataBlock);
+            setChainId(await providerW.getChainId());
+        }
     }
 
     useEffect(() => {
@@ -53,23 +62,23 @@ export default function DisplayBlockChain() {
     return (
         <>
             <Box bg='gray.300' color='black' borderWidth='1px' borderRadius='lg'>
-                {!blockFromContext.blockNumber ? (
+                {!blockFromContext.block_number ? (
                     <Center>
                         <Spinner color="blue" size="sm" mr={4} />  Fetching data ...
                     </Center>
                 ) :
                     (
                         <>
-                            <Text className={styles.text1}>Last block number = {blockFromContext.blockNumber} timerId = {timerId ? "Set" : "Not set"} </Text>
-                            <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
-                            <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
-                            <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
+                            <Text className={styles.text1}>Last block number = {blockFromContext.block_number} timerId = {timerId ? "Set" : "Not set"} </Text>
+                            <Text className={styles.text1}>BlockHash = {blockFromContext.block_hash}  </Text>
+                            <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timestamp}  </Text>
+                            <Text className={styles.text1}>BlockGasprice = {json.stringify( blockFromContext.l1_gas_price)}  </Text>
                             <Divider></Divider>
                         </>
                     )
                 }
             </Box>
-            {!!blockFromContext.blockNumber &&
+            {!!blockFromContext.block_number &&
                 <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
                     <Center> Updated each new block :</Center>
                     <GetBalance tokenAddress={constants.addrETH} ></GetBalance>

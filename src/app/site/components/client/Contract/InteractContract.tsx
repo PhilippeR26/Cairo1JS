@@ -28,10 +28,10 @@ export default function InteractContract() {
             // console.log("end getBloc");
             if (resp.status !== "PENDING") {
                 setBlockData({
-                    timeStamp: resp.timestamp,
-                    blockHash: resp.block_hash,
-                    blockNumber: resp.block_number,
-                    gasPrice: resp.l1_gas_price.price_in_wei 
+                    timestamp: resp.timestamp,
+                    block_hash: resp.block_hash,
+                    block_number: resp.block_number,
+                    l1_gas_price: resp.l1_gas_price
                 }
                 )
             }
@@ -61,7 +61,7 @@ export default function InteractContract() {
 
     return (
         <>
-            {!!blockFromContext.blockNumber &&
+            {!!blockFromContext.block_number &&
                 <Box bg='mediumaquamarine' color='black' borderWidth='3px' borderColor='green.800' borderRadius='xl' p={2}>
                     <>
                         <Text textAlign='center' fontSize={20}>Balance of Cairo 1 🦀 contract :  </Text>

@@ -24,7 +24,7 @@ export default function TransactionStatus({ transactionHash }: Props) {
         myProvider.getTransactionReceipt(transactionHash)
             .then((resp: GetTransactionReceiptResponse) => {
                 console.log("TxStatus =", resp);
-                setTxStatus(resp.execution_status ?? waiting);
+                setTxStatus(resp.statusReceipt?? waiting);
             })
             .catch((e: any) => { 
                 setTxStatus( waiting);

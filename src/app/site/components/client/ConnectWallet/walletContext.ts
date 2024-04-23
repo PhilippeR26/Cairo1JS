@@ -4,7 +4,7 @@ import {  ProviderInterface, AccountInterface, RpcProvider } from "starknet";
 import { StarknetWindowObject } from "get-wallet-starknet-ui";
 
 export interface WalletState {
-    providerW:ProviderInterface|undefined,
+    providerW:RpcProvider|undefined,
     myProvider:RpcProvider,
     addressAccount:string,
     chainId:string,

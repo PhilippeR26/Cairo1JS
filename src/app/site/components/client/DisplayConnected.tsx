@@ -7,9 +7,6 @@ import { useStoreWallet } from "./ConnectWallet/walletContext";
 // import { SpecialButton } from "./SpecialButton";
 
 // import styles from './page.module.css'
-import WalletDisplay from "../server/Wallet/WalletDisplay";
-import VisualWrapper from "../server/VisualWrapper";
-import { StateWallet } from "../server/Wallet/types";
 import PlayWithCairo1 from "./Contract/PlayWithCairo1";
 
 

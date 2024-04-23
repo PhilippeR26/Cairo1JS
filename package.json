@@ -20,14 +20,14 @@
     "axios": "^1.6.7",
     "dotenv": "^16.4.2",
     "framer-motion": "^11.0.3",
-    "get-wallet-starknet-ui": "^3.3.3",
+    "get-wallet-starknet-ui": "3.3.3",
     "material-react-toastify": "^2.0.1",
-    "next": "^14.1.0",
+    "next": "^14.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "server-only": "^0.0.1",
     "sharp": "^0.33.2",
-    "starknet": "^6.0.0",
+    "starknet": "^6.6.6",
     "swr": "^2.2.4",
     "typescript": "^5.3.3",
     "zustand": "^4.5.0"
@@ -35,5 +35,6 @@
   "devDependencies": {
     "encoding": "^0.1.13",
     "simple-zustand-devtools": "^1.1.0"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

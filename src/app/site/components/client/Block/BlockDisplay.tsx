@@ -18,10 +18,10 @@ export default function BlockDisplay({ providerSN }: Props) {
             providerSN.getBlock("latest").then((resp: GetBlockResponse) => {
                 if (resp.status !== "PENDING") {
                     setBlockData({
-                        timeStamp: resp.timestamp,
-                        blockHash: resp.block_hash,
-                        blockNumber: resp.block_number,
-                        gasPrice: resp.l1_gas_price.price_in_wei 
+                        timestamp: resp.timestamp,
+                        block_hash: resp.block_hash,
+                        block_number: resp.block_number,
+                        l1_gas_price: resp.l1_gas_price 
                     }
                     )
                 }
@@ -45,14 +45,14 @@ export default function BlockDisplay({ providerSN }: Props) {
     return (
         <>
             {
-                !blockFromContext.blockNumber ? (
+                !blockFromContext.block_number ? (
                     <Text>Fetching in progres ... </Text>
                 ) : (
                     <>
-                        <Text className={styles.text1}>BlockNumber = {blockFromContext.blockNumber} timerId = {timerId ? "Set" : "Not set"} </Text>
-                        <Text className={styles.text1}>BlockHash = {blockFromContext.blockHash}  </Text>
-                        <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timeStamp}  </Text>
-                        <Text className={styles.text1}>BlockGasprice = {blockFromContext.gasPrice}  </Text>
+                        <Text className={styles.text1}>BlockNumber = {blockFromContext.block_number} timerId = {timerId ? "Set" : "Not set"} </Text>
+                        <Text className={styles.text1}>BlockHash = {blockFromContext.block_hash}  </Text>
+                        <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timestamp}  </Text>
+                        <Text className={styles.text1}>BlockGasprice = {JSON.stringify(blockFromContext.l1_gas_price)}  </Text>
                         <Divider></Divider>
                     </>
                 )}
