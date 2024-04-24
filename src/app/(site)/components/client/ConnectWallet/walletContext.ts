@@ -5,6 +5,7 @@ import { StarknetWindowObject } from "get-starknet";
 
 export interface WalletState {
     providerW:RpcProvider|undefined,
+    myProvider:RpcProvider,
     addressAccount:string,
     chainId:string,
     accountW:AccountInterface|undefined,
@@ -14,6 +15,7 @@ export interface WalletState {
 
 export const useStoreWallet = create<WalletState>()((set) => ({
     providerW:undefined,
+    myProvider: new RpcProvider({nodeUrl:process.env.NEXT_PUBLIC_PROVIDER_URL}),
     addressAccount:"" ,
     chainId:"" ,
     accountW:undefined ,

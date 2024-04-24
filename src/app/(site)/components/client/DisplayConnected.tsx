@@ -53,7 +53,7 @@ export function DisplayConnected() {
                     </Center>
                     <br />
                     <WalletDisplay walletData={stateWallet} ></WalletDisplay>
-                    {/* <DisplayBlockChain ></DisplayBlockChain> */}
+                    <DisplayBlockChain ></DisplayBlockChain>
                     
                     <PlayWithCairo1></PlayWithCairo1>
                 </>

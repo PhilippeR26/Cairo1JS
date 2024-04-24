@@ -15,13 +15,13 @@ export default async function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v3.0.1 with starknet.js v6.6.6
+                    Test get-starknet v3.0.1 with starknet.js v6.8.0
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} />
                 </Center>
                 <p className={styles.bgText}>
-                    Please connect to testnet network
+                    Please connect to Sepolia Testnet network
                 </p>
                 <div>
                     <DisplayConnected></DisplayConnected>

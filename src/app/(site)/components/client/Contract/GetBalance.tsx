@@ -14,12 +14,7 @@ import { useStoreWallet } from "../ConnectWallet/walletContext";;
 type Props = { tokenAddress: string };
 
 export default function GetBalance({ tokenAddress }: Props) {
-    // wallet context
-    // const providerBackend = useStoreBackend(state => state.providerBackend);
-    // const accountBackend = useStoreBackend(state => state.accountBackend);
-
-    //if (!!accountBackend) {}
-
+    
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
     const accountAddress = useStoreWallet((state) => state.addressAccount);
@@ -28,25 +23,8 @@ export default function GetBalance({ tokenAddress }: Props) {
     const [decimals, setDecimals] = useState<number>(18)
     const [symbol, setSymbol] = useState<string>("");
 
-    //const myContract = new Contract(erc20Abi, tokenAddress, providerBackend);
-    const providerW = useStoreWallet(state => state.providerW);
-    const contract = new Contract(erc20Abi, tokenAddress, providerW);
-
-    async function callERC20(contractAddress: string, functionCall: string, param?: string): Promise<any> {
-        const providerW = useStoreWallet(state => state.providerW);
-    
-    
-        const contract = new Contract(erc20Abi, contractAddress, providerW);
-        console.log("ERC20 func =",functionCall,", param =",param);
-        let resp: any;
-        if (!param) {
-            resp = await contract[functionCall]();
-        } else {
-            resp = await contract[functionCall](param);
-        }
-        console.log("ERC20 result =",resp)
-        return resp;
-    }
+    const myProvider = useStoreWallet(state => state.myProvider);
+    const contract = new Contract(erc20Abi, tokenAddress, myProvider);
 
     useEffect(() => {
         contract.call("decimals")
@@ -95,7 +73,7 @@ export default function GetBalance({ tokenAddress }: Props) {
     return (
         <>
             {
-                typeof (balance) !== "bigint" ? (
+                !balance ? (
                     <>
                         <Center>
                             <Spinner color="blue" size="sm" mr={4} />  Fetching data ...

@@ -11,10 +11,6 @@ export default function ConnectWallet() {
     const addressAccount = useStoreWallet(state => state.addressAccount);
     const wallet = useStoreWallet(state => state.wallet);
 
-
-    // Server
-    //const setProvider = useStoreBackend(state => state.setProviderBackend);
-
     const handleConnectClick = async () => {
         const getWallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
         await getWallet?.enable({ starknetVersion: "v5" } as any);
@@ -28,10 +24,8 @@ export default function ConnectWallet() {
             !!(getWallet.chainId) ?
                 useStoreWallet.setState({ chainId: getWallet.chainId }) :
                 useStoreWallet.setState({ chainId: SNconstants.StarknetChainId.SN_SEPOLIA });
-            // const backEndProvider = await providerBackend();
-            // setProvider(backEndProvider);
-            // const backEndAccount: Account = await initAccountBackend(addressAccount);
         }
+        console.log("myProvider url =",process.env.NEXT_PUBLIC_PROVIDER_URL);
 
         console.log("handleClick =",useStoreWallet.getState().isConnected);
     }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { GetBlockResponse, RPC, json } from "starknet";
+import { GetBlockResponse, json, RPC} from "starknet";
 
 import { useStoreBlock, dataBlockInit, type DataBlock } from "./blockContext";
 
@@ -11,6 +11,21 @@ import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
 import { useStoreWallet } from '../ConnectWallet/walletContext';
+
+type BLOCK_HEADER = {
+    block_hash: string;
+    parent_hash: string;
+    block_number: number;
+    new_root: string;
+    timestamp: number;
+    sequencer_address: string;
+    l1_gas_price: {
+        price_in_fri: string;
+        price_in_wei: string;
+    };
+    starknet_version: string;
+  };
+  
 
 // Test a Cairo 1 contract already deployed in testnet:
 export default function DisplayBlockChain() {
@@ -22,27 +37,27 @@ export default function DisplayBlockChain() {
     const setBlockData = useStoreBlock((state) => state.setBlockData);
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
     const [chainId, setChainId] = useState<string>("unknown");
-    const providerW= useStoreWallet(state=>state.providerW);
+    const myProvider= useStoreWallet(state=>state.myProvider);
 
     async function catchBlock() {
-        if(!!providerW){
-            //console.log("catchBlock");
-            // const bl=await providerW.getBlockWithTxHashes("latest") as RPC.RPCSPEC07.SPEC.BLOCK_WITH_TX_HASHES;
-            // const dataBlock:DataBlock={
-            //     block_hash:bl.block_hash,
-            //     block_number:bl.block_number,
-            //     timestamp:bl.timestamp,
-            //     l1_gas_price: bl.l1_gas_price
-            // };
+        if(!!myProvider){
+            console.log("catchBlock");
+            const bl=await myProvider.getBlockWithTxHashes("latest") as BLOCK_HEADER;
             const dataBlock:DataBlock={
-                block_hash:"0x01",
-                block_number:600,
-                timestamp:800,
-                l1_gas_price: {price_in_fri:"0x45", price_in_wei:"0x6"}
+                block_hash:bl.block_hash,
+                block_number:bl.block_number,
+                timestamp:bl.timestamp,
+                l1_gas_price: bl.l1_gas_price
             };
+            // const dataBlock:DataBlock={
+            //     block_hash:"0x01",
+            //     block_number:600,
+            //     timestamp:800,
+            //     l1_gas_price: {price_in_fri:"0x45", price_in_wei:"0x6"}
+            // };
             //console.log("datablock =",dataBlock);
             setBlockData(dataBlock);
-            setChainId(await providerW.getChainId());
+            setChainId(await myProvider.getChainId());
         }
     }
 
@@ -90,8 +105,8 @@ export default function DisplayBlockChain() {
                 <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
                      <Center> Updated each new block :</Center>
                     <GetBalance tokenAddress={constants.addrETH} ></GetBalance>
-                   {/* <Divider borderColor='gray.600'></Divider>
-                    <GetBalance tokenAddress={constants.addrTEST} ></GetBalance> */}
+                    <Divider borderColor='gray.600'></Divider>
+                    <GetBalance tokenAddress={constants.addrSTRK} ></GetBalance> 
 
                 </Box>
             }

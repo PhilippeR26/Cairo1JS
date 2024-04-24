@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { GetTransactionReceiptResponse } from "starknet";
+import { GetTransactionReceiptResponse, json, type RejectedTransactionReceiptResponse, type RevertedTransactionReceiptResponse, type SuccessfulTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
-import { Spinner, Text } from "@chakra-ui/react";
+import { Box, Spinner, Text } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 type Props = { transactionHash: string };
-const waiting:string="waiting data";
+const waiting: string = "waiting data";
 
 export default function TransactionStatus({ transactionHash }: Props) {
     // wallet context
@@ -21,25 +21,45 @@ export default function TransactionStatus({ transactionHash }: Props) {
     const [txStatus, setTxStatus] = useState<string>(waiting);
 
     useEffect(() => {
-        myProvider.getTransactionReceipt(transactionHash)
-            .then((resp: GetTransactionReceiptResponse) => {
-                console.log("TxStatus =", resp);
-                setTxStatus(resp.statusReceipt?? waiting);
+        myProvider?.waitForTransaction(transactionHash)
+            .then((txR: GetTransactionReceiptResponse) => {
+                console.log("TxStatus =", txR.statusReceipt);
+                let finality: string = "";
+                txR.match({
+                    success: (txR: SuccessfulTransactionReceiptResponse) => {
+                        finality = txR.finality_status;
+                    },
+                    rejected: (txR: RejectedTransactionReceiptResponse) => {
+                        finality =  json.stringify( txR.transaction_failure_reason);
+                    },
+                    reverted: (txR: RevertedTransactionReceiptResponse) => {
+                        finality = txR.finality_status;
+                    },
+                    error: (err: Error) => {
+                        finality= err.message;
+                    },
+                    _: () => {
+                        console.log('Unsuccess');
+                    },
+                });
+                console.log("TxFinality =", finality);
+                setTxStatus(txR.statusReceipt+" "+finality);
             })
-            .catch((e: any) => { 
-                setTxStatus( waiting);
-                console.log("error getTransactionStatus=", e) });
+            .catch((e: any) => {
+                setTxStatus(waiting);
+                console.log("error getTransactionStatus=", e)
+            });
         return () => { }
     }
-        , [blockFromContext.blockNumber]);
+        , [blockFromContext.block_number]);
 
     return (
         <>
-            <Text className={styles.text1}>Transaction is : {" "}
-                {txStatus=== waiting ?
+            <Box className={styles.text1}>Transaction is : {" "}
+                {txStatus === waiting ?
                     (<Spinner color="blue" size="sm" mr={4} />)
                     : txStatus}
-            </Text>
+            </Box>
         </>
     )
 }
