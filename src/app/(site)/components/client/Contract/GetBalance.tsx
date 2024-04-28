@@ -48,7 +48,7 @@ export default function GetBalance({ tokenAddress }: Props) {
         contract.balanceOf(accountAddress)
             .then((resp: any) => {
                 const res3 = Number(resp);
-                console.log("res3=", res3);
+                console.log("res3=", resp);
                 setBalance(res3 / Math.pow(10, decimals));
             }
             )
@@ -73,7 +73,7 @@ export default function GetBalance({ tokenAddress }: Props) {
     return (
         <>
             {
-                !balance ? (
+                typeof balance=="undefined" ? (
                     <>
                         <Center>
                             <Spinner color="blue" size="sm" mr={4} />  Fetching data ...

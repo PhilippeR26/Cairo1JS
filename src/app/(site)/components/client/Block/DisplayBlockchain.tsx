@@ -41,7 +41,7 @@ export default function DisplayBlockChain() {
 
     async function catchBlock() {
         if(!!myProvider){
-            console.log("catchBlock");
+            //console.log("catchBlock");
             const bl=await myProvider.getBlockWithTxHashes("latest") as BLOCK_HEADER;
             const dataBlock:DataBlock={
                 block_hash:bl.block_hash,
