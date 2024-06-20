@@ -15,14 +15,16 @@ mod merkle {
     use traits::PartialOrd;
 
     struct Storage {
-        merkle_root_storage: felt252
-    }
+    merkle_root_storage: felt252,
+    airdrop_start_time: timestamp
+}
 
+#[constructor]
+fn constructor(merkle_root: felt252, airdrop_start_time: timestamp) {
+    merkle_root_storage::write(merkle_root);
+    airdrop_start_time_storage::write(airdrop_start_time);
+}
 
-    #[constructor]
-    fn constructor(merkle_root: felt252) {
-        merkle_root_storage::write(merkle_root);
-    }
 
     // provide root value
     #[view]
@@ -89,11 +91,16 @@ mod merkle {
 
     #[external]
     fn request_airdrop(address: felt252, amount: felt252, proof: Array<felt252>) {
-        let h0: felt252 = get_hash(0, address);
-        let h1: felt252 = get_hash(h0, amount);
-        let hashed_leaf: felt252 = get_hash(h1, 2); // 2= length of data (address & amount)
-        let is_valid_request: bool = verify_proof(hashed_leaf, proof);
-        assert(is_valid_request  == true, 'Proof not valid.'); // revert if not valid
+    let current_time: timestamp = current_time();
+    let airdrop_start_time: timestamp = airdrop_start_time_storage::read();
+    
+    assert(current_time >= airdrop_start_time, 'Airdrop has not started yet.');
+
+    let h0: felt252 = get_hash(0, address);
+    let h1: felt252 = get_hash(h0, amount);
+    let hashed_leaf: felt252 = get_hash(h1, 2); // 2 = length of data (address & amount)
+    let is_valid_request: bool = verify_proof(hashed_leaf, proof);
+    assert(is_valid_request, 'Invalid proof for airdrop request.'); // revert if not valid
         // Airdop
         // Do not forget to first store this address in a storage of addresses already airdropped,
         // to be sure to perform the airdrop only once per address.
