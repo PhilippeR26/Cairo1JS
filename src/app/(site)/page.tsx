@@ -15,7 +15,7 @@ export default async function Page() {
         <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v3.3.0 with starknet.js v6.8.0
+                    Test get-starknet v4.0.0 with starknet.js v6.10.0
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} />

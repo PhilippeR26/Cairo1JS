@@ -19,7 +19,7 @@ export default  function WalletDisplay( {walletData}:WalletProps) {
            <p className={styles.text1}>
            
                address = {walletData.addressAccount} <br />
-               chain = {walletData.chainId} <br /> 
+               chain = {shortString.decodeShortString(walletData.chainId)} <br /> 
                isConnected={walletData.isConnected ? "Yes" : "No"}<br />
            </p>
        </Box>

@@ -9,7 +9,9 @@ import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 import { erc20Abi } from "../../../contracts/abis/ERC20abi"
-import { useStoreWallet } from "../ConnectWallet/walletContext";;
+import { useStoreWallet } from "../ConnectWallet/walletContext";import { useFrontendProvider } from '../provider/providerContext';
+import { myFrontendProviders } from '@/utils/constants';
+;
 
 type Props = { tokenAddress: string };
 
@@ -17,13 +19,14 @@ export default function GetBalance({ tokenAddress }: Props) {
     
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
-    const accountAddress = useStoreWallet((state) => state.addressAccount);
+    const accountAddress = useStoreWallet((state) => state.address);
 
     const [balance, setBalance] = useState<number | undefined>(undefined);
     const [decimals, setDecimals] = useState<number>(18)
     const [symbol, setSymbol] = useState<string>("");
 
-    const myProvider = useStoreWallet(state => state.myProvider);
+    const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
+    const myProvider=myFrontendProviders[myProviderIndex];
     const contract = new Contract(erc20Abi, tokenAddress, myProvider);
 
     useEffect(() => {

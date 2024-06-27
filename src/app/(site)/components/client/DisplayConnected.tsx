@@ -13,9 +13,9 @@ import PlayWithCairo1 from "./Contract/PlayWithCairo1";
 
 export function DisplayConnected() {
     const isConnected = useStoreWallet(state => state.isConnected);
-    const accountW = useStoreWallet(state => state.accountW);
-    const addressAccount = useStoreWallet(state => state.addressAccount);
-    const chainId = useStoreWallet(state => state.chainId);
+    //const accountW = useStoreWallet(state => state.accountW);
+    const addressAccount = useStoreWallet(state => state.address);
+    const chainId = useStoreWallet(state => state.chain);
     const stateWallet: StateWallet = {
         addressAccount: addressAccount,
         chainId: chainId,
@@ -46,7 +46,7 @@ export function DisplayConnected() {
                                 useStoreWallet.setState({ isConnected: false });
                             }}
                         >
-                            {accountW
+                            {addressAccount
                                 ? `Your wallet : ${addressAccount?.slice(0, 7)}...${addressAccount?.slice(-4)} is connected`
                                 : "No Account"}
                         </Button>

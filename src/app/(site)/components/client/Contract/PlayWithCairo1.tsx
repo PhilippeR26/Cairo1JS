@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Account, Contract, DeclareContractResponse, InvokeFunctionResponse, RPC, constants } from "starknet";
+import { Account, Contract, DeclareContractResponse, InvokeFunctionResponse, RPC, constants, type GetTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
@@ -15,9 +15,9 @@ const contractAddress = addrTESTCONTRACT;
 
 export default function PlayWithCairo1() {
     // wallet context
-    const accountWalletFromContext = useStoreWallet(state => state.accountW);
-    const providerW = useStoreWallet(state => state.providerW);
-    const myProvider = useStoreWallet(state => state.myProvider);
+    const walletAccountFromContext = useStoreWallet(state => state.myWalletAccount);
+    // const providerW = useStoreWallet(state => state.providerW);
+    // const myProvider = useStoreWallet(state => state.myProvider);
 
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
@@ -25,24 +25,25 @@ export default function PlayWithCairo1() {
     // Component context
     const [balance, setBalance] = useState<number>(0);
     const [transactionHash, setTransactionHash] = useState<string>("");
+    const [transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse|undefined>(undefined);
 
-    const [cairo1WriteContract, setcairo1WriteContract] = useState<Contract>(new Contract(test1Abi, contractAddress, providerW));
-    const [cairo1ReadContract, setcairo1ReadContract] = useState<Contract>(new Contract(test1Abi, contractAddress, myProvider));
+    const [cairo1Contract, setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
 
-    function increaseBalance() {
-        console.log("increase-Cairo1ReadContract=", cairo1WriteContract.functions);
-        const call = cairo1WriteContract.populate("increase_counter", [10]);
-        console.log("Call=", call);
-        accountWalletFromContext?.execute(call, undefined, { version: 3 })
-            .then((resp: InvokeFunctionResponse) => {
+    async function increaseBalance() {
+        console.log("increase-Cairo1ReadContract=", cairo1Contract.functions);
+        const myCall = cairo1Contract.populate("increase_counter", [10]);
+        console.log("Call=", myCall);
+        walletAccountFromContext?.execute(myCall)
+            .then(async (resp: InvokeFunctionResponse) => {
                 console.log("increaseBalance txH =", resp.transaction_hash);
                 setTransactionHash(resp.transaction_hash);
+                setTransactionResult(await walletAccountFromContext.waitForTransaction(resp.transaction_hash));
             })
             .catch((e: any) => { console.log("error increase balance =", e) });
     }
 
     useEffect(() => {
-        cairo1ReadContract.get_balance()
+        cairo1Contract.get_balance()
             .then((resp: bigint) => {
                 console.log("resp =", resp)
                 setBalance(Number(resp));
@@ -84,7 +85,7 @@ export default function PlayWithCairo1() {
                         </div>
                         {!!transactionHash && (
                             <Box bg='green.300' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} margin={2}>
-                                <Text className={styles.text1}>Transaction version 3.</Text>
+                                
                                 <TransactionStatus transactionHash={transactionHash}></TransactionStatus>
                             </Box>
                         )

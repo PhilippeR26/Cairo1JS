@@ -11,6 +11,8 @@ import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
 import { useStoreWallet } from '../ConnectWallet/walletContext';
+import { useFrontendProvider } from '../provider/providerContext';
+import { myFrontendProviders } from '@/utils/constants';
 
 type BLOCK_HEADER = {
     block_hash: string;
@@ -37,12 +39,13 @@ export default function DisplayBlockChain() {
     const setBlockData = useStoreBlock((state) => state.setBlockData);
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
     const [chainId, setChainId] = useState<string>("unknown");
-    const myProvider= useStoreWallet(state=>state.myProvider);
+    const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
+    const myProvider=myFrontendProviders[myProviderIndex];
 
     async function catchBlock() {
         if(!!myProvider){
             //console.log("catchBlock");
-            const bl=await myProvider.getBlockWithTxHashes("latest") as BLOCK_HEADER;
+            const bl=await myProvider.getBlock("latest") ;
             const dataBlock:DataBlock={
                 block_hash:bl.block_hash,
                 block_number:bl.block_number,
@@ -67,7 +70,7 @@ export default function DisplayBlockChain() {
             catchBlock()
             console.log("timerId=", tim);
         }
-            , 5000 //ms
+            , 10000 //ms
         );
         setTimerId(() => tim);
 

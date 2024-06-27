@@ -6,13 +6,16 @@ import { useStoreWallet } from '../ConnectWallet/walletContext';
 
 import { Box, Spinner, Text } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
+import { useFrontendProvider } from '../provider/providerContext';
+import { myFrontendProviders } from '@/utils/constants';
 
 type Props = { transactionHash: string };
 const waiting: string = "waiting data";
 
 export default function TransactionStatus({ transactionHash }: Props) {
     // wallet context
-    const myProvider = useStoreWallet(state => state.myProvider);
+    const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
+    const myProvider=myFrontendProviders[myProviderIndex];
 
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
