@@ -16,8 +16,6 @@ const contractAddress = addrTESTCONTRACT;
 export default function PlayWithCairo1() {
     // wallet context
     const walletAccountFromContext = useStoreWallet(state => state.myWalletAccount);
-    // const providerW = useStoreWallet(state => state.providerW);
-    // const myProvider = useStoreWallet(state => state.myProvider);
 
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
@@ -52,9 +50,6 @@ export default function PlayWithCairo1() {
         return () => { }
     }
         , [blockFromContext.block_number]); // balance updated at each block
-
-   // useEffect(() => { setBalance(45) }, []);
-
 
 
     return (

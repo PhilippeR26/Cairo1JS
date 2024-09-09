@@ -1,39 +1,69 @@
 "use client";
 
 import { useStoreWallet } from './walletContext';
-
 import { Button } from "@chakra-ui/react";
-
-import { Account, encode, Provider, RpcProvider, constants as SNconstants } from "starknet";
-import SelectWallet from './SelectWallet';
-
+//import SelectWallet from './SelectWallet';
+import { connect } from '@starknet-io/get-starknet';
+import { WALLET_API } from '@starknet-io/types-js';
+import { validateAndParseAddress, wallet, WalletAccount,  constants as SNconstants } from 'starknet';
+import { myFrontendProviders } from '@/utils/constants';
+import { useFrontendProvider } from '../provider/providerContext';
 
 export default function ConnectWallet() {
-    // const addressAccount = useStoreWallet(state => state.addressAccount);
-    // const wallet = useStoreWallet(state => state.wallet);
-    const setSelectWalletUI = useStoreWallet(state => state.setSelectWalletUI);
-    const displaySelectWalletUI = useStoreWallet(state => state.displaySelectWalletUI);
+    const myWallet = useStoreWallet(state => state.StarknetWalletObject);
+    const setMyWallet = useStoreWallet(state => state.setMyStarknetWalletObject);
+
+    const myWalletAccount = useStoreWallet(state => state.myWalletAccount);
+    const setMyWalletAccount = useStoreWallet(state => state.setMyWalletAccount);
+
+    const setChain = useStoreWallet(state => state.setChain);
+    const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
+
+    const isConnected = useStoreWallet(state => state.isConnected);
+    const setConnected = useStoreWallet(state => state.setConnected);
+
+    const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
+    const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
+
+    const setWalletApi = useStoreWallet(state => state.setWalletApiList);
+
+    
+    async function selectW(){
+        const res=await connect({ modalMode: "alwaysAsk" });
+        if (res) {handleSelectedWallet(res)}
+    }
+
+    const handleSelectedWallet = async (selectedWallet: WALLET_API.StarknetWindowObject) => {
+        console.log("Trying to connect wallet=", selectedWallet);
+        setMyWallet(selectedWallet); // zustand
+        setMyWalletAccount(new WalletAccount(myFrontendProviders[2], selectedWallet));
+
+        const result = await wallet.requestAccounts(selectedWallet);
+        if (typeof (result) == "string") {
+            console.log("This Wallet is not compatible.");
+            //setSelectWalletUI(false);
+            return;
+        }
+        console.log("Current account addr =", result);
+        if (Array.isArray(result)) {
+            const addr = validateAndParseAddress(result[0]);
+            setAddressAccount(addr); // zustand
+        }
+        const isConnectedWallet: boolean = await wallet.getPermissions(selectedWallet).then((res: any) => (res as WALLET_API.Permission[]).includes( WALLET_API.Permission.ACCOUNTS));
+        setConnected(isConnectedWallet); // zustand
+        if (isConnectedWallet) {
+            const chainId = (await wallet.requestChainId(selectedWallet)) as string;
+            setChain(chainId);
+            setCurrentFrontendProviderIndex(chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
+            console.log("change Provider index to :", chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
+        }
+        // ********** TODO : replace supportedSpecs by api versions when available in SNJS & wallets
+        setWalletApi(await wallet.supportedSpecs(selectedWallet));
+
+        //setSelectWalletUI(false);
+    }
 
 
-
-    // const handleConnectClick = async () => {
-    //     const getWallet = await connect({ modalMode: "alwaysAsk", modalTheme: "light" });
-    //     await getWallet?.enable({ starknetVersion: "v5" } as any);
-    //     useStoreWallet.setState({ wallet: getWallet });
-    //     useStoreWallet.setState({ providerW: getWallet?.provider });
-    //     const addr = encode.addHexPrefix(encode.removeHexPrefix(getWallet?.selectedAddress ?? "0x").padStart(64, "0"));
-    //     useStoreWallet.setState({ addressAccount: addr });
-    //     useStoreWallet.setState({ isConnected: getWallet?.isConnected });
-    //     if (getWallet?.account) {
-    //         useStoreWallet.setState({ accountW: getWallet.account });
-    //         !!(getWallet.chainId) ?
-    //             useStoreWallet.setState({ chainId: getWallet.chainId }) :
-    //             useStoreWallet.setState({ chainId: SNconstants.StarknetChainId.SN_SEPOLIA });
-    //     }
-    //     console.log("myProvider url =",process.env.NEXT_PUBLIC_PROVIDER_URL);
-
-    //     console.log("handleClick =",useStoreWallet.getState().isConnected);
-    // }
     return (
         <>
             <Button
@@ -41,11 +71,12 @@ export default function ConnectWallet() {
                 textDecoration="none !important"
                 outline="none !important"
                 boxShadow="none !important"
-                onClick={() => setSelectWalletUI(true)}
+                // onClick={() => setSelectWalletUI(true)}
+                onClick={() => selectW()}
             >
                 Connect Wallet
             </Button>
-            {displaySelectWalletUI && <SelectWallet></SelectWallet>}
+            {/* {displaySelectWalletUI && <SelectWallet></SelectWallet>} */}
         </>
     )
 }

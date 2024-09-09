@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Contract, uint256, shortString } from "starknet";
+import { Contract, shortString } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 
@@ -58,20 +58,6 @@ export default function GetBalance({ tokenAddress }: Props) {
             .catch((e: any) => { console.log("error balanceOf=", e) });
     }
     , [blockFromContext.block_number, decimals]); // balance updated at each block
-
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const resp3 = await callERC20(tokenAddress, "balanceOf", accountAddress);
-    //         //const res2 = resp3.balance;
-    //         //const res3 = Number(uint256.uint256ToBN(res2));
-    //         const res3=resp3;
-    //         console.log("res3=", res3);
-    //         setBalance(res3 / Math.pow(10, decimals));
-    //     }
-    //     fetchData().catch(console.error);
-    // }
-    //     , [blockFromContext.block_number, decimals]); // balance updated at each block
 
     return (
         <>

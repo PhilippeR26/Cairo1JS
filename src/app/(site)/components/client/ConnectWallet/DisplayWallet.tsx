@@ -11,7 +11,6 @@ export interface StateWallet {
 interface WalletProps {
     walletData: StateWallet
 }
-// type Props = { walletData: string };
 export default  function WalletDisplay( {walletData}:WalletProps) {
    return (
        <>

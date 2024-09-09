@@ -1,38 +1,16 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { GetBlockResponse, json, RPC} from "starknet";
-
+import {  json} from "starknet";
 import { useStoreBlock, dataBlockInit, type DataBlock } from "./blockContext";
-
 import GetBalance from "../Contract/GetBalance";
-
 import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
-import { useStoreWallet } from '../ConnectWallet/walletContext';
 import { useFrontendProvider } from '../provider/providerContext';
 import { myFrontendProviders } from '@/utils/constants';
-
-type BLOCK_HEADER = {
-    block_hash: string;
-    parent_hash: string;
-    block_number: number;
-    new_root: string;
-    timestamp: number;
-    sequencer_address: string;
-    l1_gas_price: {
-        price_in_fri: string;
-        price_in_wei: string;
-    };
-    starknet_version: string;
-  };
   
-
-// Test a Cairo 1 contract already deployed in testnet:
 export default function DisplayBlockChain() {
-    // wallet context
-    //const providerBackend = useStoreBackend(state => state.providerBackend);
 
     // read block
     const blockFromContext = useStoreBlock(state => state.dataBlock);
@@ -44,7 +22,6 @@ export default function DisplayBlockChain() {
 
     async function catchBlock() {
         if(!!myProvider){
-            //console.log("catchBlock");
             const bl=await myProvider.getBlock("latest") ;
             const dataBlock:DataBlock={
                 block_hash:bl.block_hash,
@@ -52,13 +29,6 @@ export default function DisplayBlockChain() {
                 timestamp:bl.timestamp,
                 l1_gas_price: bl.l1_gas_price
             };
-            // const dataBlock:DataBlock={
-            //     block_hash:"0x01",
-            //     block_number:600,
-            //     timestamp:800,
-            //     l1_gas_price: {price_in_fri:"0x45", price_in_wei:"0x6"}
-            // };
-            //console.log("datablock =",dataBlock);
             setBlockData(dataBlock);
             setChainId(await myProvider.getChainId());
         }

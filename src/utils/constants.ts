@@ -21,7 +21,7 @@ export enum CommandWallet {
 
 // export type StarknetChainIdEntry = keyof typeof SNconstants.StarknetChainId;
 
-export const myFrontendProviders: ProviderInterface[] = [
+export const myFrontendProviders:RpcProvider[] = [
     new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_7" }),
     new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_7" }),
     // new RpcProvider({ nodeUrl: "https://free-rpc.nethermind.io/sepolia-juno/v0_7"}),

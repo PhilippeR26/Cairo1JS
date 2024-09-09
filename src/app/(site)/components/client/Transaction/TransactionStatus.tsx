@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { GetTransactionReceiptResponse, json, type RejectedTransactionReceiptResponse, type RevertedTransactionReceiptResponse, type SuccessfulTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
-import { useStoreWallet } from '../ConnectWallet/walletContext';
 
-import { Box, Spinner, Text } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import { useFrontendProvider } from '../provider/providerContext';
 import { myFrontendProviders } from '@/utils/constants';
