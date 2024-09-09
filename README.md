@@ -6,12 +6,12 @@
 ## Presentation
 
 This small project demonstrates how to create a DAPP to interact with the Starknet blockchain.  
-You can interact easily with Cairo 1 smart-contract, using your Argent-X or Braavos wallets (installed in your browser).  
+You can interact easily with Cairo 1 smart-contract, using your Argent-X or Braavos wallets (installed in your desktop or mobile browser).  
 The communication with the wallet can be made only with Wallets compatible with the new Wallet API.
 
 Analyze the code to see how to create a such DAPP (start [here](src/app/page.tsx))  
 
-The DAPP is made in the next.js framework, using the experimental **appDir** feature. Coded in Typescript. Using React, Zustand context & Chaka-ui components.
+The DAPP is made in the next.js framework. Coded in Typescript. Using React, Zustand context & Chaka-ui components.
 
 ## Getting Started 🚀
 
@@ -32,5 +32,5 @@ Check out the [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 > You can test this DAPP ; it's already deployed at [https://cairo1-js.vercel.app/](https://cairo1-js.vercel.app/).
 
-If you fork this repo, you need a Vercel account, and you have to configure your own environment variables for the Server side :  
+If you fork this repo, you need a Vercel account. You can configure your own environment variables for the Server side :  
 ![](./Images/vercelEnv.png)
