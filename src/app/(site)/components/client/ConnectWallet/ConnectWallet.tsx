@@ -2,7 +2,6 @@
 
 import { useStoreWallet } from './walletContext';
 import { Button } from "@chakra-ui/react";
-//import SelectWallet from './SelectWallet';
 import { connect } from '@starknet-io/get-starknet';
 import { WALLET_API } from '@starknet-io/types-js';
 import { validateAndParseAddress, wallet, WalletAccount, constants as SNconstants } from 'starknet';
@@ -62,7 +61,6 @@ export default function ConnectWallet() {
         const result = await wallet.requestAccounts(selectedWallet);
         if (typeof (result) == "string") {
             console.log("This Wallet is not compatible.");
-            //setSelectWalletUI(false);
             return;
         }
         console.log("Current account addr =", result);
@@ -80,8 +78,6 @@ export default function ConnectWallet() {
         }
         // ********** TODO : replace supportedSpecs by api versions when available in SNJS & wallets
         setWalletApi(await wallet.supportedSpecs(selectedWallet));
-
-        //setSelectWalletUI(false);
     }
 
 
@@ -92,7 +88,6 @@ export default function ConnectWallet() {
                 textDecoration="none !important"
                 outline="none !important"
                 boxShadow="none !important"
-                // onClick={() => setSelectWalletUI(true)}
                 onClick={() => selectW()}
             >
                 Connect Wallet

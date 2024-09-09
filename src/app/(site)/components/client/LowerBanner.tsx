@@ -1,9 +1,6 @@
 "use client";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Box, Link } from "@chakra-ui/react"
-// import { constants, types, type types as ert  } from "starknet";
-
-// const tt : ert.RPC.RPCSPEC07.ETransactionVersion2 = types.RPC.RPCSPEC07.ETransactionVersion2.F0;
 
 export default function LowerBanner() {
     return(
