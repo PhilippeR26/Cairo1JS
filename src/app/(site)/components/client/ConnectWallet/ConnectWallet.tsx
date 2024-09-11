@@ -1,17 +1,21 @@
 "use client";
 
 import { useStoreWallet } from './walletContext';
-import { Button } from "@chakra-ui/react";
-import { connect } from '@starknet-io/get-starknet';
-import { WALLET_API } from '@starknet-io/types-js';
+import { Box, Button, Center, Text } from "@chakra-ui/react";
+//import { connect } from '@starknet-io/get-starknet';
+import { WALLET_API, type StarknetWindowObject } from '@starknet-io/types-js';
 import { validateAndParseAddress, wallet, WalletAccount, constants as SNconstants } from 'starknet';
 import { myFrontendProviders } from '@/utils/constants';
 import { useFrontendProvider } from '../provider/providerContext';
 import WrongWallet from '../WrongWallet';
 import { useState } from 'react';
+import { connect } from 'starknetkit';
+import { ArgentMobileConnector } from 'starknetkit/argentMobile';
 
 export default function ConnectWallet() {
     const [isError, setError] = useState<boolean>(false);
+    const [isAXM, setIsAXM] = useState<string>("");
+    const [responseW, setResponseW] = useState<string>("");
 
     const myWallet = useStoreWallet(state => state.StarknetWalletObject);
     const setMyWallet = useStoreWallet(state => state.setMyStarknetWalletObject);
@@ -32,13 +36,30 @@ export default function ConnectWallet() {
 
 
     async function selectW() {
-        setError(false);
-        const myWalletSWO = await connect({ modalMode: "alwaysAsk" });
-        if (myWalletSWO) {
-            const isValid = await checkCompatibility(myWalletSWO);
-            setError(!isValid);
-            if (isValid) { await handleSelectedWallet(myWalletSWO); }
+        // setError(false);
+        // const myWalletSWO = await connect({ modalMode: "alwaysAsk" });
+        // if (myWalletSWO) {
+        //     const isValid = await checkCompatibility(myWalletSWO);
+        //     setError(!isValid);
+        //     if (isValid) { await handleSelectedWallet(myWalletSWO); }
+        // }
+        if (typeof window === "undefined") {
+            return false
         }
+
+        if (!window?.starknet_argentX) {
+            return false
+        }
+
+        const starknetMobile =
+            window?.starknet_argentX as unknown as StarknetWindowObject & {
+                isInAppBrowser: boolean
+            };
+        const reduced={...starknetMobile, icon:"e"};
+        console.log(reduced);
+        setResponseW(JSON.stringify(reduced));
+        setIsAXM(starknetMobile?.isInAppBrowser ? "true" : "false");
+        console.log(starknetMobile?.isInAppBrowser);
     }
 
     const checkCompatibility = async (myWalletSWO: WALLET_API.StarknetWindowObject) => {
@@ -90,9 +111,16 @@ export default function ConnectWallet() {
                 boxShadow="none !important"
                 onClick={() => selectW()}
             >
-                Connect Wallet
+                Connect ArgentX mobile Wallet
             </Button>
-            {isError && <WrongWallet></WrongWallet> }
+            {isError && <WrongWallet></WrongWallet>}
+            <Text align='left' >
+                <br></br>
+                <br></br>
+                responseW={responseW}
+                <br></br>
+                isAXM={isAXM}
+            </Text>
         </>
     )
 }

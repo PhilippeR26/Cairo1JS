@@ -14,8 +14,6 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@starknet-io/get-starknet": "4.0.1",
-    "@starknet-io/get-starknet-core": "4.0.1",
     "@starknet-io/types-js": "^0.7.7",
     "@types/node": "20.14.9",
     "@types/react": "18.3.3",
@@ -30,6 +28,7 @@
     "server-only": "^0.0.1",
     "sharp": "^0.33.4",
     "starknet": "^6.11.0",
+    "starknetkit": "^2.2.26",
     "swr": "^2.2.5",
     "typescript": "^5.5.2",
     "zustand": "^4.5.4"
