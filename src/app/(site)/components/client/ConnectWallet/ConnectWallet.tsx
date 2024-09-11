@@ -43,13 +43,13 @@ export default function ConnectWallet() {
         //     setError(!isValid);
         //     if (isValid) { await handleSelectedWallet(myWalletSWO); }
         // }
-        if (typeof window === "undefined") {
-            return false
-        }
+        // if (typeof window === "undefined") {
+        //     return false
+        // }
 
-        if (!window?.starknet_argentX) {
-            return false
-        }
+        // if (!window?.starknet_argentX) {
+        //     return false
+        // }
 
         const starknetMobile =
             window?.starknet_argentX as unknown as StarknetWindowObject & {
