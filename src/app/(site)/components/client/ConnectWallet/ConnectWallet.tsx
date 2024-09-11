@@ -51,15 +51,20 @@ export default function ConnectWallet() {
         //     return false
         // }
 
-        const starknetMobile =
-            window?.starknet_argentX as unknown as StarknetWindowObject & {
-                isInAppBrowser: boolean
-            };
-        const reduced={...starknetMobile, icon:"e"};
-        console.log(reduced);
-        setResponseW(JSON.stringify(reduced));
-        setIsAXM(starknetMobile?.isInAppBrowser ? "true" : "false");
-        console.log(starknetMobile?.isInAppBrowser);
+        // const starknetMobile =
+        //     window?.starknet_argentX as unknown as StarknetWindowObject & {
+        //         isInAppBrowser: boolean
+        //     };
+        // const reduced={...starknetMobile, icon:"e"};
+        // console.log(reduced);
+        // setResponseW(JSON.stringify(reduced));
+        // setIsAXM(starknetMobile?.isInAppBrowser ? "true" : "false");
+        // console.log(starknetMobile?.isInAppBrowser);
+        const { wallet } = await connect({});
+        const reduced={...wallet, icon:"e"};
+         console.log(reduced);
+         setResponseW(JSON.stringify(reduced));
+
     }
 
     const checkCompatibility = async (myWalletSWO: WALLET_API.StarknetWindowObject) => {
