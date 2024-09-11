@@ -10,7 +10,7 @@ import { useFrontendProvider } from '../provider/providerContext';
 import WrongWallet from '../WrongWallet';
 import { useState } from 'react';
 import { connect } from 'starknetkit';
-import { ArgentMobileConnector } from 'starknetkit/argentMobile';
+import { ArgentMobileConnector, type ArgentMobileConnectorOptions } from 'starknetkit/argentMobile';
 
 export default function ConnectWallet() {
     const [isError, setError] = useState<boolean>(false);
@@ -60,10 +60,17 @@ export default function ConnectWallet() {
         // setResponseW(JSON.stringify(reduced));
         // setIsAXM(starknetMobile?.isInAppBrowser ? "true" : "false");
         // console.log(starknetMobile?.isInAppBrowser);
-        const { wallet } = await connect({});
-        const reduced={...wallet, icon:"e"};
-         console.log(reduced);
-         setResponseW(JSON.stringify(reduced));
+        const AxMoptions: ArgentMobileConnectorOptions={
+            dappName:"aaaaa",
+            url:"zzzz"
+          }
+        const resp = await connect({ 
+            modalMode: 'alwaysAsk',
+            argentMobileOptions: AxMoptions
+        });
+        //const reduced={...wallet, icon:"e"};
+         console.log(resp);
+         setResponseW(JSON.stringify(resp));
 
     }
 
