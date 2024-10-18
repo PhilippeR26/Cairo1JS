@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Account, Contract, DeclareContractResponse, InvokeFunctionResponse, RPC, constants, type GetTransactionReceiptResponse } from "starknet";
+import {  Contract,  InvokeFunctionResponse, type GetTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
@@ -23,9 +23,9 @@ export default function PlayWithCairo1() {
     // Component context
     const [balance, setBalance] = useState<number>(0);
     const [transactionHash, setTransactionHash] = useState<string>("");
-    const [transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse|undefined>(undefined);
+    const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse|undefined>(undefined);
 
-    const [cairo1Contract, setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
+    const [cairo1Contract, _setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
 
     async function increaseBalance() {
         console.log("increase-Cairo1ReadContract=", cairo1Contract.functions);

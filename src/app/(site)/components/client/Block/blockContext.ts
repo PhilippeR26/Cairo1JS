@@ -21,5 +21,5 @@ export interface BlockState {
 
 export const useStoreBlock = create<BlockState>()(set => ({
     dataBlock:dataBlockInit ,
-    setBlockData:(blockInfo:DataBlock)=>{set(state=>({dataBlock:blockInfo}))}
+    setBlockData:(blockInfo:DataBlock)=>{set(_state=>({dataBlock:blockInfo}))}
 }));

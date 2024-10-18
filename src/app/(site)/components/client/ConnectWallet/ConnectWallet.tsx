@@ -13,19 +13,15 @@ import { useState } from 'react';
 export default function ConnectWallet() {
     const [isError, setError] = useState<boolean>(false);
 
-    const myWallet = useStoreWallet(state => state.StarknetWalletObject);
     const setMyWallet = useStoreWallet(state => state.setMyStarknetWalletObject);
 
-    const myWalletAccount = useStoreWallet(state => state.myWalletAccount);
     const setMyWalletAccount = useStoreWallet(state => state.setMyWalletAccount);
 
     const setChain = useStoreWallet(state => state.setChain);
     const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
 
-    const isConnected = useStoreWallet(state => state.isConnected);
     const setConnected = useStoreWallet(state => state.setConnected);
 
-    const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
     const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
 
     const setWalletApi = useStoreWallet(state => state.setWalletApiList);
@@ -48,7 +44,7 @@ export default function ConnectWallet() {
             await myWalletSWO.request({ type: "wallet_supportedSpecs" });
             isCompatible = true;
         } catch {
-            (err: any) => { console.log("Wallet compatibility failed.") };
+            (_err: any) => { console.log("Wallet compatibility failed.") };
         }
         return isCompatible;
     }

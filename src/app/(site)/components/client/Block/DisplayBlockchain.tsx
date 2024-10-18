@@ -16,7 +16,7 @@ export default function DisplayBlockChain() {
     const blockFromContext = useStoreBlock(state => state.dataBlock);
     const setBlockData = useStoreBlock((state) => state.setBlockData);
     const [timerId, setTimerId] = useState<NodeJS.Timer | undefined>(undefined);
-    const [chainId, setChainId] = useState<string>("unknown");
+    const [_, setChainId] = useState<string>("unknown");
     const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
     const myProvider=myFrontendProviders[myProviderIndex];
 
