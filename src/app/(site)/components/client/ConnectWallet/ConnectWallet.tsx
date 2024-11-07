@@ -29,7 +29,9 @@ export default function ConnectWallet() {
 
     async function selectW() {
         setError(false);
+        console.log("try to connect...");
         const myWalletSWO = await connect({ modalMode: "alwaysAsk" });
+        console.log("Connected...");
         if (myWalletSWO) {
             const isValid = await checkCompatibility(myWalletSWO);
             setError(!isValid);
@@ -39,41 +41,43 @@ export default function ConnectWallet() {
 
     const checkCompatibility = async (myWalletSWO: WALLET_API.StarknetWindowObject) => {
         // verify compatibility of wallet with the new API of get-starknet v4
-        let isCompatible: boolean = false;
-        try {
-            await myWalletSWO.request({ type: "wallet_supportedSpecs" });
-            isCompatible = true;
-        } catch {
-            (_err: any) => { console.log("Wallet compatibility failed.") };
-        }
-        return isCompatible;
+        // let isCompatible: boolean = false;
+        // try {
+        //     await myWalletSWO.request({ type: "wallet_getPermissions" });
+        //     isCompatible = true;
+        // } catch {
+        //     (_err: any) => { console.log("Wallet compatibility failed.") };
+        // }
+        // return isCompatible;
+        return true
     }
 
     const handleSelectedWallet = async (selectedWallet: WALLET_API.StarknetWindowObject) => {
-        console.log("Trying to connect wallet=", selectedWallet);
         setMyWallet(selectedWallet); // zustand
         setMyWalletAccount(new WalletAccount(myFrontendProviders[2], selectedWallet));
+        console.log("WalletAccount connected");
+        setConnected(true);// zustand
 
-        const result = await wallet.requestAccounts(selectedWallet);
-        if (typeof (result) == "string") {
-            console.log("This Wallet is not compatible.");
-            return;
-        }
-        console.log("Current account addr =", result);
-        if (Array.isArray(result)) {
-            const addr = validateAndParseAddress(result[0]);
-            setAddressAccount(addr); // zustand
-        }
-        const isConnectedWallet: boolean = await wallet.getPermissions(selectedWallet).then((res: any) => (res as WALLET_API.Permission[]).includes(WALLET_API.Permission.ACCOUNTS));
-        setConnected(isConnectedWallet); // zustand
-        if (isConnectedWallet) {
-            const chainId = (await wallet.requestChainId(selectedWallet)) as string;
-            setChain(chainId);
-            setCurrentFrontendProviderIndex(chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
-            console.log("change Provider index to :", chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
-        }
-        // ********** TODO : replace supportedSpecs by api versions when available in SNJS & wallets
-        setWalletApi(await wallet.supportedSpecs(selectedWallet));
+        // const result = await wallet.requestAccounts(selectedWallet);
+        // if (typeof (result) == "string") {
+        //     console.log("This Wallet is not compatible.");
+        //     return;
+        // }
+        // console.log("Current account addr =", result);
+        // if (Array.isArray(result)) {
+        //     const addr = validateAndParseAddress(result[0]);
+        //     setAddressAccount(addr); // zustand
+        // }
+        // const isConnectedWallet: boolean = await wallet.getPermissions(selectedWallet).then((res: any) => (res as WALLET_API.Permission[]).includes(WALLET_API.Permission.ACCOUNTS));
+        // setConnected(isConnectedWallet); // zustand
+        // if (isConnectedWallet) {
+        //     const chainId = (await wallet.requestChainId(selectedWallet)) as string;
+        //     setChain(chainId);
+        //     setCurrentFrontendProviderIndex(chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
+        //     console.log("change Provider index to :", chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
+        // }
+        // // ********** TODO : replace supportedSpecs by api versions when available in SNJS & wallets
+        // setWalletApi(await wallet.supportedSpecs(selectedWallet));
     }
 
 

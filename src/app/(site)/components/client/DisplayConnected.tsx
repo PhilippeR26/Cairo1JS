@@ -33,9 +33,6 @@ export function DisplayConnected() {
                     <Center>
                         <Button
                             ml="4"
-                            textDecoration="none !important"
-                            outline="none !important"
-                            boxShadow="none !important"
                             onClick={() => {
                                 useStoreWallet.setState({ isConnected: false });
                             }}

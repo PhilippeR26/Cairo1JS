@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {  Contract,  InvokeFunctionResponse, type GetTransactionReceiptResponse } from "starknet";
+import { Contract, InvokeFunctionResponse, type GetTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
@@ -22,10 +22,14 @@ export default function PlayWithCairo1() {
 
     // Component context
     const [balance, setBalance] = useState<number>(0);
+    const [isAccountTested, accountTested] = useState<boolean>(false);
+    const [displayAddress, setDisplayAddress] = useState<boolean>(false);
     const [transactionHash, setTransactionHash] = useState<string>("");
-    const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse|undefined>(undefined);
+    const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse | undefined>(undefined);
 
     const [cairo1Contract, _setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
+    const setAddressAccount = useStoreWallet(state => state.setAddressAccount); // zustand
+    const addressAccount = useStoreWallet(state => state.address); // zustand
 
     async function increaseBalance() {
         console.log("increase-Cairo1ReadContract=", cairo1Contract.functions);
@@ -38,6 +42,24 @@ export default function PlayWithCairo1() {
                 setTransactionResult(await walletAccountFromContext.waitForTransaction(resp.transaction_hash));
             })
             .catch((e: any) => { console.log("error increase balance =", e) });
+    }
+
+    async function getNonce() {
+        console.log("try account.getNonce");
+        const nonce = await walletAccountFromContext?.getNonce()
+        console.log("success account.getNonce. result =",nonce);
+
+        accountTested(true);
+
+    }
+
+    async function getAddress() {
+        console.log("try wa.address");
+        setAddressAccount(walletAccountFromContext?walletAccountFromContext.address:"0x00");
+        console.log("success wa.address");
+
+        setDisplayAddress(true);
+
     }
 
     useEffect(() => {
@@ -53,13 +75,13 @@ export default function PlayWithCairo1() {
 
 
     return (
-        <Box 
-        bg='mediumaquamarine' 
-        color='black' 
-        borderWidth='1px' 
-        borderRadius='md' 
-        paddingBottom='3px'
-        marginBottom={20}
+        <Box
+            bg='mediumaquamarine'
+            color='black'
+            borderWidth='1px'
+            borderRadius='md'
+            paddingBottom='3px'
+            marginBottom={20}
         >
             {
                 !balance ? (
@@ -70,26 +92,38 @@ export default function PlayWithCairo1() {
                     <>
                         <div>
                             <Text className={styles.text1}>Balance = {balance} tokens</Text>
+                            <Text className={styles.text1}>WalletAccount is instantiated</Text>
+
                             <Center>
                                 <Button
-                                    ml="4"
-                                    textDecoration="none !important"
-                                    outline="none !important"
-                                    boxShadow="none !important"
+                                    m="4px"
                                     bg='green.100'
                                     onClick={() => {
-                                        increaseBalance();
+                                        getAddress();
                                     }}
                                 >
-                                    Increase balance (+10)
+                                    Get Address
                                 </Button>
                             </Center>
                         </div>
-                        {!!transactionHash && (
-                            <Box bg='green.300' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} margin={2}>
-                                
-                                <TransactionStatus transactionHash={transactionHash}></TransactionStatus>
-                            </Box>
+                        {true && (
+                            <Center>
+                                <Button
+                                    ml="4px"
+                                    bg='green.100'
+                                    onClick={() => {
+                                        getNonce();
+                                    }}
+                                >
+                                    Get Account Nonce
+                                </Button>
+                            </Center>
+                        )
+                        }
+                        {isAccountTested && (
+                            <Center>
+                                account tested
+                            </Center>
                         )
                         }
                     </>
