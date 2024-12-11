@@ -25,6 +25,7 @@ export default function PlayWithCairo1() {
     const [isAccountTested, accountTested] = useState<boolean>(false);
     const [displayAddress, setDisplayAddress] = useState<boolean>(false);
     const [transactionHash, setTransactionHash] = useState<string>("");
+    const [nonce, setNonce] = useState<string | undefined>(undefined);
     const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse | undefined>(undefined);
 
     const [cairo1Contract, _setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
@@ -45,21 +46,20 @@ export default function PlayWithCairo1() {
     }
 
     async function getNonce() {
-        console.log("try account.getNonce");
-        const nonce = await walletAccountFromContext?.getNonce()
-        console.log("success account.getNonce. result =",nonce);
-
-        accountTested(true);
-
+        console.log("try DAPP.getNonce");
+        const nonce0 = await walletAccountFromContext?.getNonce()
+        console.log("success account.getNonce. result =", nonce0);
+        setNonce(nonce0);
     }
 
     async function getAddress() {
         console.log("try wa.address");
-        setAddressAccount(walletAccountFromContext?walletAccountFromContext.address:"0x00");
+        await walletAccountFromContext?.getAddress();
+        setAddressAccount(walletAccountFromContext ?                    walletAccountFromContext.address
+            : 
+            "0x00");
         console.log("success wa.address");
-
         setDisplayAddress(true);
-
     }
 
     useEffect(() => {
@@ -120,9 +120,9 @@ export default function PlayWithCairo1() {
                             </Center>
                         )
                         }
-                        {isAccountTested && (
+                        {nonce && (
                             <Center>
-                                account tested
+                                Nonce = {nonce}
                             </Center>
                         )
                         }

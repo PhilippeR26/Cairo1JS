@@ -11,6 +11,13 @@ import WrongWallet from '../WrongWallet';
 import { useState } from 'react';
 
 export default function ConnectWallet() {
+    const displaySelectWalletUI = useStoreWallet(state => state.displaySelectWalletUI);
+    const setSelectWalletUI = useStoreWallet(state => state.setSelectWalletUI);
+
+    const isConnected = useStoreWallet(state => state.isConnected);
+  const setConnected = useStoreWallet(state => state.setConnected);
+
+
     const [isError, setError] = useState<boolean>(false);
 
     const setMyWallet = useStoreWallet(state => state.setMyStarknetWalletObject);
@@ -20,7 +27,6 @@ export default function ConnectWallet() {
     const setChain = useStoreWallet(state => state.setChain);
     const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
 
-    const setConnected = useStoreWallet(state => state.setConnected);
 
     const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
 

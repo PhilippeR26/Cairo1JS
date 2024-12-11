@@ -6,6 +6,7 @@ import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import { useStoreWallet } from "./ConnectWallet/walletContext";
 import WalletDisplay, { StateWallet } from "./ConnectWallet/DisplayWallet";
 import PlayWithCairo1 from "./Contract/PlayWithCairo1";
+import SelectWallet from "./ConnectWallet/SelectWallet";
 
 
 export function DisplayConnected() {
@@ -24,8 +25,6 @@ export function DisplayConnected() {
                 <>
                     <Center>
                         <ConnectWallet></ConnectWallet>
-                    </Center>
-                    <Center>
                     </Center>
                 </>
             ) : (

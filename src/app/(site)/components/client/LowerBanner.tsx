@@ -22,9 +22,9 @@ export default function LowerBanner() {
             textColor="black"
           >
             Powered by
-            <Link color="blue.700" href='https://starknetjs.com' isExternal> Starknet.js v6.11.0<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
+            <Link color="blue.700" href='https://starknetjs.com' isExternal> Starknet.js v6.17.0<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
             and
-            <Link color="blue.700" href='https://github.com/starknet-io/get-starknet' isExternal> get-starknet v4.0.1<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
+            <Link color="blue.700" href='https://github.com/starknet-io/get-starknet' isExternal> get-starknet v4.0.3<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
             . 
             <Link color="blue.700" href='https://github.com/PhilippeR26/Cairo1JS' isExternal> Source code<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
             .
