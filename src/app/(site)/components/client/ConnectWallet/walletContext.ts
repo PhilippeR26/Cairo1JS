@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { ProviderInterface, AccountInterface, type WalletAccount } from "starknet";
 import { WALLET_API } from "@starknet-io/types-js";
+import type { Connector } from "@starknet-react/core";
 
 export interface Wallet_state {
     StarknetWalletObject: WALLET_API.StarknetWindowObject | undefined,
@@ -25,7 +26,8 @@ export interface Wallet_state {
     setWalletApiList: (version: string[]) => void,
     selectedApiVersion: string,
     setSelectedApiVersion: (version: string) => void,
-
+    connectorsContext:Connector[],
+    setConnectorsContext: (connectors:Connector[])=>void,
 }
 
 export const useStoreWallet = create<Wallet_state>()(set => ({
@@ -49,4 +51,6 @@ export const useStoreWallet = create<Wallet_state>()(set => ({
     setWalletApiList: (walletApi: string[]) => { set(_state => ({ walletApiList: walletApi })) },
     selectedApiVersion: "default",
     setSelectedApiVersion: (selectedApiVersion: string) => { set(_state => ({ selectedApiVersion })) },
+    connectorsContext:[],
+    setConnectorsContext: (connectors:Connector[])=>{set(_state => ({connectorsContext:connectors}))},
 }));

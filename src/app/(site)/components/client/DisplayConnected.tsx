@@ -6,23 +6,35 @@ import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import { useStoreWallet } from "./ConnectWallet/walletContext";
 import WalletDisplay, { StateWallet } from "./ConnectWallet/DisplayWallet";
 import PlayWithCairo1 from "./Contract/PlayWithCairo1";
+import { useAccount, useConnect, useDisconnect, useProvider } from "@starknet-react/core";
 
 
 export function DisplayConnected() {
     const isConnected = useStoreWallet(state => state.isConnected);
     const addressAccount = useStoreWallet(state => state.address);
     const chainId = useStoreWallet(state => state.chain);
+    const { disconnect } = useDisconnect({});
+
+
     const stateWallet: StateWallet = {
         addressAccount: addressAccount,
         chainId: chainId,
         isConnected: isConnected
     }
 
+    const { provider } = useProvider();
+    console.log("DisplayConnected.tsx=", { provider });
+    const { connect, connectors, error } = useConnect({});
+    const { address } = useAccount();
+    console.log("DisplayConnected.tsx=", { connect, connectors });
+    console.log("DisplayConnected.tsx=", { address });
+
     return (
         <>
             {!isConnected ? (
                 <>
                     <Center>
+
                         <ConnectWallet></ConnectWallet>
                     </Center>
                     <Center>
@@ -38,6 +50,7 @@ export function DisplayConnected() {
                             boxShadow="none !important"
                             onClick={() => {
                                 useStoreWallet.setState({ isConnected: false });
+                                disconnect;
                             }}
                         >
                             {addressAccount

@@ -13,6 +13,9 @@ Analyze the code to see how to create a such DAPP (start [here](src/app/page.tsx
 
 The DAPP is made in the next.js framework. Coded in Typescript. Using React, Zustand context & Chaka-ui components.
 
+> [!NOTE]
+> This branch is coded with a higher level library: starknet-react, that replaces starknet.js+get-starknet.
+
 ## Getting Started 🚀
 
 Run the development server:
