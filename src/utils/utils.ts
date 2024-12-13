@@ -1,5 +1,3 @@
-import type { BigNumberish } from "starknet";
-
 // *** display a balance *****
 export function formatBalance(qty: bigint, decimals: number): string {
     const balance = String("0").repeat(decimals) + qty.toString();
@@ -8,6 +6,7 @@ export function formatBalance(qty: bigint, decimals: number): string {
     return leftCleaned + "." + rightCleaned;
 }
 
+// *** convert a Starknet timestamp to something readable ***
 export function readableDate (timestamp: number):string {
     const d = new Date(timestamp * 1000);
     return d.toUTCString();

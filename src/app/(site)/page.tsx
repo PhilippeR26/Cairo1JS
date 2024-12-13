@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 import { Center, Text } from '@chakra-ui/react';
-import { ChakraProvider } from '@chakra-ui/react'
 
 import starknetJsImg from "../../public/Images/StarkNet-JS_logo.png";
 import starknetReactImg from "../../public/Images/starknet-react.png";
@@ -13,7 +12,6 @@ import LowerBanner from './components/client/LowerBanner';
 export default async function Page() {
 
     return (
-        <ChakraProvider>
             <div>
                 <p className={styles.bgText}>
                     Test starknet-react v3.6.2 with starknet.js v6.20.3
@@ -31,7 +29,6 @@ export default async function Page() {
                 </div>
                 <LowerBanner></LowerBanner>
             </div >
-        </ChakraProvider>
     )
 }
 

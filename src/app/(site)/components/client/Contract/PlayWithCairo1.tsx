@@ -55,6 +55,9 @@ export default function PlayWithCairo1() {
                             <Center>
                                 <Button
                                     ml="4"
+                                    px={2}
+                                    variant={'surface'}
+                                    fontWeight='bold'
                                     textDecoration="none !important"
                                     outline="none !important"
                                     boxShadow="none !important"

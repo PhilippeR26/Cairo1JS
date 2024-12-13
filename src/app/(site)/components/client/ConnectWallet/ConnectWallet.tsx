@@ -1,7 +1,8 @@
 "use client";
 
 import { useStoreWallet } from './walletContext';
-import { Button, Center } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
 import { useAccount, useDisconnect } from "@starknet-react/core";
 import SelectWallet from './SelectWallet';
 
@@ -18,10 +19,11 @@ export default function ConnectWallet() {
             {!isConnected ? (
                 <>
                     <Button
-                        ml="4"
-                        textDecoration="none !important"
-                        outline="none !important"
-                        boxShadow="none !important"
+                  variant="surface"
+                  ml={4}
+                  px={5}
+                  fontWeight='bold'
+                  
                         onClick={() => {
                             console.log("a");
                             setSelectWalletUI(true)
@@ -36,11 +38,10 @@ export default function ConnectWallet() {
                     {address ?
                         <Center>
                             <Button
-                                ml="4"
-                                textDecoration="none !important"
-                                outline="none !important"
-                                boxShadow="none !important"
-                                marginTop={3}
+                                variant="surface"
+                                ml={4}
+                                px={5}
+                                fontWeight='bold'
                                 onClick={() => {
                                     disconnect();
                                     setSelectWalletUI(false)

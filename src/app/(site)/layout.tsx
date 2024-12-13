@@ -1,5 +1,6 @@
 import { StarknetProvider } from './components/client/Starknet-provider'
 import './globals.css'
+import { Provider } from "@/components/ui/provider"
 
 export const metadata = {
   title: 'Cairo1-JS',
@@ -15,11 +16,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <StarknetProvider>
-          {children}
-        </StarknetProvider>
+        <Provider>
+          <StarknetProvider>
+            {children}
+          </StarknetProvider>
+        </Provider>
       </body>
     </html>
   )

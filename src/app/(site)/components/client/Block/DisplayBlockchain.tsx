@@ -1,6 +1,6 @@
 "use client";
 
-import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
+import { Text, Spinner, Center, Separator, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import { useBlock, useBlockNumber } from '@starknet-react/core';
 import { formatBalance, readableDate } from '@/utils/utils';
@@ -27,7 +27,7 @@ export default function DisplayBlockChain() {
                 in Gfri : {formatBalance(BigInt(blockContent.l1_gas_price.price_in_fri), 9)}
                 ,  in Gwei : {formatBalance(BigInt(blockContent.l1_gas_price.price_in_wei), 9)}
               </Text>
-              <Divider></Divider>
+              <Separator></Separator>
             </>
           )
         }
