@@ -26,7 +26,7 @@ export default function LowerBanner() {
             and
             <Link color="blue.700" href='https://www.starknet-react.com/docs/getting-started' isExternal> starknet-react v3.6.2<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
             . 
-            <Link color="blue.700" href='https://github.com/PhilippeR26/Cairo1JS' isExternal> Source code<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
+            <Link color="blue.700" href='https://github.com/PhilippeR26/Cairo1JS/tree/starknet-react' isExternal> Source code<ExternalLinkIcon mx='2px'></ExternalLinkIcon></Link>
             .
           </Box>
     )

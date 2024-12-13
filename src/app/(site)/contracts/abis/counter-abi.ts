@@ -49,4 +49,4 @@ export const test1Abi= [
     "kind": "enum",
     "variants": []
   }
-]
+] as const;

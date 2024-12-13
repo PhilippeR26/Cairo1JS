@@ -9,10 +9,8 @@ import {
   useInjectedConnectors,
   voyager
 } from "@starknet-react/core";
-import { useStoreWallet } from "./ConnectWallet/walletContext";
 
 export function StarknetProvider({ children }: { children: React.ReactNode }) {
-  const setConnectorsContext = useStoreWallet(state => state.setConnectorsContext);
 
   const { connectors } = useInjectedConnectors({
     // Show these connectors if the user has no connector installed.
@@ -20,14 +18,9 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
       argent(),
       braavos(),
     ],
-    // Hide recommended connectors if the user has any connector installed.
     includeRecommended: "onlyIfNoConnectors",
-    // Randomize the order of the connectors.
     order: "random"
   });
-  console.log({ connectors });
-  setConnectorsContext(connectors);
-  
 
   return (
     <StarknetConfig

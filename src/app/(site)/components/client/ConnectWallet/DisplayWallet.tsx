@@ -1,11 +1,12 @@
 import { Box } from "@chakra-ui/react"
 import styles from '../../../page.module.css'
-import { shortString } from "starknet"
+import type { Connector } from "@starknet-react/core"
 
 export interface StateWallet {
     addressAccount:string,
     chainId:string,
     isConnected:boolean
+    connector?:Connector
 }
 
 interface WalletProps {
@@ -16,10 +17,10 @@ export default  function WalletDisplay( {walletData}:WalletProps) {
        <>
        <Box bg='pink.200' color='black' borderWidth='1px' borderRadius='md'>
            <p className={styles.text1}>
-           
+            wallet = {walletData.connector?.name} <br></br>
+               chain = {walletData.chainId} <br /> 
                address = {walletData.addressAccount} <br />
-               chain = {shortString.decodeShortString(walletData.chainId)} <br /> 
-               isConnected={walletData.isConnected ? "Yes" : "No"}<br />
+               isConnected = {walletData.isConnected ? "Yes" : "No"}<br />
            </p>
        </Box>
        </>

@@ -1,65 +1,47 @@
-import { useEffect, useState } from 'react';
-import {  Contract,  InvokeFunctionResponse, type GetTransactionReceiptResponse } from "starknet";
-
-import { useStoreBlock } from "../Block/blockContext";
-import { useStoreWallet } from '../ConnectWallet/walletContext';
+import { useState } from 'react';
+import { type Call } from "starknet";
 
 import { Text, Button, Center, Spinner, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
-import { test1Abi } from "../../../contracts/abis/test1";
+import { test1Abi } from "../../../contracts/abis/counter-abi";
 import TransactionStatus from '../Transaction/TransactionStatus';
-import { addrTESTCONTRACT } from '@/type/constants';
-
-const contractAddress = addrTESTCONTRACT;
+import { addrTestContract } from '@/utils/constants';
+import { useContract, useReadContract, useSendTransaction } from '@starknet-react/core';
 
 export default function PlayWithCairo1() {
-    // wallet context
-    const walletAccountFromContext = useStoreWallet(state => state.myWalletAccount);
-
-    // block context
-    const blockFromContext = useStoreBlock(state => state.dataBlock);
-
-    // Component context
-    const [balance, setBalance] = useState<number>(0);
     const [transactionHash, setTransactionHash] = useState<string>("");
-    const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse|undefined>(undefined);
 
-    const [cairo1Contract, _setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
+    const { contract } = useContract({ abi: test1Abi, address: addrTestContract });
+    const { sendAsync, data, status, isSuccess } = useSendTransaction({ calls: [] });
 
     async function increaseBalance() {
-        console.log("increase-Cairo1ReadContract=", cairo1Contract.functions);
-        const myCall = cairo1Contract.populate("increase_counter", [10]);
-        console.log("Call=", myCall);
-        walletAccountFromContext?.execute(myCall)
-            .then(async (resp: InvokeFunctionResponse) => {
-                console.log("increaseBalance txH =", resp.transaction_hash);
-                setTransactionHash(resp.transaction_hash);
-                setTransactionResult(await walletAccountFromContext.waitForTransaction(resp.transaction_hash));
-            })
-            .catch((e: any) => { console.log("error increase balance =", e) });
+        if (contract) {
+            const myCall: Call = contract.populate("increase_counter", [10]);
+            const response = await sendAsync([myCall]);
+            console.log({ response, data, status, isSuccess });
+            setTransactionHash(response.transaction_hash);
+        }
     }
 
-    useEffect(() => {
-        cairo1Contract.get_balance()
-            .then((resp: bigint) => {
-                console.log("resp =", resp)
-                setBalance(Number(resp));
-            })
-            .catch((e: any) => { console.log("error get_balance =", e) });
-        return () => { }
-    }
-        , [blockFromContext.block_number]); // balance updated at each block
+    const { data: balance } = useReadContract({
+        address: addrTestContract,
+        abi: test1Abi,
+        functionName: "get_balance",
+        args: [],
+        watch: true,
+    });
+    console.log({ balance });
 
 
     return (
-        <Box 
-        bg='mediumaquamarine' 
-        color='black' 
-        borderWidth='1px' 
-        borderRadius='md' 
-        paddingBottom='3px'
-        marginBottom={20}
+        <Box
+            bg='mediumaquamarine'
+            color='black'
+            borderWidth='1px'
+            borderRadius='md'
+            paddingBottom='3px'
+            marginBottom={20}
         >
             {
                 !balance ? (
@@ -86,8 +68,15 @@ export default function PlayWithCairo1() {
                             </Center>
                         </div>
                         {!!transactionHash && (
-                            <Box bg='green.300' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} margin={2}>
-                                
+                            <Box
+                                bg='green.300'
+                                color='black'
+                                borderWidth='1px'
+                                borderColor='green.800'
+                                borderRadius='md'
+                                p={1}
+                                margin={2}
+                            >
                                 <TransactionStatus transactionHash={transactionHash}></TransactionStatus>
                             </Box>
                         )
