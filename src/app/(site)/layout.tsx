@@ -1,3 +1,4 @@
+import { Provider } from "@/components/ui/provider"
 import './globals.css'
 
 export const metadata = {
@@ -8,15 +9,14 @@ export const metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout(props: { children: React.ReactNode }) {
+  const { children } = props
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        {children}
+        <Provider>
+          {children}
+        </Provider>
       </body>
     </html>
   )

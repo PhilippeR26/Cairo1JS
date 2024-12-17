@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {  json} from "starknet";
 import { useStoreBlock, dataBlockInit, type DataBlock } from "./blockContext";
 import GetBalance from "../Contract/GetBalance";
-import { Text, Spinner, Center, Divider, Box } from "@chakra-ui/react";
+import { Text, Spinner, Center, Separator, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 import * as constants from '@/type/constants';
 import { useFrontendProvider } from '../provider/providerContext';
@@ -69,7 +69,7 @@ export default function DisplayBlockChain() {
                             <Text className={styles.text1}>BlockHash = {blockFromContext.block_hash}  </Text>
                             <Text className={styles.text1}>BlockTimeStamp = {blockFromContext.timestamp}  </Text>
                             <Text className={styles.text1}>BlockGasprice = {json.stringify( blockFromContext.l1_gas_price)}  </Text>
-                            <Divider></Divider>
+                            <Separator />
                         </>
                     )
                 }
@@ -78,7 +78,7 @@ export default function DisplayBlockChain() {
                 <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
                      <Center> Updated each new block :</Center>
                     <GetBalance tokenAddress={constants.addrETH} ></GetBalance>
-                    <Divider borderColor='gray.600'></Divider>
+                    <Separator borderColor='gray.600' />
                     <GetBalance tokenAddress={constants.addrSTRK} ></GetBalance> 
 
                 </Box>

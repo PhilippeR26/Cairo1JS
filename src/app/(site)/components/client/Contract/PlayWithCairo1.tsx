@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import {  Contract,  InvokeFunctionResponse, type GetTransactionReceiptResponse } from "starknet";
+import { Contract, InvokeFunctionResponse, type GetTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
-import { Text, Button, Center, Spinner, Box } from "@chakra-ui/react";
+import { Text, Center, Spinner, Box } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
 import styles from '../../../page.module.css'
 
 import { test1Abi } from "../../../contracts/abis/test1";
@@ -23,7 +24,7 @@ export default function PlayWithCairo1() {
     // Component context
     const [balance, setBalance] = useState<number>(0);
     const [transactionHash, setTransactionHash] = useState<string>("");
-    const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse|undefined>(undefined);
+    const [_transactionResult, setTransactionResult] = useState<GetTransactionReceiptResponse | undefined>(undefined);
 
     const [cairo1Contract, _setcairo1Contract] = useState<Contract>(new Contract(test1Abi, contractAddress, walletAccountFromContext));
 
@@ -53,13 +54,13 @@ export default function PlayWithCairo1() {
 
 
     return (
-        <Box 
-        bg='mediumaquamarine' 
-        color='black' 
-        borderWidth='1px' 
-        borderRadius='md' 
-        paddingBottom='3px'
-        marginBottom={20}
+        <Box
+            bg='mediumaquamarine'
+            color='black'
+            borderWidth='1px'
+            borderRadius='md'
+            paddingBottom='3px'
+            marginBottom={20}
         >
             {
                 !balance ? (
@@ -72,10 +73,9 @@ export default function PlayWithCairo1() {
                             <Text className={styles.text1}>Balance = {balance} tokens</Text>
                             <Center>
                                 <Button
+                                    variant="surface"
                                     ml="4"
-                                    textDecoration="none !important"
-                                    outline="none !important"
-                                    boxShadow="none !important"
+                                    fontWeight='bold'
                                     bg='green.100'
                                     onClick={() => {
                                         increaseBalance();
@@ -87,7 +87,6 @@ export default function PlayWithCairo1() {
                         </div>
                         {!!transactionHash && (
                             <Box bg='green.300' color='black' borderWidth='1px' borderColor='green.800' borderRadius='md' p={1} margin={2}>
-                                
                                 <TransactionStatus transactionHash={transactionHash}></TransactionStatus>
                             </Box>
                         )
