@@ -30,7 +30,7 @@
     "react-icons": "^5.4.0",
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
-    "starknet": "^6.20.3",
+    "starknet": "https://github.com/PhilippeR26/starknet.js.git#snjsv6203withoutFetchCookie",
     "swr": "^2.2.5",
     "typescript": "^5.7.2",
     "zustand": "^5.0.2"
