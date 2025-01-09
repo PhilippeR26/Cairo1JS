@@ -29,7 +29,7 @@
     "react-dom": "18.3.1",
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
-    "starknet": "https://github.com/PhilippeR26/starknet.js.git#snjsv6203withoutFetchCookie",
+    "starknet": "6.21.0",
     "swr": "^2.2.5",
     "typescript": "^5.6.3",
     "zustand": "^5.0.0"
