@@ -14,7 +14,7 @@ export default async function Page() {
     return (
             <div>
                 <p className={styles.bgText}>
-                    Test starknet-react v3.6.2 with starknet.js v6.20.3
+                    Test starknet-react v3.6.2 with starknet.js v6.21.0
                 </p>
                 <Center>
                     <Image src={starknetReactImg} alt='starknet.js' height={150} /> 
