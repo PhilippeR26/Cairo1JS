@@ -9,7 +9,7 @@ This small project demonstrates how to create a DAPP to interact with the Starkn
 You can interact easily with Cairo 1 smart-contract, using your Argent-X or Braavos wallets (installed in your desktop or mobile browser).  
 The communication with the wallet can be made only with Wallets compatible with the new Wallet API.
 
-Analyze the code to see how to create a such DAPP (start [here]([src/app/page.tsx](https://github.com/PhilippeR26/Cairo1JS/blob/starknet-react/src/app/(site)/page.tsx)))  
+Analyze the code to see how to create a such DAPP (start [here](https://github.com/PhilippeR26/Cairo1JS/blob/starknet-react/src/app/(site)/page.tsx))  
 
 The DAPP is made in the next.js framework. Coded in Typescript. Using React, Zustand context & Chaka-ui components.
 
