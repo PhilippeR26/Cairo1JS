@@ -21,7 +21,6 @@ import { WalletAccount, wallet, validateAndParseAddress, constants as SNconstant
 import { WALLET_API } from "@starknet-io/types-js";
 import { compatibleApiVersions, myFrontendProviders } from "@/utils/constants";
 import getStarknet from "@starknet-io/get-starknet-core"
-import type { Wallet } from "@wallet-standard/base";
 import { createStore, type Store } from "getSnDiscovery";
 import { isStarknetWallet, type WalletWithStarknetFeatures } from "getSnStandard/features";
 import type { StarknetInjectedWallet } from "getSnStandard";
@@ -172,7 +171,7 @@ console.log("selected wallet =",json.stringify(selectedWallet));
                         disabled={true}
                       >
                         <Image src={iconW} width={30} />
-                        {(wallet as Wallet).name + ' ' + (wallet as Wallet).version + " not compatible!"}
+                        {(wallet as WalletWithStarknetFeatures).name + ' ' + (wallet as WalletWithStarknetFeatures).version + " not compatible!"}
                       </Button>
                     </>}
                   </>
