@@ -52,7 +52,7 @@ export default function ConnectWallet() {
     const handleSelectedWallet = async (selectedWallet: WALLET_API.StarknetWindowObject) => {
         console.log("Trying to connect wallet=", selectedWallet);
         setMyWallet(selectedWallet); // zustand
-        setMyWalletAccount(new WalletAccount(myFrontendProviders[2], selectedWallet));
+        setMyWalletAccount(await WalletAccount.connect(myFrontendProviders[2], selectedWallet));
 
         const result = await wallet.requestAccounts(selectedWallet);
         if (typeof (result) == "string") {
