@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GetTransactionReceiptResponse, json, type RejectedTransactionReceiptResponse, type RevertedTransactionReceiptResponse, type SuccessfulTransactionReceiptResponse } from "starknet";
+import { GetTransactionReceiptResponse, json, type RevertedTransactionReceiptResponse, type SuccessfulTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 
@@ -30,9 +30,6 @@ export default function TransactionStatus({ transactionHash }: Props) {
                 txR.match({
                     success: (txR: SuccessfulTransactionReceiptResponse) => {
                         finality = txR.finality_status;
-                    },
-                    rejected: (txR: RejectedTransactionReceiptResponse) => {
-                        finality =  json.stringify( txR.transaction_failure_reason);
                     },
                     reverted: (txR: RevertedTransactionReceiptResponse) => {
                         finality = txR.finality_status;

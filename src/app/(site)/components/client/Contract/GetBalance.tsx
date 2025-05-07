@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Contract, shortString } from "starknet";
+import { Contract, shortString, validateAndParseAddress } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 
@@ -19,13 +19,15 @@ export default function GetBalance({ tokenAddress }: Props) {
     
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
+    
     const accountAddress = useStoreWallet((state) => state.address);
+   
+    const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
 
     const [balance, setBalance] = useState<number | undefined>(undefined);
     const [decimals, setDecimals] = useState<number>(18)
     const [symbol, setSymbol] = useState<string>("");
 
-    const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
     const myProvider=myFrontendProviders[myProviderIndex];
     const contract = new Contract(erc20Abi, tokenAddress, myProvider);
 
@@ -40,7 +42,7 @@ export default function GetBalance({ tokenAddress }: Props) {
         contract.symbol()
             .then((resp: any) => {
                 const res2 = shortString.decodeShortString(resp);
-                console.log("ressymbol=", res2);
+                console.log("resSymbol=", res2);
                 setSymbol(res2);
             })
             .catch((e: any) => { console.log("error getSymbol=", e) });
@@ -48,6 +50,7 @@ export default function GetBalance({ tokenAddress }: Props) {
         , []);
 
     useEffect(() => {
+        if (!accountAddress) return;
         contract.balanceOf(accountAddress)
             .then((resp: any) => {
                 const res3 = Number(resp);
@@ -57,7 +60,7 @@ export default function GetBalance({ tokenAddress }: Props) {
             )
             .catch((e: any) => { console.log("error balanceOf=", e) });
     }
-    , [blockFromContext.block_number, decimals]); // balance updated at each block
+    , [blockFromContext.block_number, decimals, accountAddress]); // balance updated at each block
 
     return (
         <>

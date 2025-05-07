@@ -6,18 +6,24 @@ import SelectWallet from "./ConnectWallet/SelectWallet";
 import PlayWithCairo1 from "./Contract/PlayWithCairo1";
 import DisplayBlockChain from "./Block/DisplayBlockchain";
 import WalletDisplay, { type StateWallet } from "./ConnectWallet/WalletDisplay";
+import DisplayEvents from "./ConnectWallet/DisplayEvents";
 
 export function DisplayConnected() {
-    const isConnected = useStoreWallet(state => state.isConnected);
-    const setConnected = useStoreWallet(state => state.setConnected);
+    const {
+        isConnected,
+        setConnected,
+        address:addressAccount,
+        chain:chainId,
+        displaySelectWalletUI,
+        setSelectWalletUI,
+    } = useStoreWallet(state => state);
 
-    const addressAccount = "0x123345634563464356";
+    const stateWallet: StateWallet = {
+        addressAccount: addressAccount,
+        chainId: chainId,
+        isConnected: isConnected
+    }
 
-    const displaySelectWalletUI = useStoreWallet(state => state.displaySelectWalletUI);
-    const setSelectWalletUI = useStoreWallet(state => state.setSelectWalletUI);
-
-    // Temporary. To be able to build.
-    const stateWallet:StateWallet={addressAccount:"0x01",chainId:"0x54aa",isConnected:true};
 
     return (
         <>
@@ -33,7 +39,6 @@ export function DisplayConnected() {
                             mt={3}
                             px={5}
                             onClick={() => setSelectWalletUI(true)}
-                        // onClick={() => handleConnect330Click()}
                         >
                             Connect a Wallet
                         </Button>
@@ -64,6 +69,7 @@ export function DisplayConnected() {
                     <br />
                     <WalletDisplay walletData={stateWallet} ></WalletDisplay>
                     <DisplayBlockChain ></DisplayBlockChain>
+                    <DisplayEvents></DisplayEvents>
                     <PlayWithCairo1></PlayWithCairo1>
                 </>
             )

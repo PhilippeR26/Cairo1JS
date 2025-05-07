@@ -1,23 +1,14 @@
 import { isWalletObject } from "@starknet-io/get-starknet-core";
 
-import { Image, Separator, StackSeparator, VStack, useDisclosure } from "@chakra-ui/react";
 import {
-  DialogActionTrigger,
-  DialogBody,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+  Image, StackSeparator, VStack, useDisclosure, Button,
+  Dialog,
+} from "@chakra-ui/react";
 import { useStoreWallet } from "./walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { useState } from "react";
-import { WalletAccount, wallet, validateAndParseAddress, constants as SNconstants, json } from "starknet";
+import { WalletAccountV5, walletV5, validateAndParseAddress, constants as SNconstants, json } from "starknet";
 import { WALLET_API } from "@starknet-io/types-js";
 import { compatibleApiVersions, myFrontendProviders } from "@/utils/constants";
 import getStarknet from "@starknet-io/get-starknet-core"
@@ -35,24 +26,24 @@ type ValidWallet = {
 export default function SelectWallet() {
   const { open, onOpen, onClose } = useDisclosure()
 
-  const myWallet = useStoreWallet(state => state.StarknetWalletObject);
-  const setMyWallet = useStoreWallet(state => state.setMyStarknetWalletObject);
-
-  const myWalletAccount = useStoreWallet(state => state.myWalletAccount);
-  const setMyWalletAccount = useStoreWallet(state => state.setMyWalletAccount);
-  const myFrontendProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
-  const setCurrentFrontendProviderIndex = useFrontendProvider(state => state.setCurrentFrontendProviderIndex);
-
-  const isConnected = useStoreWallet(state => state.isConnected);
-  const setConnected = useStoreWallet(state => state.setConnected);
-
-  const displaySelectWalletUI = useStoreWallet(state => state.displaySelectWalletUI);
-  const setSelectWalletUI = useStoreWallet(state => state.setSelectWalletUI);
-
-  const setWalletApi = useStoreWallet(state => state.setWalletApiList);
-
-  const setChain = useStoreWallet(state => state.setChain);
-  const setAddressAccount = useStoreWallet(state => state.setAddressAccount);
+  const {
+    walletWSF: myWallet,
+    setWalletWSF: setMyWallet,
+    myWalletAccount,
+    setMyWalletAccount,
+    isConnected,
+    setConnected,
+    displaySelectWalletUI,
+    setSelectWalletUI,
+    setWalletApiList: setWalletApi,
+    setChain,
+    setAddressAccount,
+  } = useStoreWallet(state => state);
+  
+  const {
+    currentFrontendProviderIndex: myFrontendProviderIndex,
+    setCurrentFrontendProviderIndex,
+  } = useFrontendProvider(state => state);
 
   const store: Store = createStore();
   const wallets: WalletWithStarknetFeatures[] = store.getWallets();
@@ -61,40 +52,45 @@ export default function SelectWallet() {
   const [walletList, setWalletList] = useState<ValidWallet[]>([]);
 
   const handleSelectedWallet = async (selectedWallet: WalletWithStarknetFeatures) => {
-    
-    const w=selectedWallet as StarknetInjectedWallet;
+    console.log("selected WalletWithStarknetFeatures=", selectedWallet);
+    const aa = await selectedWallet.features["standard:connect"].connect({ silent: false });
+    console.log("connect aa=", aa);
+
+    const chainId = await selectedWallet.features["starknet:walletApi"].request({ type: "wallet_requestChainId" });
+    console.log("chainId=", chainId);
+
     setConnected(true);
     // WALLET_API.StarknetWindowObject
 
+    setMyWallet(selectedWallet); // zustand
+    console.log("Trying to connect wallet=", selectedWallet);
     // setMyWallet(selectedWallet); // zustand
-    // console.log("Trying to connect wallet=", selectedWallet);
-    // setMyWallet(selectedWallet); // zustand
-    // const myWA=await WalletAccount.connect(myFrontendProviders[2], selectedWallet);
-    // setMyWalletAccount(myWA);
-    // console.log("WalletAccount created=",myWA);
-    // const result = await wallet.requestAccounts(selectedWallet);
-    // if (typeof (result) == "string") {
-    //   console.log("This Wallet is not compatible.");
-    //   setSelectWalletUI(false);
-    //   return;
-    // }
-    // console.log("Current account addr =", result);
-    // if (Array.isArray(result)) {
-    //   const addr = validateAndParseAddress(result[0]);
-    //   setAddressAccount(addr); // zustand
-    // }
-    // const isConnectedWallet: boolean = await wallet.getPermissions(selectedWallet).then((res: any) => (res as WALLET_API.Permission[]).includes(WALLET_API.Permission.ACCOUNTS));
-    // setConnected(isConnectedWallet); // zustand
-    // if (isConnectedWallet) {
-    //   const chainId = (await wallet.requestChainId(selectedWallet)) as string;
-    //   setChain(chainId);
-    //   setCurrentFrontendProviderIndex(chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
+    const myWA = await WalletAccountV5.connect(myFrontendProviders[2], selectedWallet);
+    setMyWalletAccount(myWA);
+    console.log("WalletAccount created=", myWA);
+    const result = await walletV5.requestAccounts(selectedWallet);
+    if (typeof (result) == "string") {
+      console.log("This Wallet is not compatible.");
+      setSelectWalletUI(false);
+      return;
+    }
+    console.log("Current account addr =", result);
+    if (Array.isArray(result)) {
+      const addr = validateAndParseAddress(result[0]);
+      setAddressAccount(addr); // zustand
+    }
+    const isConnectedWallet: boolean = await walletV5.getPermissions(selectedWallet).then((res: any) => (res as WALLET_API.Permission[]).includes(WALLET_API.Permission.ACCOUNTS));
+    setConnected(isConnectedWallet); // zustand
+    if (isConnectedWallet) {
+      const chainId = (await walletV5.requestChainId(selectedWallet)) as string;
+      setChain(chainId);
+      setCurrentFrontendProviderIndex(chainId === SNconstants.StarknetChainId.SN_MAIN ? 0 : 2);
 
-    //   console.log("change Provider index to :", myFrontendProviderIndex);
-    // }
-    // // ********** TODO : replace supportedSpecs by api versions when available in SNJS
-    // setWalletApi(await wallet.supportedSpecs(selectedWallet));
-console.log("selected wallet =",json.stringify(selectedWallet));
+      console.log("change Provider index to :", myFrontendProviderIndex);
+    }
+    // ********** TODO : replace supportedSpecs by api versions when available in SNJS
+    setWalletApi(await walletV5.supportedSpecs(selectedWallet));
+    console.log("selected wallet =", json.stringify(selectedWallet));
     setSelectWalletUI(false);
   }
 
@@ -105,11 +101,11 @@ console.log("selected wallet =",json.stringify(selectedWallet));
       return () => { }
     },
     []
-   );
+  );
 
   return (
     <>
-      <DialogRoot
+      <Dialog.Root
         placement={"center"}
         scrollBehavior={"inside"}
         size={"md"}
@@ -120,67 +116,70 @@ console.log("selected wallet =",json.stringify(selectedWallet));
           onClose()
         }}
       >
-        <DialogContent>
-          <DialogCloseTrigger />
-          <DialogHeader
-            fontSize='xl'
-            fontWeight='bold'
-            padding={"20px"}
-            marginBottom={"10px"}
-          >
-            Select a wallet:
-          </DialogHeader>
-          <DialogBody
-            px={"20px"}
-          >
-            <VStack
-              separator={<StackSeparator borderColor='gray.200' />}
-              gap={3}
-              marginBottom={"20px"}
-              align='stretch'
+        <Dialog.Positioner>
+          <Dialog.Content>
+            <Dialog.Header
+              fontSize='xl'
+              fontWeight='bold'
+              padding={"20px"}
+              marginBottom={"10px"}
             >
-              {
-                wallets.map((wallet: WalletWithStarknetFeatures, index: number) => {
-                  const iconW: string = wallet.icon;
-                  return <>
-                    {isStarknetWallet(wallet) ? <>
-                      <Button
-                        key={"wKey" + index.toString()}
-                        id={"wId" + index.toString()}
-                        // backgroundColor="gray.100"
-                        // color={"black"}
-                        variant="surface"
-                        fontSize='lg'
-                        fontWeight='bold'
-                        onClick={() => {
-                          handleSelectedWallet(wallet);
-                          onClose();
-                        }} >
-                        <Image src={iconW} width={30} />
-                        {wallet.name + ' ' + wallet.version}
-                      </Button>
-                    </> : <>
-                      <Button
-                        key={"wKey" + index.toString()}
-                        id={"wId" + index.toString()}
+              <Dialog.Title>
+                Select a wallet:
+              </Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body
+              px={"20px"}
+            >
+              <VStack
+                separator={<StackSeparator borderColor='gray.200' />}
+                gap={3}
+                marginBottom={"20px"}
+                align='stretch'
+              >
+                {
+                  wallets.map((wallet: WalletWithStarknetFeatures, index: number) => {
+                    const iconW: string = wallet.icon;
+                    return <>
+                      {isStarknetWallet(wallet) ? <>
+                        <Button
+                          key={"wKey" + index.toString()}
+                          id={"wId" + index.toString()}
+                          // backgroundColor="gray.100"
+                          // color={"black"}
+                          variant="surface"
+                          fontSize='lg'
+                          fontWeight='bold'
+                          onClick={() => {
+                            handleSelectedWallet(wallet);
+                            onClose();
+                          }} >
+                          <Image src={iconW ? iconW : undefined} width={30} />
+                          {wallet.name + ' ' + wallet.features["starknet:walletApi"].walletVersion}
+                        </Button>
+                      </> : <>
+                        <Button
+                          key={"wKey" + index.toString()}
+                          id={"wId" + index.toString()}
 
-                        variant="surface"
-                        fontSize='lg'
-                        fontWeight='bold'
-                        backgroundColor="orange"
-                        disabled={true}
-                      >
-                        <Image src={iconW} width={30} />
-                        {(wallet as WalletWithStarknetFeatures).name + ' ' + (wallet as WalletWithStarknetFeatures).version + " not compatible!"}
-                      </Button>
-                    </>}
-                  </>
-                })
-              }
-            </VStack>
-          </DialogBody>
-        </DialogContent>
-      </DialogRoot>
+                          variant="surface"
+                          fontSize='lg'
+                          fontWeight='bold'
+                          backgroundColor="orange"
+                          disabled={true}
+                        >
+                          <Image src={iconW} width={30} />
+                          {(wallet as WalletWithStarknetFeatures).name + ' ' + (wallet as WalletWithStarknetFeatures).version + " not compatible!"}
+                        </Button>
+                      </>}
+                    </>
+                  })
+                }
+              </VStack>
+            </Dialog.Body>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Dialog.Root>
     </>
   )
 

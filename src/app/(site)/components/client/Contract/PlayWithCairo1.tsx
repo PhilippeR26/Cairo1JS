@@ -4,8 +4,7 @@ import { Contract, InvokeFunctionResponse, type GetTransactionReceiptResponse } 
 import { useStoreBlock } from "../Block/blockContext";
 import { useStoreWallet } from '../ConnectWallet/walletContext';
 
-import { Text, Center, Spinner, Box } from "@chakra-ui/react";
-import { Button } from "@/components/ui/button";
+import { Text, Center, Spinner, Box, Button } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 import { test1Abi } from "../../../contracts/abis/test1";
@@ -74,7 +73,8 @@ export default function PlayWithCairo1() {
                             <Center>
                                 <Button
                                     variant="surface"
-                                    ml="4"
+                                    mb="2"
+                                    px="4"
                                     fontWeight='bold'
                                     bg='green.100'
                                     onClick={() => {

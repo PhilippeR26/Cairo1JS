@@ -20,8 +20,8 @@ export default function LowerBanner() {
       fontWeight="extrabold"
       color="grey.800"
     >
-      Powered by
-      <Link color="blue.700" href='https://starknetjs.com'> Starknet.js v6.20.3<SquareArrowOutUpRight margin-left="2px" /></Link>
+      Powered by {""}
+      <Link color="blue.700" href='https://starknetjs.com'> Starknet.js v7.1.0<SquareArrowOutUpRight margin-left="2px" /></Link>
       {" "} and {" "}
       <Link color="blue.700" href='https://github.com/fracek/get-starknet/tree/wallet-standard' > get-starknet v5<SquareArrowOutUpRight margin-left="2px" /></Link>
       .{" "}
