@@ -1,4 +1,3 @@
-import { isWalletObject } from "@starknet-io/get-starknet-core";
 
 import {
   Image, StackSeparator, VStack, useDisclosure, Button,
@@ -11,10 +10,8 @@ import { useState } from "react";
 import { WalletAccountV5, walletV5, validateAndParseAddress, constants as SNconstants, json } from "starknet";
 import { WALLET_API } from "@starknet-io/types-js";
 import { compatibleApiVersions, myFrontendProviders } from "@/utils/constants";
-import getStarknet from "@starknet-io/get-starknet-core"
 import { createStore, type Store } from "getSnDiscovery";
 import { isStarknetWallet, type WalletWithStarknetFeatures } from "getSnStandard/features";
-import type { StarknetInjectedWallet } from "getSnStandard";
 
 // export interface StarknetWalletProvider extends StarknetWindowObject {}
 type ValidWallet = {
@@ -49,8 +46,6 @@ export default function SelectWallet() {
   const wallets: WalletWithStarknetFeatures[] = store.getWallets();
   console.log(wallets);
 
-  const [walletList, setWalletList] = useState<ValidWallet[]>([]);
-
   const handleSelectedWallet = async (selectedWallet: WalletWithStarknetFeatures) => {
     console.log("selected WalletWithStarknetFeatures=", selectedWallet);
     const aa = await selectedWallet.features["standard:connect"].connect({ silent: false });
@@ -60,11 +55,9 @@ export default function SelectWallet() {
     console.log("chainId=", chainId);
 
     setConnected(true);
-    // WALLET_API.StarknetWindowObject
 
     setMyWallet(selectedWallet); // zustand
     console.log("Trying to connect wallet=", selectedWallet);
-    // setMyWallet(selectedWallet); // zustand
     const myWA = await WalletAccountV5.connect(myFrontendProviders[2], selectedWallet);
     setMyWalletAccount(myWA);
     console.log("WalletAccount created=", myWA);
@@ -145,8 +138,6 @@ export default function SelectWallet() {
                         <Button
                           key={"wKey" + index.toString()}
                           id={"wId" + index.toString()}
-                          // backgroundColor="gray.100"
-                          // color={"black"}
                           variant="surface"
                           fontSize='lg'
                           fontWeight='bold'
