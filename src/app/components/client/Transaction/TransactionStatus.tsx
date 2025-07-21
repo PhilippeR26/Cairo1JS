@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GetTransactionReceiptResponse, json,  type RevertedTransactionReceiptResponse, type SuccessfulTransactionReceiptResponse } from "starknet";
+import { GetTransactionReceiptResponse, json, type RevertedTransactionReceiptResponse, type SuccessfulTransactionReceiptResponse } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 

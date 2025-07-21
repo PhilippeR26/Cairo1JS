@@ -1,43 +1,64 @@
 "use client";
 
 import { Center, Button } from "@chakra-ui/react";
-import DisplayBlockChain from "./Block/DisplayBlockchain";
-import ConnectWallet from "./ConnectWallet/ConnectWallet";
 import { useStoreWallet } from "./ConnectWallet/walletContext";
-import WalletDisplay, { StateWallet } from "./ConnectWallet/DisplayWallet";
+import SelectWallet from "./ConnectWallet/SelectWallet";
 import PlayWithCairo1 from "./Contract/PlayWithCairo1";
-
+import DisplayBlockChain from "./Block/DisplayBlockchain";
+import WalletDisplay, { type StateWallet } from "./ConnectWallet/WalletDisplay";
+import DisplayEvents from "./ConnectWallet/DisplayEvents";
 
 export function DisplayConnected() {
-    const isConnected = useStoreWallet(state => state.isConnected);
-    const addressAccount = useStoreWallet(state => state.address);
-    const chainId = useStoreWallet(state => state.chain);
+    const {
+        isConnected,
+        setConnected,
+        address:addressAccount,
+        chain:chainId,
+        displaySelectWalletUI,
+        setSelectWalletUI,
+    } = useStoreWallet(state => state);
+
     const stateWallet: StateWallet = {
         addressAccount: addressAccount,
         chainId: chainId,
         isConnected: isConnected
     }
 
+
     return (
         <>
             {!isConnected ? (
                 <>
                     <Center>
-                        <ConnectWallet></ConnectWallet>
-                    </Center>
-                    <Center>
+                        <Button
+                            variant="surface"
+                            textDecoration="none !important"
+                            fontWeight='bold'
+                            outline="none !important"
+                            boxShadow="none !important"
+                            mt={3}
+                            px={5}
+                            onClick={() => setSelectWalletUI(true)}
+                        >
+                            Connect a Wallet
+                        </Button>
+                        {displaySelectWalletUI && <SelectWallet></SelectWallet>}
                     </Center>
                 </>
             ) : (
                 <>
                     <Center>
                         <Button
-                            ml="4"
+                            variant="surface"
                             textDecoration="none !important"
+                            fontWeight='bold'
                             outline="none !important"
                             boxShadow="none !important"
+                            mt={3}
+                            px={5}
                             onClick={() => {
-                                useStoreWallet.setState({ isConnected: false });
+                                setConnected(false);
+                                setSelectWalletUI(false)
                             }}
                         >
                             {addressAccount
@@ -48,6 +69,7 @@ export function DisplayConnected() {
                     <br />
                     <WalletDisplay walletData={stateWallet} ></WalletDisplay>
                     <DisplayBlockChain ></DisplayBlockChain>
+                    <DisplayEvents></DisplayEvents>
                     <PlayWithCairo1></PlayWithCairo1>
                 </>
             )

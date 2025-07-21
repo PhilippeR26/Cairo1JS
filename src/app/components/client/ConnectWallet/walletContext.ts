@@ -1,18 +1,19 @@
 "use client";
 
 import { create } from "zustand";
-import { ProviderInterface, AccountInterface, type WalletAccount } from "starknet";
-import { WALLET_API } from "@starknet-io/types-js";
+import { ProviderInterface, AccountInterface, type WalletAccountV5 } from "starknet";
+// import { WALLET_API } from "@starknet-io/types-js";
+import type { WalletWithStarknetFeatures } from "@starknet-io/get-starknet-wallet-standard/features";
 
 export interface Wallet_state {
-    StarknetWalletObject: WALLET_API.StarknetWindowObject | undefined,
-    setMyStarknetWalletObject: (wallet: WALLET_API.StarknetWindowObject) => void,
+    walletWSF: WalletWithStarknetFeatures | undefined,
+    setWalletWSF: (wallet: WalletWithStarknetFeatures) => void,
     address: string,
     setAddressAccount: (address: string) => void,
     chain: string,
     setChain: (chain: string) => void,
-    myWalletAccount: WalletAccount | undefined;
-    setMyWalletAccount: (myWAccount: WalletAccount) => void;
+    myWalletAccount: WalletAccountV5 | undefined;
+    setMyWalletAccount: (myWAccount: WalletAccountV5) => void;
     account: AccountInterface | undefined,
     setAccount: (account: AccountInterface) => void,
     provider: ProviderInterface | undefined,
@@ -29,24 +30,24 @@ export interface Wallet_state {
 }
 
 export const useStoreWallet = create<Wallet_state>()(set => ({
-    StarknetWalletObject: undefined,
-    setMyStarknetWalletObject: (wallet: WALLET_API.StarknetWindowObject) => { set(_state => ({ StarknetWalletObject: wallet })) },
+    walletWSF: undefined,
+    setWalletWSF: (wallet: WalletWithStarknetFeatures) => { set({ walletWSF: wallet }) },
     address: "",
-    setAddressAccount: (address: string) => { set(_state => ({ address })) },
+    setAddressAccount: (address: string) => { set({ address }) },
     chain: "",
-    setChain: (chain: string) => { set(_state => ({ chain: chain })) },
+    setChain: (chain: string) => { set({ chain }) },
     myWalletAccount: undefined,
-    setMyWalletAccount: (myWAccount: WalletAccount) => { set(_state => ({ myWalletAccount: myWAccount })) },
+    setMyWalletAccount: (myWAccount: WalletAccountV5) => { set({ myWalletAccount: myWAccount }) },
     account: undefined,
-    setAccount: (account: AccountInterface) => { set(_state => ({ account })) },
+    setAccount: (account: AccountInterface) => { set({ account }) },
     provider: undefined,
-    setProvider: (provider: ProviderInterface) => { set(_state => ({ provider: provider })) },
+    setProvider: (provider: ProviderInterface) => { set({ provider }) },
     isConnected: false,
-    setConnected: (isConnected: boolean) => { set(_state => ({ isConnected })) },
+    setConnected: (isConnected: boolean) => { set({ isConnected }) },
     displaySelectWalletUI: false,
-    setSelectWalletUI: (displaySelectWalletUI: boolean) => { set(_state => ({ displaySelectWalletUI })) },
+    setSelectWalletUI: (displaySelectWalletUI: boolean) => { set({ displaySelectWalletUI }) },
     walletApiList: [],
-    setWalletApiList: (walletApi: string[]) => { set(_state => ({ walletApiList: walletApi })) },
+    setWalletApiList: (walletApi: string[]) => { set({ walletApiList: walletApi }) },
     selectedApiVersion: "default",
-    setSelectedApiVersion: (selectedApiVersion: string) => { set(_state => ({ selectedApiVersion })) },
+    setSelectedApiVersion: (selectedApiVersion: string) => { set({ selectedApiVersion }) },
 }));
