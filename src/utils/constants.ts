@@ -22,9 +22,9 @@ export enum CommandWallet {
 // export type StarknetChainIdEntry = keyof typeof SNconstants.StarknetChainId;
 
 export const myFrontendProviders:RpcProvider[] = [
-    new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_8" }),
-    new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_8" }),
-    new RpcProvider({ nodeUrl: "https://starknet-sepolia.public.blastapi.io/rpc/v0_8"}),
+    new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_9" }),
+    new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_9" }),
+    new RpcProvider({ nodeUrl: "https://starknet-sepolia.public.blastapi.io/rpc/v0_9"}),
     ];
 
 export const RejectContractAddress: string[] = [
