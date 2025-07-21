@@ -9,27 +9,31 @@ import { Text, Center, Spinner, } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
 
 import { erc20Abi } from "../../../contracts/abis/ERC20abi"
-import { useStoreWallet } from "../ConnectWallet/walletContext";import { useFrontendProvider } from '../provider/providerContext';
+import { useStoreWallet } from "../ConnectWallet/walletContext"; import { useFrontendProvider } from '../provider/providerContext';
 import { myFrontendProviders } from '@/utils/constants';
 ;
 
 type Props = { tokenAddress: string };
 
 export default function GetBalance({ tokenAddress }: Props) {
-    
+
     // block context
     const blockFromContext = useStoreBlock(state => state.dataBlock);
-    
+
     const accountAddress = useStoreWallet((state) => state.address);
-   
-    const myProviderIndex= useFrontendProvider(state=>state.currentFrontendProviderIndex);
+
+    const myProviderIndex = useFrontendProvider(state => state.currentFrontendProviderIndex);
 
     const [balance, setBalance] = useState<number | undefined>(undefined);
     const [decimals, setDecimals] = useState<number>(18)
     const [symbol, setSymbol] = useState<string>("");
 
-    const myProvider=myFrontendProviders[myProviderIndex];
-    const contract = new Contract(erc20Abi, tokenAddress, myProvider);
+    const myProvider = myFrontendProviders[myProviderIndex];
+    const contract = new Contract({
+        abi: erc20Abi,
+        address: tokenAddress,
+        providerOrAccount: myProvider
+    });
 
     useEffect(() => {
         contract.call("decimals")
@@ -60,12 +64,12 @@ export default function GetBalance({ tokenAddress }: Props) {
             )
             .catch((e: any) => { console.log("error balanceOf=", e) });
     }
-    , [blockFromContext.block_number, decimals, accountAddress]); // balance updated at each block
+        , [blockFromContext.block_number, decimals, accountAddress]); // balance updated at each block
 
     return (
         <>
             {
-                typeof balance=="undefined" ? (
+                typeof balance == "undefined" ? (
                     <>
                         <Center>
                             <Spinner color="blue" size="sm" mr={4} />  Fetching data ...

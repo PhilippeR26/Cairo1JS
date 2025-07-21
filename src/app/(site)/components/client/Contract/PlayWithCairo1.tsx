@@ -44,7 +44,11 @@ export default function PlayWithCairo1() {
 
     useEffect(() => {
         console.log("Contract initialized");
-        setCairo1Contract(new Contract(test1Abi, contractAddress, walletAccountFromContext))
+        setCairo1Contract(new Contract({
+            abi: test1Abi,
+            address: contractAddress,
+            providerOrAccount: walletAccountFromContext
+        }))
 
 
         return () => { }
