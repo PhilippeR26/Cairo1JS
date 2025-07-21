@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { ProviderInterface, AccountInterface, type WalletAccountV5 } from "starknet";
 // import { WALLET_API } from "@starknet-io/types-js";
-import type { WalletWithStarknetFeatures } from "getSnStandard/features";
+import type { WalletWithStarknetFeatures } from "@starknet-io/get-starknet-wallet-standard/features";
 
 export interface Wallet_state {
     walletWSF: WalletWithStarknetFeatures | undefined,

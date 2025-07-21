@@ -10,8 +10,8 @@ import { useState } from "react";
 import { WalletAccountV5, walletV5, validateAndParseAddress, constants as SNconstants, json } from "starknet";
 import { WALLET_API } from "@starknet-io/types-js";
 import { compatibleApiVersions, myFrontendProviders } from "@/utils/constants";
-import { createStore, type Store } from "getSnDiscovery";
-import { isStarknetWallet, type WalletWithStarknetFeatures } from "getSnStandard/features";
+import { createStore, type Store } from "@starknet-io/get-starknet-discovery";
+import { isStarknetWallet, type WalletWithStarknetFeatures } from "@starknet-io/get-starknet-wallet-standard/features";
 
 // export interface StarknetWalletProvider extends StarknetWindowObject {}
 type ValidWallet = {

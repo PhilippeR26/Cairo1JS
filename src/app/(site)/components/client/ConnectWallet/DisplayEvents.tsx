@@ -2,7 +2,7 @@ import { Box, Center, SimpleGrid } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { useStoreWallet } from "./walletContext";
 import type { StandardEventsChangeProperties } from "@wallet-standard/features";
-import { getStarknetChainId } from "getSnStandard/chains";
+import { getStarknetChainId } from "@starknet-io/get-starknet-wallet-standard/chains";
 import { encode, shortString } from "starknet";
 
 

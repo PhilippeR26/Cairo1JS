@@ -49,7 +49,7 @@ export default function PlayWithCairo1() {
             .catch((e: any) => { console.log("error get_balance =", e) });
         return () => { }
     }
-        , [blockFromContext.block_number]); // balance updated at each block
+        , [blockFromContext.block_number, cairo1Contract]); // balance updated at each block
 
 
     return (
