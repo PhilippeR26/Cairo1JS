@@ -11,9 +11,9 @@
   "dependencies": {
     "@chakra-ui/react": "^3.15.1",
     "@emotion/react": "^11.14.0",
-    "@starknet-io/get-starknet-discovery": "^5.0.0-beta.0",
-    "@starknet-io/get-starknet-wallet-standard": "^5.0.0-beta.0",
-    "@starknet-io/types-js": "0.8.4",
+    "@starknet-io/get-starknet-discovery": "file:~/Documents/starknet/get-starknet/packages/discovery",
+    "@starknet-io/get-starknet-wallet-standard": "file:~/Documents/starknet/get-starknet/packages/wallet-standard",
+    "@starknet-io/types-js": "0.9.0",
     "@types/node": "24.0.15",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
@@ -25,7 +25,7 @@
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0",
     "sharp": "^0.34.3",
-    "starknet": "github:PhilippeR26/starknet.js#WalletAccountV5",
+    "starknet": "file:/D/starknetFork/starknet.js",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
