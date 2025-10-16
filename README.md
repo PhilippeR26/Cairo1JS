@@ -15,6 +15,10 @@ The DAPP is made in the Next.js framework. Coded in Typescript. Using React, Zus
 
 ## Getting Started 🚀
 
+Create a `.env.local` file, containing : 
+```bash
+NEXT_PUBLIC_PROVIDER_URL = "your_Sepolia_node_url"
+```
 Run the development server:
 
 ```bash
