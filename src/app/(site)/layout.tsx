@@ -1,9 +1,10 @@
 import { Provider } from "@/components/ui/provider"
 import './globals.css'
+import type { Metadata } from "next"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Cairo1-JS',
-  description: 'Demo of Starknet.js with Cairo 1',
+  description: 'Demo of Starknet.js',
   icons: {
     icon: "./favicon.ico",
   },

@@ -23,7 +23,7 @@ export default function LowerBanner() {
       Powered by {""}
       <Link color="blue.700" href='https://starknetjs.com'> Starknet.js v8.6.0<SquareArrowOutUpRight margin-left="2px" /></Link>
       {" "} and {" "}
-      <Link color="blue.700" href='https://github.com/fracek/get-starknet/tree/wallet-standard' > get-starknet v5.6.0<SquareArrowOutUpRight margin-left="2px" /></Link>
+      <Link color="blue.700" href='https://github.com/fracek/get-starknet/tree/wallet-standard' > get-starknet v5.0.0<SquareArrowOutUpRight margin-left="2px" /></Link>
       .{" "}
       <Link color="blue.700" href='https://github.com/PhilippeR26/Cairo1JS' > Source code<SquareArrowOutUpRight margin-left="2px" /></Link>
       .

@@ -1,3 +1,4 @@
+"use client";
 
 import {
   Image, StackSeparator, VStack, useDisclosure, Button,
