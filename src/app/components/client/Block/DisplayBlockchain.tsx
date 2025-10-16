@@ -6,7 +6,7 @@ import { useStoreBlock, dataBlockInit, type DataBlock } from "./blockContext";
 import GetBalance from "../Contract/GetBalance";
 import { Text, Spinner, Center, Separator, Box } from "@chakra-ui/react";
 import styles from '../../../page.module.css'
-import * as constants from '@/type/constants';
+import * as constants from '@/utils/constants';
 import { useFrontendProvider } from '../provider/providerContext';
 import { myFrontendProviders } from '@/utils/constants';
   

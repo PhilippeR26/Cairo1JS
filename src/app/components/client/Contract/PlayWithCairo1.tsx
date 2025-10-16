@@ -9,7 +9,7 @@ import styles from '../../../page.module.css'
 
 import { test1Abi } from "../../../contracts/abis/test1";
 import TransactionStatus from '../Transaction/TransactionStatus';
-import { addrTESTCONTRACT } from '@/type/constants';
+import { addrTESTCONTRACT } from '@/utils/constants';
 
 const contractAddress = addrTESTCONTRACT;
 

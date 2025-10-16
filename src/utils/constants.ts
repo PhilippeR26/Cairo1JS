@@ -4,6 +4,11 @@ export const addrETH = "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b8
 export const addrTEST = "0x07394cBe418Daa16e42B87Ba67372d4AB4a5dF0B05C6e554D158458Ce245BC10";
 export const addrLORDtestnet = "0x019c92fa87f4d5e3bE25C3DD6a284f30282a07e87cd782f5Fd387B82c8142017"; 
 export const addrLORDmainnet = "0x0124aeb495b947201f5faC96fD1138E326AD86195B98df6DEc9009158A533B49"; 
+export const addrSTRK = "0x04718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d";
+export const addrxASTR = "0x005EF67D8c38B82ba699F206Bf0dB59f1828087A710Bad48Cc4d51A2B0dA4C29"; // xAstraly
+export const addrTESTCONTRACT ="0x6a109c64aefc6f0e337f8996baec2db09e209d12fd329843327a0f442e04d84"; // sepolia testnet
+
+
 export enum CommandWallet {
     wallet_requestAccounts = "wallet_requestAccounts",
     wallet_watchAsset = "wallet_watchAsset",
@@ -24,7 +29,7 @@ export enum CommandWallet {
 export const myFrontendProviders:RpcProvider[] = [
     new RpcProvider({ nodeUrl: "https://starknet-mainnet.public.blastapi.io/rpc/v0_9" }),
     new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_9" }),
-    new RpcProvider({ nodeUrl: "https://starknet-sepolia.public.blastapi.io/rpc/v0_9"}),
+    new RpcProvider({ nodeUrl: process.env.NEXT_PUBLIC_PROVIDER_URL}),
     ];
 
 export const RejectContractAddress: string[] = [
@@ -37,3 +42,4 @@ export const RejectContractAddress: string[] = [
 export const accountClass = "0x061dac032f228abef9c6626f995015233097ae253a7f72d68552db02f2971b8f";
 
 export const compatibleApiVersions: string[]=["0.7"];
+
