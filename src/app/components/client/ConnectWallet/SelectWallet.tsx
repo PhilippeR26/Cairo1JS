@@ -55,7 +55,6 @@ export default function SelectWallet() {
     console.log("chainId=", chainId);
 
     setConnected(true);
-
     setMyWallet(selectedWallet); // zustand
     console.log("Trying to connect wallet=", selectedWallet);
     const myWA = await WalletAccountV5.connect(myFrontendProviders[2], selectedWallet);
