@@ -6,7 +6,7 @@
 ## Presentation
 
 This small project demonstrates how to create a DAPP to interact with the Starknet blockchain.  
-You can interact easily with Cairo smart-contract, using your Argent-X or Braavos wallets (installed in your desktop).  
+You can interact easily with Cairo smart-contract, using your Starknet wallets (installed in your desktop).  
 The communication with the wallet can be made only with Wallets compatible with the new Wallet API.
 
 Analyze the code to see how to create a such DAPP (start [here](https://github.com/PhilippeR26/Cairo1JS/blob/main/src/app/(site)/page.tsx))  

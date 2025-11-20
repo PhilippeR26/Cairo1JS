@@ -20,7 +20,7 @@ export default  function WalletDisplay( {walletData}:WalletProps) {
                 <Text className={styles.text1}>
 
                     address = {walletData.addressAccount} <br />
-                    chaind = {chainName} <br/>
+                    chainId = {chainName} <br/>
                     {chainName !== "SN_SEPOLIA" && <>
                         <Text as="span" color={'red'} fontWeight={"extrabold"} fontSize={"2xl"}>Change to Sepolia Testnet</Text>
                         <br/>

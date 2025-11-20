@@ -59,7 +59,7 @@ export default function SelectWallet() {
     console.log("Trying to connect wallet=", selectedWallet);
     const myWA = await WalletAccountV5.connect(myFrontendProviders[2], selectedWallet);
     setMyWalletAccount(myWA);
-    console.log("WalletAccount created=", myWA);
+    console.log("WalletAccountV5 created=", myWA);
     const result = await walletV5.requestAccounts(selectedWallet);
     if (typeof (result) == "string") {
       console.log("This Wallet is not compatible.");
