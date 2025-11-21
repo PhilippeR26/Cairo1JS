@@ -13,7 +13,7 @@ export default async function Page() {
     return (
             <div>
                 <p className={styles.bgText}>
-                    Test get-starknet v5.0.0 with starknet.js v8.9.0ß
+                    Test get-starknet v5.0.0 with starknet.js v9.0.0ß
                 </p>
                 <Center>
                     <Image src={starknetjsImg} alt='starknet.js' width={150} />

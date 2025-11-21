@@ -21,7 +21,7 @@ export default function LowerBanner() {
       color="grey.800"
     >
       Powered by {""}
-      <Link color="blue.700" href='https://starknetjs.com'> Starknet.js v8.9.0ß<SquareArrowOutUpRight margin-left="2px" /></Link>
+      <Link color="blue.700" href='https://starknetjs.com'> Starknet.js v9.0.0ß<SquareArrowOutUpRight margin-left="2px" /></Link>
       {" "} and {" "}
       <Link color="blue.700" href='https://github.com/fracek/get-starknet/tree/wallet-standard' > get-starknet v5.0.0<SquareArrowOutUpRight margin-left="2px" /></Link>
       .{" "}
