@@ -36,7 +36,7 @@ export default function SelectWallet() {
     setChain,
     setAddressAccount,
   } = useStoreWallet(state => state);
-  
+
   const {
     currentFrontendProviderIndex: myFrontendProviderIndex,
     setCurrentFrontendProviderIndex,
@@ -46,7 +46,7 @@ export default function SelectWallet() {
   const wallets: WalletWithStarknetFeatures[] = store.getWallets();
   console.log(wallets);
 
-  const handleSelectedWallet = async (selectedWallet: WalletWithStarknetFeatures) => {
+  async function handleSelectedWallet(selectedWallet: WalletWithStarknetFeatures) {
     console.log("selected WalletWithStarknetFeatures=", selectedWallet);
     const aa = await selectedWallet.features["standard:connect"].connect({ silent: false });
     console.log("connect aa=", aa);

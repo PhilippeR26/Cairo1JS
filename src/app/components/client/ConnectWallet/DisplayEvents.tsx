@@ -29,23 +29,25 @@ export default function DisplayEvents() {
             console.log("account event=", change.accounts[0].address);
             setCurrentAccount(change.accounts[0].address);
             setTime1(getTime());
-            const a = change.accounts[0].chains[0];
-            console.log("network event=", change.accounts[0].chains[0]);
-            setCurrentChainId(getStarknetChainId(change.accounts[0].chains[0]));
+            const network = change.accounts[0].chains[0];
+            console.log("network event=", network);
+            setCurrentChainId(getStarknetChainId(network));
             setTime2(getTime())
         }
     }, []);
 
-    useEffect(() => {
-        console.log("Subscribe events...");
-        selectedWalletAccountV5?.onChange(addEvent);
-        return () => {
-            console.log("unsubscribe to events...");
-            selectedWalletAccountV5?.unsubscribeChange();
-            console.log("events OFF!");
+    useEffect(
+        () => {
+            console.log("Subscribe events...");
+            selectedWalletAccountV5?.onChange(addEvent);
+            return () => {
+                console.log("unsubscribe to events...");
+                selectedWalletAccountV5?.unsubscribeChange();
+                console.log("events OFF!");
+            }
         }
-    }
-        , [selectedWalletAccountV5, addEvent]);
+        , [selectedWalletAccountV5, addEvent]
+    );
 
     return <SimpleGrid minChildWidth="250px" gap="5px" py="3px">
         <Box bg="lightblue" color='black' borderWidth='1px' borderRadius='lg'>

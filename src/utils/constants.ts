@@ -28,14 +28,14 @@ export enum CommandWallet {
 
 export const myFrontendProviders: RpcProvider[] = [
     new RpcProvider({ nodeUrl: "https://starknet-mainnet.g.alchemy.com/starknet/version/rpc/v0_10/" + process.env.NEXT_PUBLIC_PROVIDER_URL }),
-    new RpcProvider({ nodeUrl: "https://starknet-testnet.public.blastapi.io/rpc/v0_9" }),
+    new RpcProvider({ nodeUrl: "xxx" }), // Goerli deprecated
     new RpcProvider({ nodeUrl: "https://starknet-sepolia.g.alchemy.com/starknet/version/rpc/v0_10/" + process.env.NEXT_PUBLIC_PROVIDER_URL }),
 ];
 
 export const RejectContractAddress: string[] = [
     "0x541b0409e65bf546ff6c3090f4c07c53938b20c1f659250b84ce5eb66d4485e", // mainnet
-    "0x00", // testnet deprecated
-    "0x4d0f60ba43be97d44257a77e6123f11df89350396480af6ed0cbc81c8179592", // sepolia
+    "0x00", // Goerli testnet deprecated
+    "0x4d0f60ba43be97d44257a77e6123f11df89350396480af6ed0cbc81c8179592", // sepolia Testnet
 ];
 
 // OpenZeppelin 0.8.1. Exists in Mainnet & Sepolia
