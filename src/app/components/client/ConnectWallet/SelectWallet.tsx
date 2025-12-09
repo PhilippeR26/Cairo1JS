@@ -36,12 +36,13 @@ export default function SelectWallet() {
   console.log(wallets);
 
   async function handleSelectedWallet(selectedWallet: WalletWithStarknetFeatures) {
+    // First, low level connection to be able to get chainId (only a problem in Ready wallet)
     console.log("selected WalletWithStarknetFeatures=", selectedWallet);
-
+    await selectedWallet.features["standard:connect"].connect({ silent: false });
     // Direct access to wallet features 
-    const chainId = await selectedWallet.features["starknet:walletApi"].request({ type: "wallet_requestChainId" });
+    const chainId = (await walletV5.requestChainId(selectedWallet)) as string;
     // or
-    const chainId2 = (await walletV5.requestChainId(selectedWallet)) as string;
+    // const chainId = await selectedWallet.features["starknet:walletApi"].request({ type: "wallet_requestChainId" });
     console.log("chainId=", chainId);
 
     setConnected(true);
