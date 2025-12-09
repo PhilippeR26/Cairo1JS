@@ -5,42 +5,31 @@ import {
 } from "@chakra-ui/react";
 import { useStoreWallet } from "./walletContext";
 import { useFrontendProvider } from "../provider/providerContext";
-import { use, useEffect } from "react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { WalletAccountV5, walletV5, validateAndParseAddress, constants as SNconstants, json } from "starknet";
 import { WALLET_API } from "@starknet-io/types-js";
-import { compatibleApiVersions, myFrontendProviders } from "@/utils/constants";
+import { myFrontendProviders } from "@/utils/constants";
 import { createStore, type Store } from "@starknet-io/get-starknet-discovery";
 import { isStarknetWallet, type WalletWithStarknetFeatures } from "@starknet-io/get-starknet-wallet-standard/features";
-
-// export interface StarknetWalletProvider extends StarknetWindowObject {}
-type ValidWallet = {
-  wallet: WALLET_API.StarknetWindowObject;
-  isValid: boolean;
-}
 
 
 export default function SelectWallet() {
   const { open, onOpen, onClose } = useDisclosure()
 
   const {
-    walletWSF: myWallet,
     setWalletWSF: setMyWallet,
-    myWalletAccount,
     setMyWalletAccount,
-    isConnected,
     setConnected,
-    displaySelectWalletUI,
     setSelectWalletUI,
     setWalletApiList: setWalletApi,
     setChain,
     setAddressAccount,
-  } = useStoreWallet(state => state);
+  } = useStoreWallet();
 
   const {
     currentFrontendProviderIndex: myFrontendProviderIndex,
     setCurrentFrontendProviderIndex,
-  } = useFrontendProvider(state => state);
+  } = useFrontendProvider();
 
   const store: Store = createStore();
   const wallets: WalletWithStarknetFeatures[] = store.getWallets();
@@ -48,16 +37,17 @@ export default function SelectWallet() {
 
   async function handleSelectedWallet(selectedWallet: WalletWithStarknetFeatures) {
     console.log("selected WalletWithStarknetFeatures=", selectedWallet);
-    const aa = await selectedWallet.features["standard:connect"].connect({ silent: false });
-    console.log("connect aa=", aa);
 
+    // Direct access to wallet features 
     const chainId = await selectedWallet.features["starknet:walletApi"].request({ type: "wallet_requestChainId" });
+    // or
+    const chainId2 = (await walletV5.requestChainId(selectedWallet)) as string;
     console.log("chainId=", chainId);
 
     setConnected(true);
     setMyWallet(selectedWallet); // zustand
     console.log("Trying to connect wallet=", selectedWallet);
-    const myWA = await WalletAccountV5.connect(myFrontendProviders[2], selectedWallet);
+    const myWA: WalletAccountV5 = await WalletAccountV5.connect(myFrontendProviders[2], selectedWallet);
     setMyWalletAccount(myWA);
     console.log("WalletAccountV5 created=", myWA);
     const result = await walletV5.requestAccounts(selectedWallet);
@@ -80,7 +70,6 @@ export default function SelectWallet() {
 
       console.log("change Provider index to :", myFrontendProviderIndex);
     }
-    // ********** TODO : replace supportedSpecs by api versions when available in SNJS
     setWalletApi(await walletV5.supportedSpecs(selectedWallet));
     console.log("selected wallet =", json.stringify(selectedWallet));
     setSelectWalletUI(false);
@@ -172,5 +161,4 @@ export default function SelectWallet() {
       </Dialog.Root>
     </>
   )
-
 }

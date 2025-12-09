@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Contract, shortString, validateAndParseAddress } from "starknet";
+import { Contract, shortString } from "starknet";
 
 import { useStoreBlock } from "../Block/blockContext";
 
