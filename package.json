@@ -12,6 +12,8 @@
     "@chakra-ui/react": "^3.30.0",
     "@emotion/react": "^11.14.0",
     "@starknet-io/get-starknet-discovery": "^5.0.0",
+    "@starknet-io/get-starknet-modal": "^5.0.0",
+    "@starknet-io/get-starknet-ui": "^5.0.0",
     "@starknet-io/get-starknet-wallet-standard": "^5.0.0",
     "@starknet-io/types-js": "0.10.0",
     "@wallet-standard/features": "^1.1.0",

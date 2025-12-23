@@ -11,6 +11,7 @@ import { WALLET_API } from "@starknet-io/types-js";
 import { myFrontendProviders } from "@/utils/constants";
 import { createStore, type Store } from "@starknet-io/get-starknet-discovery";
 import { isStarknetWallet, type WalletWithStarknetFeatures } from "@starknet-io/get-starknet-wallet-standard/features";
+import { useConnect } from "@starknet-io/get-starknet-modal";
 
 
 export default function SelectWallet() {
@@ -30,6 +31,13 @@ export default function SelectWallet() {
     currentFrontendProviderIndex: myFrontendProviderIndex,
     setCurrentFrontendProviderIndex,
   } = useFrontendProvider();
+  const {
+    connect,
+    disconnect,
+    isConnecting,
+    isError,
+    connected
+  } = useConnect();
 
   const store: Store = createStore();
   const wallets: WalletWithStarknetFeatures[] = store.getWallets();
@@ -38,7 +46,9 @@ export default function SelectWallet() {
   async function handleSelectedWallet(selectedWallet: WalletWithStarknetFeatures) {
     // First, low level connection to be able to get chainId (only a problem in Ready wallet)
     console.log("selected WalletWithStarknetFeatures=", selectedWallet);
-    await selectedWallet.features["standard:connect"].connect({ silent: false });
+    //await selectedWallet.features["standard:connect"].connect({ silent: false });
+    connect(selectedWallet);
+
     // Direct access to wallet features 
     const chainId = (await walletV5.requestChainId(selectedWallet)) as string;
     // or

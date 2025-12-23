@@ -1,6 +1,8 @@
-import { Provider } from "@/components/ui/provider"
-import './globals.css'
-import type { Metadata } from "next"
+
+import { Provider as ChakraProvider } from "@/components/ui/provider";
+import './globals.css';
+import type { Metadata } from "next";
+import GetStarknetInit from "./components/server/GetStarknetInit";
 
 export const metadata: Metadata = {
   title: 'Cairo1-JS',
@@ -15,9 +17,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Provider>
-          {children}
-        </Provider>
+        <GetStarknetInit>
+          <ChakraProvider>
+            {children}
+          </ChakraProvider>
+        </GetStarknetInit>
       </body>
     </html>
   )
