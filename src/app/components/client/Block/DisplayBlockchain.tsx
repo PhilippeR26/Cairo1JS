@@ -9,9 +9,11 @@ import styles from '../../../page.module.css'
 import * as constants from '@/utils/constants';
 import { useFrontendProvider } from '../provider/providerContext';
 import { myFrontendProviders } from '@/utils/constants';
+import { useStoreWallet } from '../ConnectWallet/walletContext';
   
 export default function DisplayBlockChain() {
 
+    const accountAddr = useStoreWallet((state) => state.address);
     // read block
     const blockFromContext = useStoreBlock(state => state.dataBlock);
     const setBlockData = useStoreBlock((state) => state.setBlockData);
@@ -77,9 +79,9 @@ export default function DisplayBlockChain() {
             {!!blockFromContext.block_number &&
                 <Box bg='yellow.300' color='black' borderWidth='1px' borderRadius='lg'>
                      <Center> Updated each new block :</Center>
-                    <GetBalance tokenAddress={constants.addrETH} ></GetBalance>
+                    <GetBalance tokenAddress={constants.addrETH} accountAddress={accountAddr} ></GetBalance>
                     <Separator borderColor='gray.600' />
-                    <GetBalance tokenAddress={constants.addrSTRK} ></GetBalance> 
+                    <GetBalance tokenAddress={constants.addrSTRK} accountAddress={accountAddr} ></GetBalance> 
 
                 </Box>
             }
